@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/font-awesome.css}">
+    <script th:src="@{/js/jquery-3.2.1.min.js}"></script>
+    <script th:src="@{/js/popper.min.js}"></script>
+    <script th:src="@{/js/bootstrap.js}"></script>
+</head>
+<body>
+<div class="container">
+    <div class="alert alert-info">支持HTML，MathJax</div>
+    <form action="" method="post">
+        <h3 th:text="'Id : '+${problem.id}"></h3>
+        <div class="form-group">
+            Title:<input type="text" class="form-control" name="title" th:value="${problem.title}">
+        </div>
+        <div class="form-group">
+            Active: <input type="checkbox" name="active" th:value="${problem.active}">
+            Time Limit:<input type="number" class="form-control" name="timeLimit" value="1000" th:value="${problem.timeLimit}">
+        </div>
+        <div class="form-group">
+            Memory Limit:<input type="number" class="form-control" name="memoryLimit" value="65536" th:value="${problem.memoryLimit}">
+        </div>
+
+        <div class="form-group">
+            Description: <textarea class="form-control" name="description" cols="35" rows="15" th:text="${problem.description}"></textarea>
+        </div>
+        <div class="form-group">
+            Input: <textarea name="input" class="form-control" cols="35" rows="10" th:text="${problem.input}"></textarea>
+        </div>
+        <div class="form-group">
+            Output: <textarea name="output" class="form-control" cols="35" rows="10" th:text="${problem.output}"></textarea>
+        </div>
+        <div class="form-group">
+            Sample Input: <textarea name="sampleInput" class="form-control" cols="35" rows="10" th:text="${problem.sampleInput}"></textarea>
+        </div>
+        <div class="form-group">
+            Sample Output: <textarea name="sampleOutput" class="form-control" cols="35" rows="10" th:text="${problem.sampleOutput}"></textarea>
+        </div>
+        <div class="form-group">
+            Hint: <textarea name="hint" class="form-control" cols="35" rows="5" th:text="${problem.hint}"></textarea>
+        </div>
+        <div class="form-group">
+            Source: <textarea name="source" class="form-control" cols="35" rows="5" th:text="${problem.source}"></textarea>
+        </div>
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary">
+        </div>
+    </form>
+</div>
+</body>
+</html>

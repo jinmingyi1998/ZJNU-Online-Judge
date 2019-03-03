@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="header">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/font-awesome.css}">
+    <script th:src="@{/js/jquery-3.2.1.min.js}"></script>
+    <script th:src="@{/js/popper.min.js}"></script>
+    <script th:src="@{/js/bootstrap.js}"></script>
+    <script src="/js/run_prettify.js"></script>
+    <link rel="stylesheet" href="/css/sunburst.css">
+    <style>
+        html, body {
+            height: 100%;
+            width: 100%;
+
+        }
+
+        body {
+            margin-bottom: 60px;
+            padding-bottom: 60px;
+            margin: 0;
+            margin-top: 20px;
+            padding-top: 60px;
+            background: linear-gradient(90deg, #7fe6de, #8EC0E4, #5a92e6, #617be4);
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-xl bg-dark navbar-dark fixed-top">
+    <a class="navbar-brand" href="/"><img th:src="@{/favicon.ico}" alt="" width="30px">&nbsp;HOME</a>
+    <button class="navbar-toggler justify-content-end" type="button" data-toggle="collapse"
+            data-target="#collapsibleNavbar"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+            <li class="nav-item"><a class="nav-link" href="/problems">Problem</a></li>
+            <li class="nav-item"><a class="nav-link" href="/status">Status</a></li>
+            <li class="nav-item">
+                <a class="nav-link" th:if="${session.currentUser== null}" th:href="@{/login}">Sign in</a>
+                <a class="nav-link" th:unless="${session.currentUser== null}" th:href="@{/login}"
+                   th:text="${session.currentUser.getName()}"></a></li>
+            <li class="nav-item"><a class="nav-link" th:if="${session.currentUser== null}" th:href="@{/register}">Sign up</a>
+                <a class="nav-link" th:href="@{/logout}" th:unless="${session.currentUser== null}">Sign out</a></li>
+        </ul>
+    </div>
+</nav>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="header">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/font-awesome.css}">
+    <script th:src="@{/js/jquery-3.2.1.min.js}"></script>
+    <script th:src="@{/js/popper.min.js}"></script>
+    <script th:src="@{/js/bootstrap.js}"></script>
+    <title>Admin</title>
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            margin: 30px;
+        }
+    </style>
+    <script>
+        $(function () {
+            $(".remove-btn").click(function () {
+                if (confirm("You are going to delete problem " + $(this).attr("id"))) {
+                    $.post({
+                        url: "/admin/delete/" + $(this).attr("id"),
+                        success:function () {
+                            location.reload();
+                        }
+                    });
+                }
+            });
+        })
+    </script>
+</head>
+<body>
+<div class="container">
+    <a href="/admin/insert" class="btn btn-success">Add a problem</a>
+    <form action="" class="form-inline">Search: <input type="text" class="form-control" name="search"><button class="btn">Search</button></form>
+    <ul class="list-group" th:each="problem,proStat:${problems.content}">
+        <li class="list-group-item list-group-item-action">
+            <span th:text="${problem.id}"></span>
+            <span th:text="${problem.title}"></span>
+            <a class="btn-sm btn-primary float-right" th:href="'/admin/edit/'+${problem.id}">Update</a>
+            <a class="btn-danger btn-sm remove-btn float-right" th:id="${problem.id}">Remove</a></li>
+    </ul>
+    <div class="container">
+        <ul class="pagination">
+            <li th:each="i:${#numbers.sequence(problems.number-5>0?problems.number-5:0 ,problems.number+5>problems.totalPages-1? problems.totalPages-1:problems.number+5)}"
+                th:class="'page-item'+${i==problems.number?' active':' '}">
+                <a th:href="@{${url}(page=${i})}" th:text="${i+1}" class="page-link">1</a>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

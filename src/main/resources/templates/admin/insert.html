@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Insert</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/font-awesome.css}">
+    <script th:src="@{/js/jquery-3.2.1.min.js}"></script>
+    <script th:src="@{/js/popper.min.js}"></script>
+    <script th:src="@{/js/bootstrap.js}"></script>
+</head>
+<body>
+<div class="container">
+    <div class="alert alert-info">支持HTML，MathJax</div>
+    <form action="" method="post">
+        <div class="form-group">
+            Title:<input type="text" class="form-control" name="title">
+        </div>
+        <div class="form-group">
+            Time Limit(ms):<input type="number" class="form-control" name="timeLimit" value="1000">
+        </div>
+        <div class="form-group">
+            Memory Limit(Bytes):<input type="number" class="form-control" name="memoryLimit" value="65536000">
+        </div>
+
+        <div class="form-group">
+            Description: <textarea class="form-control" name="description" cols="35" rows="15"></textarea>
+        </div>
+        <div class="form-group">
+            Input: <textarea name="input" class="form-control" cols="35" rows="10"></textarea>
+        </div>
+        <div class="form-group">
+            Output: <textarea name="output" class="form-control" cols="35" rows="10"></textarea>
+        </div>
+        <div class="form-group">
+            Sample Input: <textarea name="sampleInput" class="form-control" cols="35" rows="10"></textarea>
+        </div>
+        <div class="form-group">
+            Sample Output: <textarea name="sampleOutput" class="form-control" cols="35" rows="10"></textarea>
+        </div>
+        <div class="form-group">
+            Hint: <textarea name="hint" class="form-control" cols="35" rows="5"></textarea>
+        </div>
+        <div class="form-group">
+            Source: <textarea name="source" class="form-control" cols="35" rows="5"></textarea>
+        </div>
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary">
+        </div>
+    </form>
+</div>
+</body>
+</html>
