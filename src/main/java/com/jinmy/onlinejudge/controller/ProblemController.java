@@ -25,6 +25,7 @@ import java.util.List;
 @Slf4j
 @RestController
 public class ProblemController {
+    private final int PAGE_SIZE = 30;
     @Autowired
     private ProblemService problemService;
     @Autowired
@@ -35,7 +36,6 @@ public class ProblemController {
     private JudgeService judgeService;
     @Autowired
     private UserService userService;
-    private final int PAGE_SIZE = 30;
 
     @GetMapping("/showproblem")
     public ModelAndView showproblem(@RequestParam("id") Long id, HttpServletResponse response) {
@@ -49,7 +49,7 @@ public class ProblemController {
         List<Solution> solutionList = new ArrayList<Solution>();
         if (session.getAttribute("currentUser") != null) {
             User user = (User) session.getAttribute("currentUser");
-            solutionList = solutionService.getSolutionPage(0, 5, user.getId()).getContent();
+            solutionList = solutionService.getSolutionPage(0, 5, user).getContent();
         }
         m.addObject("solutions", solutionList);
         return m;
@@ -85,8 +85,7 @@ public class ProblemController {
         if (problem == null) {
             return "Problem Not Exist";
         }
-        Solution solution = new Solution(user.getId(), problem.getId(), language, source, request.getRemoteAddr(), share);
-        solution.setResult("Pending");
+        Solution solution = new Solution(user, problem, language, source, request.getRemoteAddr(), share);
         solution = solutionService.insertSolution(solution);
         judgeService.submit(solution);
         return "success";
@@ -106,7 +105,7 @@ public class ProblemController {
         }
         ModelAndView m = new ModelAndView("problem/problemlist");
         page = Math.max(page, 0);
-        Page<Problem> problemPage = problemService.getProblemPage(page, PAGE_SIZE,_search);
+        Page<Problem> problemPage = problemService.getProblemPage(page, PAGE_SIZE, _search);
         if (page >= problemPage.getTotalPages() && problemPage.getTotalPages() > 0) {
             page = problemPage.getTotalPages() - 1;
             problemPage = problemService.getProblemPage(page, PAGE_SIZE, search);

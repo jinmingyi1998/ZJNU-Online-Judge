@@ -1,0 +1,88 @@
+package com.jinmy.onlinejudge.entity;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+
+import javax.persistence.*;
+import java.time.Instant;
+import java.util.List;
+
+enum Visibility {
+    pri("private"), pub("public");
+    String name;
+
+    Visibility(String s) {
+        name = s;
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+
+enum JoinPolicy {
+    invite("invite"), apply("apply"), free("free");
+    String name;
+
+    JoinPolicy(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@Slf4j
+@Data
+@Entity
+public class Team {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(nullable = false, length = 255)
+    private String name;
+    @ManyToMany
+    private List<Contest> contests;
+    @Column(nullable = false)
+    private Visibility visibility;
+    @Column(nullable = false)
+    private JoinPolicy joinPolicy;
+    @Column(columnDefinition = "LONGTEXT")
+    private String introduction;
+    @Column
+    private Instant createTime;
+    @JsonIgnore
+    @OneToMany(mappedBy = "team")
+    private List<TeamRole> teamRoles;
+    protected Team() {
+    }
+
+    public Team(String name, List<Contest> contests, Visibility visibility, JoinPolicy joinPolicy, String introduction, Instant createTime, List<TeamRole> teamRoles) {
+        this.name = name;
+        this.contests = contests;
+        this.visibility = visibility;
+        this.joinPolicy = joinPolicy;
+        this.introduction = introduction;
+        this.createTime = createTime;
+    }
+
+    @Override
+    public String toString() {
+        return "Team{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", contests=" + contests +
+                ", visibility=" + visibility +
+                ", joinPolicy=" + joinPolicy +
+                ", introduction='" + introduction + '\'' +
+                ", createTime=" + createTime +
+                '}';
+    }
+}
+
+

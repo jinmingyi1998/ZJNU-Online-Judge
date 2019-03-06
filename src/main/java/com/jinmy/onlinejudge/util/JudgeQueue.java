@@ -135,12 +135,16 @@ public class JudgeQueue {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //log.info("Compile output:" + output);
+        log.info("Compile output:" + output);
         if (!output.equals("")) {
             //CE
+            CompileError ce = new CompileError(solution, output);
+            //compileErrorRepository.save(ce);
+            solution.setCe(ce);
             solution.setResult("Compile Error");
-            CompileError ce = new CompileError(solution.getId(), output);
-            compileErrorRepository.save(ce);
+            solutionService.updateSolution(solution);
+            log.info("SOLUTION:" + solution.toString());
+            log.info("CE:" + ce.toString());
             return 1;
         }
 
@@ -273,7 +277,7 @@ public class JudgeQueue {
          * Python3 = 4
          */
         int lang;
-        Problem problem = problemService.getProblemById(solution.getProblemId());
+        Problem problem = solution.getProblem();
         switch (solution.getLanguage()) {
             case "c":
                 lang = 0;
@@ -298,6 +302,7 @@ public class JudgeQueue {
         if (compile(filename, lang, solution) == 0) {
             String case_name = "";
             solution.setResult("Running");
+            solutionService.updateSolution(solution);
             File file = new File(config.getData_dir() + problem.getId());
             if (!file.exists()) {
                 log.error("Data directory not Found!");
@@ -351,6 +356,5 @@ public class JudgeQueue {
             solution.setResult("Compile Error");
         }
         solutionService.updateSolution(solution);
-        log.info(solution.getResult());
     }
 }

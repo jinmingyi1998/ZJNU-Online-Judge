@@ -21,7 +21,8 @@
         $(function () {
             $(".remove-btn").click(function () {
                 if (confirm("You are going to delete problem " + $(this).attr("id"))) {
-                    $.post({
+                    $.ajax({
+                        type:"delete",
                         url: "/admin/delete/" + $(this).attr("id"),
                         success:function () {
                             location.reload();

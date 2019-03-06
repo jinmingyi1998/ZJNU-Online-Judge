@@ -109,7 +109,7 @@
                         <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" style="width:0%"
                              id="prog"></div>
                     </div>
-                    <a class="btn btn-primary btn-lg text-center" id="submit_btn">Submit</a>
+                    <a class="btn btn-primary btn-lg text-center" id="submit_btn" >Submit</a>
                 </form>
             </div>
         </div>
@@ -198,7 +198,7 @@
                     </tbody>
                 </table>
                 <button class="btn btn-sm share-code btn-danger" id="modal-share" th:if="${session.currentUser!=null}">Not Shared</button>
-                <div id="modal-ce"></div>
+                <pre id="modal-ce"></pre>
                 <pre class="prettyprint"><code id="source_code"></code></pre>
             </div>
             <div class="modal-footer">

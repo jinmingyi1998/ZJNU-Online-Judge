@@ -1,6 +1,8 @@
 package com.jinmy.onlinejudge.repository;
 
+import com.jinmy.onlinejudge.entity.Problem;
 import com.jinmy.onlinejudge.entity.Solution;
+import com.jinmy.onlinejudge.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,12 +20,13 @@ public interface SolutionRepository extends JpaRepository<Solution, Long> {
     @Override
     Page<Solution> findAll(Pageable pageable);
 
-    List<Solution> findAllByUserId(Long uid);
+    List<Solution> findAllByUser(User u);
 
-    Page<Solution> findAllByUserId(Pageable pageable, Long uid);
+    Page<Solution> findAllByUser(Pageable pageable, User user);
 
     List<Solution> findAllByResult(String result);
-    List<Solution> findAllByProblemId(Long pid);
+
+    List<Solution> findAllByProblem(Problem problem);
 
     Page<Solution> findAllByResult(Pageable pageable, String result);
 }

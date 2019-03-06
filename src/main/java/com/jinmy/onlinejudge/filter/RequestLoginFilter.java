@@ -15,6 +15,7 @@ import java.io.IOException;
 @Slf4j
 public class RequestLoginFilter implements Filter {
     UserService userService;
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpSession session = ((HttpServletRequest) request).getSession();
@@ -37,9 +38,9 @@ public class RequestLoginFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) {
-        ServletContext sc=filterConfig.getServletContext();
-        WebApplicationContext context=WebApplicationContextUtils.getWebApplicationContext(sc);
-        userService= context.getBean(UserService.class);
+        ServletContext sc = filterConfig.getServletContext();
+        WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(sc);
+        userService = context.getBean(UserService.class);
     }
 
     @Override

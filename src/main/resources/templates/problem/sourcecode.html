@@ -39,8 +39,8 @@
         <tbody class="text-center">
         <tr th:object="${solution}">
             <td th:text="*{id}"></td>
-            <td th:text="*{username}"></td>
-            <td th:text="*{problemId}"></td>
+            <td th:text="*{user.username}"></td>
+            <td th:text="*{problem.id}"></td>
             <td th:switch="*{result}">
                 <span th:case="'Accepted'" class="text-success font-weight-bold">Accepted</span>
                 <span th:case="'Compile Error'" class="text-muted">Compile Error</span>
@@ -50,7 +50,7 @@
             <td th:text="*{memory/1024}"></td>
             <td th:text="*{length}"></td>
             <td th:text="*{normalLanguage}"></td>
-            <td th:text="*{#dates.format(submitTime,'yyyy-MM-dd HH-mm-ss')}"></td>
+            <td th:text="*{normalSubmitTime}"></td>
         </tr>
         </tbody>
     </table>

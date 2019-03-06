@@ -1,7 +1,6 @@
 package com.jinmy.onlinejudge.util;
 
 import com.jinmy.onlinejudge.config.Config;
-import com.jinmy.onlinejudge.entity.Problem;
 import com.jinmy.onlinejudge.entity.Solution;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +9,16 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 public class Compiler extends SandboxApi {
-    protected Compiler(){}
     @Autowired
     private Config config;
+
+    protected Compiler() {
+    }
+
     /**
-     * @param filename   source file
+     * @param filename source file
      * @param solution
-     * @param lang       Language Code 0-5 ==>  c,cpp,java,py2,py3
+     * @param lang     Language Code 0-5 ==>  c,cpp,java,py2,py3
      */
     public void init(String filename, Solution solution, int lang) {
         super.init();
@@ -25,34 +27,34 @@ public class Compiler extends SandboxApi {
         max_cpu_time = 3000;
         run_dir = config.getSrc_dir() + solution.getId() + "/";
         max_real_time = 5000;
-        max_memory = 128*1024*1024;
-        max_stack=128*1024*1024;
+        max_memory = 128 * 1024 * 1024;
+        max_stack = 128 * 1024 * 1024;
         switch (lang) {
             case 0:
-                exe_path ="/usr/bin/gcc";
-                args=filename+" "+config.getCompile().getC().getArgs()+" -o "+run_dir+"main";
-                args=args.replaceAll(" "," --args=");
+                exe_path = "/usr/bin/gcc";
+                args = filename + " " + config.getCompile().getC().getArgs() + " -o " + run_dir + "main";
+                args = args.replaceAll(" ", " --args=");
                 break;
             case 1:
                 exe_path = "/usr/bin/g++";
-                args=filename+" -o "+run_dir+"main "+config.getCompile().getCpp().getArgs();
-                args=args.replaceAll(" "," --args=");
+                args = filename + " -o " + run_dir + "main " + config.getCompile().getCpp().getArgs();
+                args = args.replaceAll(" ", " --args=");
                 break;
             case 2:
                 exe_path = "/usr/bin/javac";
-                args=filename+" -d "+run_dir+" "+config.getCompile().getJava().getArgs();
-                args=args.replaceAll(" "," --args=");
-                max_memory =-1;
+                args = filename + " -d " + run_dir + " " + config.getCompile().getJava().getArgs();
+                args = args.replaceAll(" ", " --args=");
+                max_memory = -1;
                 break;
             case 3:
                 exe_path = "/usr/bin/python";
-                args=config.getCompile().getPython2().getArgs()+" "+filename;
-                args=args.replaceAll(" "," --args=");
+                args = config.getCompile().getPython2().getArgs() + " " + filename;
+                args = args.replaceAll(" ", " --args=");
                 break;
             case 4:
                 exe_path = "/usr/bin/python3";
-                args=config.getCompile().getPython3().getArgs()+" "+filename;
-                args=args.replaceAll(" "," --args=");
+                args = config.getCompile().getPython3().getArgs() + " " + filename;
+                args = args.replaceAll(" ", " --args=");
                 break;
         }
         output_path = run_dir + "compile";//compile output
