@@ -1,3 +1,11 @@
+<!--
+  ~ Copyright (c) 2019. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  -->
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -14,9 +22,11 @@
 <div class="container">
     <div class="row">
         <div class="col-9">
-            <form action="" class="form-inline">Search: <input type="text" class="form-control" name="search"><button class="btn">Search</button></form>
+            <form action="" class="form-inline">Search: <input class="form-control" name="search" type="text">
+                <button class="btn">Search</button>
+            </form>
             <ul class="list-group">
-                <li class="list-group-item card" th:each="problem,iterStat:${problems.content}" style="margin: 10px;">
+                <li class="list-group-item card" style="margin: 10px;" th:each="problem,iterStat:${problems.content}">
                     <div class="card-body">
                         <h4 class="card-title">
                             <a th:href="'/showproblem?id='+${problem.id}"
@@ -31,9 +41,9 @@
             </ul>
             <ul class="pagination">
                 <li class="page-item"><a class="page-link" th:href="@{${url}(page=${problems.number -1})}">Last</a></li>
-                <li th:each="i:${#numbers.sequence(problems.number-5>=0?problems.number-5:0 ,problems.number+5>=problems.totalPages? problems.totalPages-1:problems.number+5)}"
-                    th:class="'page-item'+${i==problems.number?' active':' '}">
-                    <a th:href="@{${url}(page=${i})}" th:text="${i+1}" class="page-link">1</a>
+                <li th:class="'page-item'+${i==problems.number?' active':' '}"
+                    th:each="i:${#numbers.sequence(problems.number-5>=0?problems.number-5:0 ,problems.number+5>=problems.totalPages? problems.totalPages-1:problems.number+5)}">
+                    <a class="page-link" th:href="@{${url}(page=${i})}" th:text="${i+1}">1</a>
                 </li>
                 <li class="page-item"><a class="page-link" th:href="@{${url}(page=${problems.number+1})}">Next</a></li>
             </ul>

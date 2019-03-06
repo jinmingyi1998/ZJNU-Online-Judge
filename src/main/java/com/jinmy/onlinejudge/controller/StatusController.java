@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2019. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+ * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+ * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+ * Vestibulum commodo. Ut rhoncus gravida arcu.
+ */
+
 package com.jinmy.onlinejudge.controller;
 
 import com.jinmy.onlinejudge.entity.Solution;
@@ -9,16 +17,12 @@ import com.jinmy.onlinejudge.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -43,42 +47,10 @@ public class StatusController {
                                        @RequestParam(value = "result", defaultValue = "") String result) {
         ModelAndView m = new ModelAndView("problem/status");
         page = Math.max(0, page);
-        List<Solution> solutionList = null;
         // receive username
-        if (username.length() > 0) {
-            session.setAttribute("status-username", username);
-        }
-        if ((username = (String) session.getAttribute("status-username")) != null) {
-            User user = userService.getUserByUsername(username);
-            if (user != null) {
-                solutionList = solutionService.allSolutionFilterByUser(solutionList, user);
-            }
-        }
-        //receive result
-        if (result.length() > 0) {
-            session.setAttribute("status-result", result);
-        }
-        if ((result = (String) session.getAttribute("status-result")) != null) {
-            solutionList = solutionService.allSolutionFilterByResult(solutionList, result);
-        }
-        //recieve problem
-        if (pid >= 0) {
-            session.setAttribute("status-pid", pid);
-        }
-        if ((pid = (Long) session.getAttribute("status-pid")) != null) {
-            solutionList = solutionService.allSolutionFilterByProblem(solutionList, problemService.getProblemById(pid));
-        }
-        if (solutionList == null) {
-            Page<Solution> solutionPage = solutionService.getSolutionPage(page, PAGE_SIZE);
-            m.addObject("solutions", solutionPage);
-        } else {
-            int _page = solutionList.size() / PAGE_SIZE;
-            if (solutionList.size() % PAGE_SIZE != 0)
-                _page++;
-            page = Math.min(page, _page);
-            Page<Solution> solutionPage = new PageImpl<>(solutionList, new PageRequest(page, PAGE_SIZE, Sort.Direction.DESC, "id"), solutionList.size());
-            m.addObject("solutions", solutionPage);
-        }
+        Page<Solution> solutions = solutionService.getStatus(userService.getUserByUsername(username),
+                problemService.getProblemById(pid), result, page);
+        m.addObject("solutions", solutions);
         return m;
     }
 

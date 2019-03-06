@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2019. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+ * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+ * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+ * Vestibulum commodo. Ut rhoncus gravida arcu.
+ */
+
 package com.jinmy.onlinejudge.service;
 
 import com.jinmy.onlinejudge.entity.CompileError;
@@ -13,7 +21,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,6 +28,7 @@ public class SolutionService {
     public static final String[] STATUS = {"Accepted", "Wrong Answer", "Compile Error",
             "Time Limit Exceed", "Memory Limit Exceed",
             "Runtime Error", "System Error"};
+    private final int PAGE_SIZE = 30;
     @Autowired
     UserService userService;
     @Autowired
@@ -36,10 +44,6 @@ public class SolutionService {
         Optional<Solution> solution = solutionRepository.findById(id);
         if (solution.isPresent()) {
             Solution s = solution.get();
-//            Optional<CompileError> ce = compileErrorRepository.findCompileErrorBySolution(s);
-//            if (ce.isPresent()) {
-//                s.setCe(ce.get());
-//            }
             return s;
         }
         return null;
@@ -50,62 +54,9 @@ public class SolutionService {
         return solutionRepository.save(solution);
     }
 
-    public List<Solution> allSolutionFilterByUser(List<Solution> solutionList, User user) {
-        if (solutionList == null) {
-            solutionList = solutionRepository.findAllByUser(user);
-//            for (Solution s : solutionList) {
-//                Optional<CompileError> ce = compileErrorRepository.findCompileErrorBySolution(s);
-//                if (ce.isPresent()) {
-//                    s.setCe(ce.get());
-//                }
-//            }
-        }
-        for (int j = solutionList.size() - 1; j >= 0; j--) {
-            if (solutionList.get(j).getUser().getId() != user.getId())
-                solutionList.remove(j);
-        }
-        return solutionList;
-    }
 
-    public List<Solution> allSolutionFilterByResult(List<Solution> solutionList, String result) {
-        for (int i = 0; i < SolutionService.STATUS.length; i++) {
-            if (result.equals(SolutionService.STATUS[i])) {
-                if (solutionList == null) {
-                    solutionList = solutionRepository.findAllByResult(result);
-//                    for (Solution s : solutionList) {
-//                        Optional<CompileError> ce = compileErrorRepository.findCompileErrorBySolution(s.getId());
-//                        if (ce.isPresent()) {
-//                            s.setCe(ce.get());
-//                        }
-//                    }
-                } else {
-                    for (int j = solutionList.size() - 1; j >= 0; j--) {
-                        if (!solutionList.get(j).getResult().equals(result))
-                            solutionList.remove(j);
-                    }
-                }
-                return solutionList;
-            }
-        }
-        return solutionList;
-    }
-
-    public List<Solution> allSolutionFilterByProblem(List<Solution> solutionList, Problem problem) {
-        if (null == solutionList) {
-            solutionList = solutionRepository.findAllByProblem(problem);
-//            for (Solution s : solutionList) {
-//                Optional<CompileError> ce = compileErrorRepository.findCompileErrorBySolution(s.getId());
-//                if (ce.isPresent()) {
-//                    s.setCe(ce.get());
-//                }
-//            }
-        } else {
-            for (int i = solutionList.size() - 1; i >= 0; i--) {
-                if (solutionList.get(i).getProblem().getId() != problem.getId())
-                    solutionList.remove(i);
-            }
-        }
-        return solutionList;
+    public Page<Solution> getStatus(User user, Problem problem, String result, int page) {
+        return solutionRepository.findAllByUserAndProblemAndResult(user, problem, result, PageRequest.of(page, PAGE_SIZE));
     }
 
     /**
@@ -113,7 +64,7 @@ public class SolutionService {
      *
      * @param page
      * @param size
-     * @param id   user id
+     * @param user
      * @return a page
      */
     public Page<Solution> getSolutionPage(int page, int size, User user) {

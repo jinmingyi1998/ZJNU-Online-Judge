@@ -1,7 +1,15 @@
+<!--
+  ~ Copyright (c) 2019. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  -->
+
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="header">
+<html lang="en" th:fragment="header" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta content="text/html;charset=UTF-8" http-equiv="Content-Type">
     <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
     <link rel="stylesheet" th:href="@{/css/font-awesome.css}">
     <script th:src="@{/js/jquery-3.2.1.min.js}"></script>
@@ -22,9 +30,9 @@
             $(".remove-btn").click(function () {
                 if (confirm("You are going to delete problem " + $(this).attr("id"))) {
                     $.ajax({
-                        type:"delete",
+                        type: "delete",
                         url: "/admin/delete/" + $(this).attr("id"),
-                        success:function () {
+                        success: function () {
                             location.reload();
                         }
                     });
@@ -35,8 +43,10 @@
 </head>
 <body>
 <div class="container">
-    <a href="/admin/insert" class="btn btn-success">Add a problem</a>
-    <form action="" class="form-inline">Search: <input type="text" class="form-control" name="search"><button class="btn">Search</button></form>
+    <a class="btn btn-success" href="/admin/insert">Add a problem</a>
+    <form action="" class="form-inline">Search: <input class="form-control" name="search" type="text">
+        <button class="btn">Search</button>
+    </form>
     <ul class="list-group" th:each="problem,proStat:${problems.content}">
         <li class="list-group-item list-group-item-action">
             <span th:text="${problem.id}"></span>
@@ -46,9 +56,9 @@
     </ul>
     <div class="container">
         <ul class="pagination">
-            <li th:each="i:${#numbers.sequence(problems.number-5>0?problems.number-5:0 ,problems.number+5>problems.totalPages-1? problems.totalPages-1:problems.number+5)}"
-                th:class="'page-item'+${i==problems.number?' active':' '}">
-                <a th:href="@{${url}(page=${i})}" th:text="${i+1}" class="page-link">1</a>
+            <li th:class="'page-item'+${i==problems.number?' active':' '}"
+                th:each="i:${#numbers.sequence(problems.number-5>0?problems.number-5:0 ,problems.number+5>problems.totalPages-1? problems.totalPages-1:problems.number+5)}">
+                <a class="page-link" th:href="@{${url}(page=${i})}" th:text="${i+1}">1</a>
             </li>
         </ul>
     </div>

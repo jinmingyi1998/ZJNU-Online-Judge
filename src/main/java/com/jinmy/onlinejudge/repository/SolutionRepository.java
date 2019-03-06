@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2019. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+ * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+ * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+ * Vestibulum commodo. Ut rhoncus gravida arcu.
+ */
+
 package com.jinmy.onlinejudge.repository;
 
 import com.jinmy.onlinejudge.entity.Problem;
@@ -29,4 +37,6 @@ public interface SolutionRepository extends JpaRepository<Solution, Long> {
     List<Solution> findAllByProblem(Problem problem);
 
     Page<Solution> findAllByResult(Pageable pageable, String result);
+
+    Page<Solution> findAllByUserAndProblemAndResult(User user, Problem problem, String result, Pageable pageable);
 }

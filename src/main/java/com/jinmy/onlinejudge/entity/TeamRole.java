@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2019. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+ * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+ * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+ * Vestibulum commodo. Ut rhoncus gravida arcu.
+ */
+
 package com.jinmy.onlinejudge.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -30,11 +38,13 @@ public class TeamRole {
     @ManyToOne
     private User user;
     private Role role;
+
     public TeamRole(Team team, User user, Role role) {
         this.team = team;
         this.user = user;
         this.role = role;
     }
+
     public TeamRole() {
 
     }
