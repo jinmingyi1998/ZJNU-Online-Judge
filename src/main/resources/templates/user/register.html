@@ -55,7 +55,20 @@
     <script>
         var pattern = new RegExp("^[a-zA-Z0-9_]{6,15}$");
         $(function () {
-            $(".alert").hide();
+            $("#submit-btn").click(function () {
+                $.post({
+                    data:$("form").serialize(),
+                    url:"/register",
+                    success:function (data) {
+                        if (data == "success") {
+                            location.href="/";
+                        }else{
+                            $("#message").text(data);
+                        }
+                    }
+                });
+            });
+
         });
         function checkInputUsername(){
             var usr=$("#inputUsername").val();
@@ -86,8 +99,8 @@
                 return false;
             }
         }
-        function checkInput() {
-            return checkInputPassword()&&checkInputUsername();
+        function checkInput() {//always false
+            return checkInputPassword()&&checkInputUsername()&&false;
         }
     </script>
 </head>
@@ -95,24 +108,25 @@
 <div class="container text-center">
     <form class="form-signin" method="post" action="/register">
         <h1 class="h3 mb-3 font-weight-normal">Sign Up</h1>
+        <div class="alert alert-danger" id="message" style="display: none"></div>
         <label for="inputUsername" class="sr-only">Username</label>
         <input type="text" id="inputUsername" name="username" class="form-control" placeholder="Username" required="" autofocus="" onchange="checkInputUsername()" pattern="\w{6,20}">
-        <div id="usr_wrg" class="alert alert-light fade show">May only contain alphanumeric characters or underline,and cannot begin or end with a underline, 6-15 characters</div>
+        <div id="usr_wrg" class="alert alert-light" style="display:none;">May only contain alphanumeric characters or underline,and cannot begin or end with a underline, 6-15 characters</div>
         <label for="inputName" class="sr-only">Name</label>
         <input type="text" id="inputName" class="form-control" placeholder="Name" name="name" required="">
         <label for="inputEmail" class="sr-only">Email</label>
         <input type="email" id="inputEmail" class="form-control" placeholder="Email" name="email" required>
         <label for="inputPassword" class="sr-only">Password</label>
         <input type="password" id="inputPassword" class="form-control" placeholder="Password" name="password" required pattern="\w{6,16}">
-        <div id="pwd_wrg" class="alert alert-light">May only contain alphanumeric characters or underline,and cannot begin or end with a underline, 6-15 characters</div>
+        <div id="pwd_wrg" class="alert alert-light" style="display: none">May only contain alphanumeric characters or underline,and cannot begin or end with a underline, 6-15 characters</div>
         <label for="inputPassword2" class="sr-only">Repeat Password</label>
         <input type="password" id="inputPassword2" class="form-control" placeholder="Repeat Password" required="" onchange="checkInputPassword()">
-        <div id="pwd2_wrg" class="alert alert-danger">Password are different</div>
+        <div id="pwd2_wrg" class="alert alert-danger" style="display: none">Password are different</div>
         <label for="inputSchool" class="sr-only">School</label>
         <input type="text" id="inputSchool" class="form-control" placeholder="School" name="school">
         <label for="inputClass" class="sr-only">Class</label>
         <input type="text" id="inputClass" class="form-control" placeholder="Class" name="cls">
-        <input class="btn btn-lg btn-primary btn-block" type="submit" value="Sign up" onclick="checkInput()">
+        <input class="btn btn-lg btn-primary btn-block" type="submit" id="submit-btn" value="Sign up" onclick="checkInput();return false">
     </form>
 </div>
 

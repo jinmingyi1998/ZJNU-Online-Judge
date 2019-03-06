@@ -1,9 +1,6 @@
 package com.jinmy.onlinejudge.util;
 
-import com.jinmy.onlinejudge.config.Config;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * All directory value end with '/'
@@ -28,6 +25,9 @@ public abstract class SandboxApi {
     protected String script;
     protected String seccomp;
 
+    protected SandboxApi() {
+    }
+
     public void init() {
         max_cpu_time = 1000;
         max_real_time = max_cpu_time * 2;
@@ -37,8 +37,5 @@ public abstract class SandboxApi {
         max_process_number = 65500;
         max_output_size = 1500 * 1024;
         args = " ";
-    }
-
-    protected SandboxApi() {
     }
 }

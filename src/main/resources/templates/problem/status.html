@@ -4,7 +4,8 @@
     <th:block th:insert="~{fragment/header :: header}"></th:block>
     <meta charset="UTF-8">
     <title th:text="Status"></title>
-    <script src="/js/StatusInModal.js"></script>
+    <script th:src="@{/js/urlcontrol.js}" language="JavaScript"></script>
+    <script th:src="@{/js/StatusInModal.js}" language="JavaScript"></script>
     <style>
         table {
             border-radius: 0.5rem;
@@ -14,10 +15,23 @@
             padding: 0.5rem;
         }
     </style>
+    <script language="JavaScript">
+        $(function () {
+            $(".page-link").click(function () {
+                if ($(this).attr("id")=="top-page"){
+                    query["page"]="1";
+                }else if($(this).attr("id")=="next-page"){
+                    query.page="[[]]"
+                }
+
+            });
+        });
+
+    </script>
 </head>
 <body>
 <div class="container" height="100%">
-    <form class="container form-inline" action="" method="get">
+    <form class="container form-inline">
         <label for="username">
             Username:</label><input type="text" id="username" class="form-control" name="username">
         Problem: <input type="text" class="form-control" name="problem">
@@ -30,7 +44,7 @@
         <option value="Compile Error">Compile Error</option>
         <option value="Runtime Error">Runtime Error</option>
     </select>
-        <input type="submit" class="btn btn-primary" value="Go">
+        <input type="submit" class="btn btn-primary" value="Go" onclick="return false">
     </form>
     <table class="table-sm table-hover table-responsive-xl table-bordered table-light container-fluid"
            style="opacity: 0.8">
@@ -50,8 +64,8 @@
         <tbody class="text-center">
         <tr th:each="solution,iter:${solutions}" th:object="${solution}">
             <td th:text="*{id}"></td>
-            <td th:text="*{username}"></td>
-            <td><a th:href="'/showproblem?id='+*{problemId}" th:text="*{problemId}"></a></td>
+            <td th:text="*{user.username}"></td>
+            <td><a th:href="'/showproblem?id='+*{problem.id}" th:text="*{problem.id}"></a></td>
             <td th:switch="*{result}" th:id="*{id}" class="view-code">
                 <span th:case="'Accepted'" class="text-success font-weight-bold">Accepted</span>
                 <span th:case="'Compile Error'" class="text-muted" th:text="*{result}"></span>
@@ -69,11 +83,9 @@
     </table>
     <div class="container text-center">
         <ul class="pagination">
-            <li class="page-item"><a class="page-link" th:href="@{${url}(page=0)}">Top</a></li>
-            <li class="page-item"><a class="page-link" th:href="@{${url}(page=${solutions.number -1})}">Last</a></li>
-            <li class="page-item"><a class="page-link"
-                                     th:href="@{${url}(page=${solutions.isLast()?solutions.number:solutions.number+1})}">Next</a>
-            </li>
+            <li class="page-item"><a class="page-link" id="top-page">Top</a></li>
+            <li class="page-item"><a class="page-link" id="last-page">Last</a></li>
+            <li class="page-item"><a class="page-link" id="next-page">Next</a></li>
         </ul>
     </div>
 </div>
@@ -111,8 +123,10 @@
                     <td id="modal-submit-time"></td>
                     </tbody>
                 </table>
-                <button class="btn btn-sm share-code btn-danger" id="modal-share" th:if="${session.currentUser!=null}">Not Shared</button>
-                <div id="modal-ce"></div>
+                <button class="btn btn-sm share-code btn-danger" id="modal-share" th:if="${session.currentUser!=null}">
+                    Not Shared
+                </button>
+                <pre id="modal-ce"></pre>
                 <pre class="prettyprint"><code id="source_code"></code></pre>
             </div>
             <div class="modal-footer">

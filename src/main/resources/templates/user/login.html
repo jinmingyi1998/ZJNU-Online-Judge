@@ -4,6 +4,24 @@
     <th:block th:insert="~{fragment/header :: header}"></th:block>
     <meta charset="UTF-8">
     <title>Login</title>
+    <script>
+        $(function () {
+            $("#submit-btn").click(function () {
+                $.post({
+                    url: "/login",
+                    data: $("form").serialize(),
+                    success: function (data) {
+                        if (data == "success") {
+                            location=window.document.referrer;
+                        } else {
+                            $("#message").text(data);
+                            $("#message").show();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
     <style>
         html, body {
             height: 100%;
@@ -49,22 +67,21 @@
             border-top-left-radius: 0;
             border-top-right-radius: 0;
         }
-
     </style>
 </head>
 <body>
 
 
 <div class="container text-center">
-    <span th:text="${message}" class="text-warning font-weight-bold "></span>
-    <form class="form-signin" method="post" action="/login">
+    <form class="form-signin">
         <h1 class="h3 mb-3 font-weight-normal">Sign in</h1>
+        <div class="alert alert-warning" id="message" style="display: none"></div>
         <label for="inputUsername" class="sr-only">Username</label>
         <input type="text" id="inputUsername" name="username" class="form-control" placeholder="Username" required=""
                autofocus>
         <label for="inputPassword" class="sr-only">Password</label>
         <input type="password" id="inputPassword" class="form-control" placeholder="Password" name="password" required>
-        <input class="btn btn-lg btn-primary btn-block" type="submit" value="Sign in">
+        <input class="btn btn-lg btn-primary btn-block" id="submit-btn" type="submit" value="Sign in" onclick="return false" >
     </form>
 </div>
 

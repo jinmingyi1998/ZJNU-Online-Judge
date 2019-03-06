@@ -8,9 +8,13 @@ $(function () {
                     var solution = data;
                     $(".prettyprint").attr("class", "prettyprint");
                     $("#modal-id").text(solution.id);
-                    $("#modal-ce").text(solution.ce);
-                    $("#modal-username").text(solution.username);
-                    $("#modal-problem").text(solution.problemId);
+                    try {
+                        $("#modal-ce").text(solution.ce.info);
+                    }catch (e) {
+                        ;
+                    }
+                    $("#modal-username").text(solution.user.username);
+                    $("#modal-problem").text(solution.problem['id']);
                     $("#modal-result").text(solution.result);
                     if (solution.result == "Accepted") {
                         $("#modal-result").attr("class", "text-success font weight-bold");

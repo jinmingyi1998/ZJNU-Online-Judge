@@ -3,6 +3,7 @@ package com.jinmy.onlinejudge.controller;
 import com.jinmy.onlinejudge.entity.Solution;
 import com.jinmy.onlinejudge.entity.User;
 import com.jinmy.onlinejudge.repository.CompileErrorRepository;
+import com.jinmy.onlinejudge.service.ProblemService;
 import com.jinmy.onlinejudge.service.SolutionService;
 import com.jinmy.onlinejudge.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,8 @@ public class StatusController {
     @Autowired
     HttpSession session;
     @Autowired
+    ProblemService problemService;
+    @Autowired
     CompileErrorRepository compileErrorRepository;
 
     @GetMapping
@@ -48,7 +51,7 @@ public class StatusController {
         if ((username = (String) session.getAttribute("status-username")) != null) {
             User user = userService.getUserByUsername(username);
             if (user != null) {
-                solutionList = solutionService.allSolutionFilterByUser(solutionList, user.getId());
+                solutionList = solutionService.allSolutionFilterByUser(solutionList, user);
             }
         }
         //receive result
@@ -63,7 +66,7 @@ public class StatusController {
             session.setAttribute("status-pid", pid);
         }
         if ((pid = (Long) session.getAttribute("status-pid")) != null) {
-            solutionList = solutionService.allSolutionFilterByProblem(solutionList, pid);
+            solutionList = solutionService.allSolutionFilterByProblem(solutionList, problemService.getProblemById(pid));
         }
         if (solutionList == null) {
             Page<Solution> solutionPage = solutionService.getSolutionPage(page, PAGE_SIZE);
@@ -88,7 +91,7 @@ public class StatusController {
             m.addObject("solution", solution);
             return m;
         }
-        if (user != null && user.getId() == solution.getUserId()) {
+        if (user != null && user.getId() == solution.getUser().getId()) {
             m.addObject("solution", solution);
             return m;
         }
@@ -103,17 +106,25 @@ public class StatusController {
     @PostMapping("/view/{id}")
     public Solution restfulShowSourceCode(@PathVariable(value = "id") Long id, HttpServletResponse response) {
         Solution solution = solutionService.getSolutionById(id);
-        User user = (User) session.getAttribute("currentUser");
-        if (solution != null && solution.getShare()) {
+        try {
+            User user = (User) session.getAttribute("currentUser");
+            if (solution != null && solution.getShare()) {
+                return solution;
+            }
+            if (user != null && user.getId() == solution.getUser().getId()) {
+                return solution;
+            }
+            solution.setSource("This Source Code Is Not Shared!");
+            solution.setCe(null);
             return solution;
+        } catch (Exception e) {
+            try {
+                response.sendRedirect("/404");
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
-        if (user != null && user.getId() == solution.getUserId()) {
-            return solution;
-        }
-        solution.setSource("This Source Code Is Not Shared!");
-        solution.setCe("");
-        solution.setUsername(userService.getUserById(solution.getUserId()).getUsername());
-        return solution;
+        return null;
     }
 
     @PostMapping("/share/{id}")

@@ -12,7 +12,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Page<User> findByNameLike(String name, Pageable pageable);
 
-    Optional<User> findByUsernameAndPassword(String username,String password);
+    Optional<User> findByUsernameAndPassword(String username, String password);
 
     void deleteById(Long id);
 

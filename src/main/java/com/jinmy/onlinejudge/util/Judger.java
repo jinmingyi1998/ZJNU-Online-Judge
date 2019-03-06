@@ -3,7 +3,6 @@ package com.jinmy.onlinejudge.util;
 import com.jinmy.onlinejudge.config.Config;
 import com.jinmy.onlinejudge.entity.Problem;
 import com.jinmy.onlinejudge.entity.Solution;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,11 +10,11 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class Judger extends SandboxApi {
-    protected Judger() {
-    }
-
     @Autowired
     private Config config;
+
+    protected Judger() {
+    }
 
     /**
      * @param filename   source file

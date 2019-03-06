@@ -1,13 +1,13 @@
 package com.jinmy.onlinejudge.service;
 
 import com.jinmy.onlinejudge.entity.CompileError;
+import com.jinmy.onlinejudge.entity.Problem;
 import com.jinmy.onlinejudge.entity.Solution;
 import com.jinmy.onlinejudge.entity.User;
 import com.jinmy.onlinejudge.repository.CompileErrorRepository;
 import com.jinmy.onlinejudge.repository.SolutionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -18,15 +18,15 @@ import java.util.Optional;
 
 @Service
 public class SolutionService {
+    public static final String[] STATUS = {"Accepted", "Wrong Answer", "Compile Error",
+            "Time Limit Exceed", "Memory Limit Exceed",
+            "Runtime Error", "System Error"};
     @Autowired
     UserService userService;
     @Autowired
     private SolutionRepository solutionRepository;
     @Autowired
     private CompileErrorRepository compileErrorRepository;
-    public static final String[] STATUS = {"Accepted", "Wrong Answer", "Compile Error",
-            "Time Limit Exceed", "Memory Limit Exceed",
-            "Runtime Error", "System Error"};
 
     /**
      * @param id solution id
@@ -36,11 +36,10 @@ public class SolutionService {
         Optional<Solution> solution = solutionRepository.findById(id);
         if (solution.isPresent()) {
             Solution s = solution.get();
-            Optional<CompileError> ce = compileErrorRepository.findCompileErrorBySolution(id);
-            if (ce.isPresent()) {
-                s.setCe(ce.get().getInfo());
-            }
-            s.setUsername(userService.getUserById(s.getUserId()).getUsername());
+//            Optional<CompileError> ce = compileErrorRepository.findCompileErrorBySolution(s);
+//            if (ce.isPresent()) {
+//                s.setCe(ce.get());
+//            }
             return s;
         }
         return null;
@@ -51,19 +50,18 @@ public class SolutionService {
         return solutionRepository.save(solution);
     }
 
-    public List<Solution> allSolutionFilterByUser(List<Solution> solutionList, Long id) {
+    public List<Solution> allSolutionFilterByUser(List<Solution> solutionList, User user) {
         if (solutionList == null) {
-            solutionList = solutionRepository.findAllByUserId(id);
-            for (Solution s : solutionList) {
-                Optional<CompileError> ce = compileErrorRepository.findCompileErrorBySolution(s.getId());
-                if (ce.isPresent()) {
-                    s.setCe(ce.get().getInfo());
-                }
-                s.setUsername(userService.getUserById(s.getUserId()).getUsername());
-            }
+            solutionList = solutionRepository.findAllByUser(user);
+//            for (Solution s : solutionList) {
+//                Optional<CompileError> ce = compileErrorRepository.findCompileErrorBySolution(s);
+//                if (ce.isPresent()) {
+//                    s.setCe(ce.get());
+//                }
+//            }
         }
         for (int j = solutionList.size() - 1; j >= 0; j--) {
-            if (solutionList.get(j).getUserId() != id)
+            if (solutionList.get(j).getUser().getId() != user.getId())
                 solutionList.remove(j);
         }
         return solutionList;
@@ -74,13 +72,12 @@ public class SolutionService {
             if (result.equals(SolutionService.STATUS[i])) {
                 if (solutionList == null) {
                     solutionList = solutionRepository.findAllByResult(result);
-                    for (Solution s : solutionList) {
-                        Optional<CompileError> ce = compileErrorRepository.findCompileErrorBySolution(s.getId());
-                        if (ce.isPresent()) {
-                            s.setCe(ce.get().getInfo());
-                        }
-                        s.setUsername(userService.getUserById(s.getUserId()).getUsername());
-                    }
+//                    for (Solution s : solutionList) {
+//                        Optional<CompileError> ce = compileErrorRepository.findCompileErrorBySolution(s.getId());
+//                        if (ce.isPresent()) {
+//                            s.setCe(ce.get());
+//                        }
+//                    }
                 } else {
                     for (int j = solutionList.size() - 1; j >= 0; j--) {
                         if (!solutionList.get(j).getResult().equals(result))
@@ -93,19 +90,18 @@ public class SolutionService {
         return solutionList;
     }
 
-    public List<Solution> allSolutionFilterByProblem(List<Solution> solutionList, Long pid) {
+    public List<Solution> allSolutionFilterByProblem(List<Solution> solutionList, Problem problem) {
         if (null == solutionList) {
-            solutionList = solutionRepository.findAllByProblemId(pid);
-            for (Solution s : solutionList) {
-                Optional<CompileError> ce = compileErrorRepository.findCompileErrorBySolution(s.getId());
-                if (ce.isPresent()) {
-                    s.setCe(ce.get().getInfo());
-                }
-                s.setUsername(userService.getUserById(s.getUserId()).getUsername());
-            }
+            solutionList = solutionRepository.findAllByProblem(problem);
+//            for (Solution s : solutionList) {
+//                Optional<CompileError> ce = compileErrorRepository.findCompileErrorBySolution(s.getId());
+//                if (ce.isPresent()) {
+//                    s.setCe(ce.get());
+//                }
+//            }
         } else {
             for (int i = solutionList.size() - 1; i >= 0; i--) {
-                if (solutionList.get(i).getProblemId() != pid)
+                if (solutionList.get(i).getProblem().getId() != problem.getId())
                     solutionList.remove(i);
             }
         }
@@ -120,13 +116,13 @@ public class SolutionService {
      * @param id   user id
      * @return a page
      */
-    public Page<Solution> getSolutionPage(int page, int size, Long id) {
+    public Page<Solution> getSolutionPage(int page, int size, User user) {
         Sort _sort = new Sort(Sort.Direction.DESC, "submitTime");
-        Page<Solution> solutionPage = solutionRepository.findAllByUserId(new PageRequest(page, size, _sort), id);
+        Page<Solution> solutionPage = solutionRepository.findAllByUser(new PageRequest(page, size, _sort), user);
         for (Solution s : solutionPage.getContent()) {
             if (s.getResult().equals("Compile Error")) {
-                Optional<CompileError> ce = compileErrorRepository.findCompileErrorBySolution(s.getId());
-                if (ce.isPresent()) s.setCe(ce.get().getInfo());
+                Optional<CompileError> ce = compileErrorRepository.findCompileErrorBySolution(s);
+                if (ce.isPresent()) s.setCe(ce.get());
             }
         }
         return solutionPage;
@@ -142,13 +138,12 @@ public class SolutionService {
     public Page<Solution> getSolutionPage(int page, int size) {
         Sort _sort = new Sort(Sort.Direction.DESC, "id");
         Page<Solution> solutionPage = solutionRepository.findAll(new PageRequest(page, size, _sort));
-        for (Solution s : solutionPage.getContent()) {
-            if (s.getResult().equals("Compile Error")) {
-                Optional<CompileError> ce = compileErrorRepository.findCompileErrorBySolution(s.getId());
-                if (ce.isPresent()) s.setCe(ce.get().getInfo());
-            }
-            s.setUsername(userService.getUserById(s.getUserId()).getUsername());
-        }
+//        for (Solution s : solutionPage.getContent()) {
+//            if (s.getResult().equals("Compile Error")) {
+//                Optional<CompileError> ce = compileErrorRepository.findCompileErrorBySolution(s.getId());
+//                if (ce.isPresent()) s.setCe(ce.get());
+//            }
+//        }
         return solutionPage;
     }
 

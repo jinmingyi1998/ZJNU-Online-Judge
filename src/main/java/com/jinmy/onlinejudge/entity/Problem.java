@@ -1,18 +1,20 @@
 package com.jinmy.onlinejudge.entity;
 
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.List;
+
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Log4j2
 @Data
 @Entity
 public class Problem {
-    protected Problem() {
-    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,11 +39,54 @@ public class Problem {
     @Column(nullable = false, columnDefinition = "int default 65536")
     private Integer memoryLimit;
     @Column(nullable = false)
-    private Boolean active=false;
+    private Boolean active = false;
     @Column(nullable = false, columnDefinition = "int default 0")
-    private Integer submit=0;
+    private Integer submit = 0;
     @Column(nullable = false, columnDefinition = "int default 0")
-    private Integer accepted=0;
+    private Integer accepted = 0;
+    @JsonIgnore
+    @ManyToMany
+    private List<Tag> tags;
+    @JsonIgnore
+    @OneToMany(mappedBy = "problem")
+    private List<ProblemComment> problemComments;
+    @JsonIgnore
+    @OneToMany(mappedBy = "problem")
+    private List<Solution> solutions;
+    protected Problem() {
+    }
+
+    public Problem(String title, String description, String input, String output, String sampleInput, String sampleOutput, String hint, String source, Integer timeLimit, Integer memoryLimit) {
+        this.title = title;
+        this.description = description;
+        this.input = input;
+        this.output = output;
+        this.sampleInput = sampleInput;
+        this.sampleOutput = sampleOutput;
+        this.hint = hint;
+        this.source = source;
+        this.timeLimit = timeLimit;
+        this.memoryLimit = memoryLimit;
+        accepted = 0;
+        submit = 0;
+        active = false;
+    }
+
+    public Problem(String title, String description, String input, String output, String sampleInput, String sampleOutput, String hint, String source, Integer timeLimit, Integer memoryLimit, Boolean active) {
+        this.title = title;
+        this.description = description;
+        this.input = input;
+        this.output = output;
+        this.sampleInput = sampleInput;
+        this.sampleOutput = sampleOutput;
+        this.hint = hint;
+        this.source = source;
+        this.timeLimit = timeLimit;
+        this.memoryLimit = memoryLimit;
+        this.active = active;
+        accepted = 0;
+        submit = 0;
+    }
 
     @Override
     public String toString() {
@@ -61,38 +106,6 @@ public class Problem {
                 ", submit=" + submit +
                 ", accepted=" + accepted +
                 '}';
-    }
-
-    public Problem(String title, String description, String input, String output, String sampleInput, String sampleOutput, String hint, String source, Integer timeLimit, Integer memoryLimit) {
-        this.title = title;
-        this.description = description;
-        this.input = input;
-        this.output = output;
-        this.sampleInput = sampleInput;
-        this.sampleOutput = sampleOutput;
-        this.hint = hint;
-        this.source = source;
-        this.timeLimit = timeLimit;
-        this.memoryLimit = memoryLimit;
-        accepted=0;
-        submit=0;
-        active=false;
-    }
-
-    public Problem(String title, String description, String input, String output, String sampleInput, String sampleOutput, String hint, String source, Integer timeLimit, Integer memoryLimit, Boolean active) {
-        this.title = title;
-        this.description = description;
-        this.input = input;
-        this.output = output;
-        this.sampleInput = sampleInput;
-        this.sampleOutput = sampleOutput;
-        this.hint = hint;
-        this.source = source;
-        this.timeLimit = timeLimit;
-        this.memoryLimit = memoryLimit;
-        this.active = active;
-        accepted=0;
-        submit=0;
     }
 
     public String getRatio() {

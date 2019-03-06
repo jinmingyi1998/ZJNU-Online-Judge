@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -61,14 +60,14 @@ public class AdminController {
         return m;
     }
 
-    @PostMapping("/edit/{pid}")
+    @PutMapping("/edit/{pid}")
     public ModelAndView editProblemAction(Problem problem, @PathVariable(value = "pid") Long id, HttpServletResponse response) {
         problem.setId(id);
         problemService.updateProblem(problem);
         return editProblem(id, response);
     }
 
-    @PostMapping("/delete/{pid}")
+    @DeleteMapping("/delete/{pid}")
     public void deleteProblem(@PathVariable(value = "pid") Long id) {
         problemService.delete(id);
     }
