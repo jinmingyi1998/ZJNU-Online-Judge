@@ -1,8 +1,16 @@
+<!--
+  ~ Copyright (c) 2019. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  -->
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Insert</title>
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta content="text/html;charset=UTF-8" http-equiv="Content-Type">
     <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
     <link rel="stylesheet" th:href="@{/css/font-awesome.css}">
     <script th:src="@{/js/jquery-3.2.1.min.js}"></script>
@@ -14,38 +22,38 @@
     <div class="alert alert-info">支持HTML，MathJax</div>
     <form action="" method="post">
         <div class="form-group">
-            Title:<input type="text" class="form-control" name="title">
+            Title:<input class="form-control" name="title" type="text">
         </div>
         <div class="form-group">
-            Time Limit(ms):<input type="number" class="form-control" name="timeLimit" value="1000">
+            Time Limit(ms):<input class="form-control" name="timeLimit" type="number" value="1000">
         </div>
         <div class="form-group">
-            Memory Limit(Bytes):<input type="number" class="form-control" name="memoryLimit" value="65536000">
+            Memory Limit(Bytes):<input class="form-control" name="memoryLimit" type="number" value="65536000">
         </div>
 
         <div class="form-group">
-            Description: <textarea class="form-control" name="description" cols="35" rows="15"></textarea>
+            Description: <textarea class="form-control" cols="35" name="description" rows="15"></textarea>
         </div>
         <div class="form-group">
-            Input: <textarea name="input" class="form-control" cols="35" rows="10"></textarea>
+            Input: <textarea class="form-control" cols="35" name="input" rows="10"></textarea>
         </div>
         <div class="form-group">
-            Output: <textarea name="output" class="form-control" cols="35" rows="10"></textarea>
+            Output: <textarea class="form-control" cols="35" name="output" rows="10"></textarea>
         </div>
         <div class="form-group">
-            Sample Input: <textarea name="sampleInput" class="form-control" cols="35" rows="10"></textarea>
+            Sample Input: <textarea class="form-control" cols="35" name="sampleInput" rows="10"></textarea>
         </div>
         <div class="form-group">
-            Sample Output: <textarea name="sampleOutput" class="form-control" cols="35" rows="10"></textarea>
+            Sample Output: <textarea class="form-control" cols="35" name="sampleOutput" rows="10"></textarea>
         </div>
         <div class="form-group">
-            Hint: <textarea name="hint" class="form-control" cols="35" rows="5"></textarea>
+            Hint: <textarea class="form-control" cols="35" name="hint" rows="5"></textarea>
         </div>
         <div class="form-group">
-            Source: <textarea name="source" class="form-control" cols="35" rows="5"></textarea>
+            Source: <textarea class="form-control" cols="35" name="source" rows="5"></textarea>
         </div>
         <div class="form-group">
-            <input type="submit" class="btn btn-primary">
+            <input class="btn btn-primary" type="submit">
         </div>
     </form>
 </div>

@@ -1,11 +1,19 @@
+<!--
+  ~ Copyright (c) 2019. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  -->
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:insert="~{fragment/header :: header}"></th:block>
     <meta charset="UTF-8">
     <title th:text="Status"></title>
-    <script th:src="@{/js/urlcontrol.js}" language="JavaScript"></script>
-    <script th:src="@{/js/StatusInModal.js}" language="JavaScript"></script>
+    <script language="JavaScript" th:src="@{/js/urlcontrol.js}"></script>
+    <script language="JavaScript" th:src="@{/js/StatusInModal.js}"></script>
     <style>
         table {
             border-radius: 0.5rem;
@@ -15,28 +23,37 @@
             padding: 0.5rem;
         }
     </style>
-    <script language="JavaScript">
+    <script language="JavaScript" th:inline="javascript">
         $(function () {
             $(".page-link").click(function () {
-                if ($(this).attr("id")=="top-page"){
-                    query["page"]="1";
-                }else if($(this).attr("id")=="next-page"){
-                    query.page="[[]]"
+                if ($(this).attr("id") == "top-page") {
+                    query["page"] = "1";
+                } else if ($(this).attr("id") == "next-page") {
+                    query.page = "[[${solutions.number}]]" + 1;
+                } else if ($(this).attr("id") == "last-page") {
+                    query.page = "[[${solutions.number}]]" - 1;
                 }
-
+                url = location.href + "?username=" + query.username + "&problem=" + query.problem + "&result=" + query.result + "&page=" + query.page;
+                location.href = url;
+            });
+            $("#search-submit").click(function () {
+                query.username = $("#search-username").val();
+                query.problem = $("#search-problem").val();
+                query.result = $("#search-result").val();
+                url = location.href + "?username=" + query.username + "&problem=" + query.problem + "&result=" + query.result + "&page=" + query.page;
+                location.href = url;
             });
         });
-
     </script>
 </head>
 <body>
 <div class="container" height="100%">
+    <div th:text="${solutions.number}"></div>
     <form class="container form-inline">
-        <label for="username">
-            Username:</label><input type="text" id="username" class="form-control" name="username">
-        Problem: <input type="text" class="form-control" name="problem">
-        Result:<select name="result" class="form-control">
-        <option value="" selected>All</option>
+        Username:<input class="form-control" id="search-username" name="username" type="text">
+        Problem: <input class="form-control" id="search-problem" name="problem" type="text">
+        Result:<select class="form-control" id="search-result" name="result">
+        <option selected value="">All</option>
         <option value="Accepted">Accepted</option>
         <option value="Wrong Answer">Wrong Answer</option>
         <option value="Time Limit Exceed">Time Limit Exceed</option>
@@ -44,7 +61,7 @@
         <option value="Compile Error">Compile Error</option>
         <option value="Runtime Error">Runtime Error</option>
     </select>
-        <input type="submit" class="btn btn-primary" value="Go" onclick="return false">
+        <input class="btn btn-primary" id="search-submit" onclick="return false" type="submit" value="Go">
     </form>
     <table class="table-sm table-hover table-responsive-xl table-bordered table-light container-fluid"
            style="opacity: 0.8">
@@ -66,12 +83,12 @@
             <td th:text="*{id}"></td>
             <td th:text="*{user.username}"></td>
             <td><a th:href="'/showproblem?id='+*{problem.id}" th:text="*{problem.id}"></a></td>
-            <td th:switch="*{result}" th:id="*{id}" class="view-code">
-                <span th:case="'Accepted'" class="text-success font-weight-bold">Accepted</span>
-                <span th:case="'Compile Error'" class="text-muted" th:text="*{result}"></span>
-                <span th:case="'Pending'" class="text-muted" th:text="*{result}"></span>
-                <span th:case="'Running*'" class="text-muted" th:text="*{result}"></span>
-                <span th:case="*" class="text-danger" th:text="${solution.result}"></span>
+            <td class="view-code" th:id="*{id}" th:switch="*{result}">
+                <span class="text-success font-weight-bold" th:case="'Accepted'">Accepted</span>
+                <span class="text-muted" th:case="'Compile Error'" th:text="*{result}"></span>
+                <span class="text-muted" th:case="'Pending'" th:text="*{result}"></span>
+                <span class="text-muted" th:case="'Running*'" th:text="*{result}"></span>
+                <span class="text-danger" th:case="*" th:text="${solution.result}"></span>
             </td>
             <td th:text="*{time}"></td>
             <td th:text="*{memory/1024}"></td>
@@ -94,7 +111,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Source Code</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button class="close" data-dismiss="modal" type="button">&times;</button>
             </div>
             <div class="modal-body">
                 <table class="table-sm table-light table-responsive-sm">
@@ -130,7 +147,7 @@
                 <pre class="prettyprint"><code id="source_code"></code></pre>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
             </div>
         </div>
     </div>
