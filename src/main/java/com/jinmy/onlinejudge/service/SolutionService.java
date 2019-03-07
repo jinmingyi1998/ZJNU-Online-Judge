@@ -13,11 +13,10 @@ import com.jinmy.onlinejudge.entity.Problem;
 import com.jinmy.onlinejudge.entity.Solution;
 import com.jinmy.onlinejudge.entity.User;
 import com.jinmy.onlinejudge.repository.CompileErrorRepository;
+import com.jinmy.onlinejudge.repository.SolutionExampleExecutor;
 import com.jinmy.onlinejudge.repository.SolutionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +34,8 @@ public class SolutionService {
     private SolutionRepository solutionRepository;
     @Autowired
     private CompileErrorRepository compileErrorRepository;
+    @Autowired
+    private SolutionExampleExecutor solutionExampleExecutor;
 
     /**
      * @param id solution id
@@ -56,7 +57,13 @@ public class SolutionService {
 
 
     public Page<Solution> getStatus(User user, Problem problem, String result, int page) {
-        return solutionRepository.findAllByUserAndProblemAndResult(user, problem, result, PageRequest.of(page, PAGE_SIZE));
+        Solution s = new Solution();
+        s.setUser(user);
+        s.setProblem(problem);
+        s.setResult(result);
+        ExampleMatcher exampleMatcher = ExampleMatcher.matching().withIgnoreNullValues();
+        Example<Solution> example = Example.of(s, exampleMatcher);
+        return solutionExampleExecutor.findAll(example, PageRequest.of(page, PAGE_SIZE, new Sort(Sort.Direction.DESC, "id")));
     }
 
     /**

@@ -1,11 +1,12 @@
 package com.jinmy.onlinejudge.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.List;
 
@@ -30,11 +31,18 @@ public class Contest {
     private Instant lastTime;
     @Column(nullable = false)
     private Instant createTime;
-    @JsonIgnore
     @OneToMany(mappedBy = "contest")
     private List<ContestComment> contestComments;
     @OneToMany(mappedBy = "contest")
     private List<ContestProblem> problems;
+
+    public String getNormalStartTime() {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date.from(startTime));
+    }
+
+    public String getNormalLastTime() {
+        return new SimpleDateFormat("HH:mm:ss").format(Date.from(startTime));
+    }
 
     public Contest(String title, String description, String privilege, String password, Instant startTime, Instant lastTime, Instant createTime, List<ContestProblem> contestProblems, List<ContestComment> contestComments) {
         this.title = title;
@@ -47,7 +55,6 @@ public class Contest {
     }
 
     public Contest() {
-
     }
 
     @Override

@@ -47,6 +47,8 @@ public class StatusController {
                                        @RequestParam(value = "result", defaultValue = "") String result) {
         ModelAndView m = new ModelAndView("problem/status");
         page = Math.max(0, page);
+        if (result.length() == 0)
+            result = null;
         // receive username
         Page<Solution> solutions = solutionService.getStatus(userService.getUserByUsername(username),
                 problemService.getProblemById(pid), result, page);
@@ -105,16 +107,18 @@ public class StatusController {
             User user = (User) session.getAttribute("currentUser");
             if (userService.isExist(user.getId())) {
                 Solution solution = solutionService.getSolutionById(id);
-                solution.setShare(!solution.getShare());
-                solutionService.updateSolution(solution);
-                return solution.getShare();
+                if (solution.getUser().equals(user)) {
+                    solution.setShare(!solution.getShare());
+                    solutionService.updateSolution(solution);
+                    return solution.getShare();
+                }
             }
         } catch (Exception e) {
-            try {
-                response.sendRedirect("/404");
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
+        }
+        try {
+            response.sendRedirect("/404");
+        } catch (IOException e1) {
+            e1.printStackTrace();
         }
         return false;
     }

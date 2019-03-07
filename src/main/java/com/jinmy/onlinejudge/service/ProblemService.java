@@ -9,12 +9,14 @@
 package com.jinmy.onlinejudge.service;
 
 import com.jinmy.onlinejudge.entity.Problem;
+import com.jinmy.onlinejudge.entity.Tag;
 import com.jinmy.onlinejudge.repository.ProblemRepository;
+import com.jinmy.onlinejudge.repository.TagRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,8 @@ import java.util.Optional;
 public class ProblemService {
     @Autowired
     private ProblemRepository problemRepository;
+    @Autowired
+    private TagRepository tagRepository;
 
     /**
      * @param id
@@ -55,21 +59,32 @@ public class ProblemService {
         return problemRepository.save(problem);
     }
 
+    public Page<Problem> getTag(int page, int size, String tagname) {
+        try {
+            Tag t = tagRepository.findByName(tagname).get();
+            Page<Problem> problems = new PageImpl<Problem>(t.getProblems(),
+                    PageRequest.of(page, size, new Sort(Sort.Direction.ASC, "id")),
+                    t.getProblems().size());
+            return problems;
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
     public Page<Problem> getProblemPage(int page, int size, String search) {
         Sort _sort = new Sort(Sort.Direction.ASC, "id");
-        Pageable pageable = new PageRequest(page, size, _sort);
         try {
             if (search.length() > 0) {
                 try {
-                    return problemRepository.findAllByIdOrTitleLike(pageable, Long.parseLong(search), search);
+                    return problemRepository.findAllByIdOrTitleLike(PageRequest.of(page, size, _sort), Long.parseLong(search), "%" + search + "%");
                 } catch (NumberFormatException e) {
-                    return problemRepository.findAllByTitleLike(pageable, "%" + search + "%");
+                    return problemRepository.findAllByTitleLike(PageRequest.of(page, size, _sort), "%" + search + "%");
                 }
             }
         } catch (Exception e) {
-            return problemRepository.findAll(pageable);
+            return problemRepository.findAll(PageRequest.of(page, size, _sort));
         }
-        return problemRepository.findAll(pageable);
+        return problemRepository.findAll(PageRequest.of(page, size, _sort));
     }
 
     public void delete(Long id) {

@@ -1,6 +1,6 @@
 var que = location.search;
 var query = Object();
-
+query.page = 0;
 $(function () {
     if (que.indexOf("?") != -1) {
         var str = que.substr(1);

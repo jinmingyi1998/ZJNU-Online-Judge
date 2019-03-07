@@ -53,7 +53,7 @@ public class Solution {
     @OneToOne(mappedBy = "solution", cascade = CascadeType.ALL, orphanRemoval = true)
     private CompileError ce;
 
-    protected Solution() {
+    public Solution() {
     }
 
     public Solution(User user, Problem problem, String language, String source, String ip, Boolean share) {

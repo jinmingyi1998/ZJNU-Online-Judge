@@ -24,23 +24,36 @@
         }
     </style>
     <script language="JavaScript" th:inline="javascript">
+        if (typeof (query.username) == "undefined") {
+            query.username = "";
+        }
+        if (typeof (query.page) == "undefined") {
+            query.page = "";
+        }
+        if (typeof (query.result) == "undefined") {
+            query.result = "";
+        }
+        if (typeof (query.problem) == "undefined") {
+            query.problem = "";
+        }
         $(function () {
             $(".page-link").click(function () {
                 if ($(this).attr("id") == "top-page") {
-                    query["page"] = "1";
+                    query.page = "1";
                 } else if ($(this).attr("id") == "next-page") {
-                    query.page = "[[${solutions.number}]]" + 1;
+                    query.page = parseInt([[${solutions.number}]]) + 1;
+
                 } else if ($(this).attr("id") == "last-page") {
-                    query.page = "[[${solutions.number}]]" - 1;
+                    query.page = parseInt([[${solutions.number}]]) - 1;
                 }
-                url = location.href + "?username=" + query.username + "&problem=" + query.problem + "&result=" + query.result + "&page=" + query.page;
+                url = location.pathname + "?username=" + query.username + "&problem=" + query.problem + "&result=" + query.result + "&page=" + query.page;
                 location.href = url;
             });
             $("#search-submit").click(function () {
                 query.username = $("#search-username").val();
                 query.problem = $("#search-problem").val();
                 query.result = $("#search-result").val();
-                url = location.href + "?username=" + query.username + "&problem=" + query.problem + "&result=" + query.result + "&page=" + query.page;
+                url = location.pathname + "?username=" + query.username + "&problem=" + query.problem + "&result=" + query.result + "&page=" + query.page;
                 location.href = url;
             });
         });
@@ -48,7 +61,6 @@
 </head>
 <body>
 <div class="container" height="100%">
-    <div th:text="${solutions.number}"></div>
     <form class="container form-inline">
         Username:<input class="form-control" id="search-username" name="username" type="text">
         Problem: <input class="form-control" id="search-problem" name="problem" type="text">

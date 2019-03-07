@@ -9,7 +9,6 @@
 package com.jinmy.onlinejudge.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 
@@ -25,8 +24,7 @@ public class Tag {
     private Long id;
     @Column(nullable = false, length = 200)
     private String name;
-    @JsonIgnore
-    @ManyToMany(mappedBy = "tags")
+    @ManyToMany(mappedBy = "tags", fetch = FetchType.EAGER)
     private List<Problem> problems;
 
     public Tag(String name) {

@@ -11,6 +11,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.Instant;
+import java.util.Objects;
 
 enum Privilege {
     admin("admin"), teacher("teacher"), student("student");
@@ -30,6 +31,19 @@ enum Privilege {
 @Log4j2
 @Entity
 public class User {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return getId().equals(user.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getUsername(), getName(), getEmail(), getPassword(), getSubmit(), getSolve(), getBanned(), getRegistertime(), getSchool(), getCls(), getPrivilege());
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

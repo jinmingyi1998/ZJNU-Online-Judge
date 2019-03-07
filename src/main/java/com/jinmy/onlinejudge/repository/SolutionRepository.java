@@ -14,11 +14,13 @@ import com.jinmy.onlinejudge.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.QueryByExampleExecutor;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface SolutionRepository extends JpaRepository<Solution, Long> {
+public interface SolutionRepository extends JpaRepository<Solution, Long>, QueryByExampleExecutor<Solution> {
+
     Solution save(Solution solution);
 
     Optional<Solution> findById(Long id);
@@ -38,5 +40,6 @@ public interface SolutionRepository extends JpaRepository<Solution, Long> {
 
     Page<Solution> findAllByResult(Pageable pageable, String result);
 
-    Page<Solution> findAllByUserAndProblemAndResult(User user, Problem problem, String result, Pageable pageable);
+    //   Page<Solution> findAllByUserAndProblemAndResult( Pageable pageable, User user, Problem problem, String result);
 }
+

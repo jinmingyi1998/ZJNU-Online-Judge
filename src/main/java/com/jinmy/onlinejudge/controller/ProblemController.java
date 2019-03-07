@@ -3,6 +3,7 @@ package com.jinmy.onlinejudge.controller;
 import com.jinmy.onlinejudge.entity.Problem;
 import com.jinmy.onlinejudge.entity.Solution;
 import com.jinmy.onlinejudge.entity.User;
+import com.jinmy.onlinejudge.repository.TagRepository;
 import com.jinmy.onlinejudge.service.JudgeService;
 import com.jinmy.onlinejudge.service.ProblemService;
 import com.jinmy.onlinejudge.service.SolutionService;
@@ -36,6 +37,8 @@ public class ProblemController {
     private JudgeService judgeService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private TagRepository tagRepository;
 
     @GetMapping("/showproblem")
     public ModelAndView showproblem(@RequestParam("id") Long id, HttpServletResponse response) {
@@ -59,7 +62,8 @@ public class ProblemController {
     public String submitProblem(Model m, @PathVariable("id") Long id,
                                 HttpServletResponse response, HttpServletRequest request,
                                 @RequestParam(value = "language", defaultValue = "cpp") String language,
-                                @RequestParam(value = "source") String source, @RequestParam(value = "share", defaultValue = "false") boolean share) {
+                                @RequestParam(value = "source") String source,
+                                @RequestParam(value = "share", defaultValue = "false") boolean share) {
         log.info("Submit:" + Date.from(Instant.now()));
         if (session.getAttribute("last_submit") != null) {
             Instant instant = (Instant) session.getAttribute("last_submit");
@@ -94,23 +98,23 @@ public class ProblemController {
     @GetMapping("/problems")
     public ModelAndView showProblemList(@RequestParam(value = "page", defaultValue = "0") int page,
                                         @RequestParam(value = "search", defaultValue = "") String search) {
-        if (search.length() > 0) {
-            session.setAttribute("problem-search", search);
-        }
-        String _search;
-        try {
-            _search = (String) session.getAttribute("search");
-        } catch (Exception e) {
-            _search = "";
-        }
         ModelAndView m = new ModelAndView("problem/problemlist");
         page = Math.max(page, 0);
-        Page<Problem> problemPage = problemService.getProblemPage(page, PAGE_SIZE, _search);
-        if (page >= problemPage.getTotalPages() && problemPage.getTotalPages() > 0) {
-            page = problemPage.getTotalPages() - 1;
-            problemPage = problemService.getProblemPage(page, PAGE_SIZE, search);
-        }
+        Page<Problem> problemPage = problemService.getProblemPage(page, PAGE_SIZE, search);
         m.addObject("problems", problemPage);
+        m.addObject("tags", tagRepository.findAll());
+        return m;
+    }
+
+    @GetMapping("/problems/tags")
+    public ModelAndView showProblemListByTag(@RequestParam(value = "page", defaultValue = "0") int page,
+                                             @RequestParam(value = "tag", defaultValue = "") String tagname) {
+        ModelAndView m = new ModelAndView("problem/tagproblems");
+        page = Math.max(page, 0);
+        Page<Problem> problemPage = problemService.getTag(page, PAGE_SIZE, tagname);
+        m.addObject("problems", problemPage);
+        m.addObject("tag", tagRepository.findByName(tagname).get());
+        m.addObject("tags", tagRepository.findAll());
         return m;
     }
 }

@@ -10,7 +10,6 @@ package com.jinmy.onlinejudge.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
@@ -52,13 +51,10 @@ public class Problem {
     private Integer submit = 0;
     @Column(nullable = false, columnDefinition = "int default 0")
     private Integer accepted = 0;
-    @JsonIgnore
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Tag> tags;
-    @JsonIgnore
     @OneToMany(mappedBy = "problem")
     private List<ProblemComment> problemComments;
-    @JsonIgnore
     @OneToMany(mappedBy = "problem")
     private List<Solution> solutions;
 

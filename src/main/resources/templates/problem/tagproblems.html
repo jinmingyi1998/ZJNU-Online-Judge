@@ -11,7 +11,7 @@
 <head>
     <th:block th:insert="~{fragment/header :: header}"></th:block>
     <meta charset="UTF-8">
-    <title>Problem List</title>
+    <title th:text="'Tag: '+${tag.name}"></title>
     <style>
         .list-group-item {
             background: rgba(255, 255, 255, 0.8);
@@ -26,8 +26,8 @@
         if (typeof (query.page) == "undefined") {
             query.page = 0;
         }
-        if (typeof (query.problem) == "undefined") {
-            query.problem = "";
+        if (typeof (query.tag) == "undefined") {
+            query.tag = "";
         }
         $(function () {
             for (var i = Math.max(0, parseInt(query.page) - 5); i < Math.min(parseInt(query.page) + 4, query.maxpage); i++) {
@@ -45,13 +45,7 @@
                 } else {
                     query.page = parseInt(act);
                 }
-                url = location.pathname + "?problem=" + query.problem + "&page=" + query.page;
-                location.href = url;
-            });
-            $("#search").click(function () {
-                var act = $("#search-problem").val();
-                query.problem = act;
-                url = location.pathname + "?problem=" + query.problem + "&page=" + query.page;
+                url = location.pathname + "?page=" + query.page + "&tag=" + query.tag;
                 location.href = url;
             });
         });
@@ -62,10 +56,6 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-9">
-            <div action="" class="form-inline">Search: <input class="form-control" id="search-problem" name="search"
-                                                              type="text">
-                <button class="btn" id="search">Search</button>
-            </div>
             <ul class="list-group">
                 <li class="list-group-item card" style="margin: 10px;" th:each="problem,iterStat:${problems.content}"
                     th:object="${problem}">
@@ -76,8 +66,8 @@
                                     <a th:href="'/showproblem?id='+*{id}"
                                        th:text="${problem.id}+'  '+${problem.title}"></a></h4></li>
                             <li class="list-inline-item float-right" th:each="ta:*{tags}">
-                                <a class="badge badge-pill badge-info"
-                                   th:href="'/problems/tags?tag='+${ta.name}" th:text="${ta.name}"></a></li>
+                                <a class="badge badge-pill badge-info" th:href="'/problems/tags?tag='+${ta.name}"
+                                   th:text="${ta.name}"></a></li>
                         </ul>
                         <ul class="card-text text-muted list-inline">
                             <li class="list-inline-item" th:text="'Submit : '+${problem.submit}"></li>
@@ -95,7 +85,7 @@
         </div>
         <div class="col-3">
             <div class="container-fluid bg-light rounded" style="opacity: 0.8">
-                <h1 class="text-center">Tags</h1>
+                <h1>Tags</h1>
                 <a class="badge badge-success badge-pill font-weight-bold" style="font-size: 1rem" th:each="tag:${tags}"
                    th:href="'/problems/tags?tag='+${tag.name}" th:text="${tag.name}"></a>
             </div>

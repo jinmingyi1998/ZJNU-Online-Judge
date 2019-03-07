@@ -15,17 +15,12 @@
     <script th:src="@{/js/jquery-3.2.1.min.js}"></script>
     <script th:src="@{/js/popper.min.js}"></script>
     <script th:src="@{/js/bootstrap.js}"></script>
-    <script src="/js/urlcontrol.js"></script>
-    <script th:inline="javascript">
-        query.page = [[${problems.number}]];
-        query.maxpage = [[${problems.totalPages}]];
-    </script>
     <script>
         if (typeof (query.page) == "undefined") {
             query.page = 0;
         }
-        if (typeof (query.problem) == "undefined") {
-            query.problem = "";
+        if (typeof (query.title) == "undefined") {
+            query.title = "";
         }
         $(function () {
             for (var i = Math.max(0, parseInt(query.page) - 5); i < Math.min(parseInt(query.page) + 4, query.maxpage); i++) {
@@ -43,28 +38,18 @@
                 } else {
                     query.page = parseInt(act);
                 }
-                url = location.pathname + "?problem=" + query.problem + "&page=" + query.page;
+                url = location.pathname + "?title=" + query.title + "&page=" + query.page;
                 location.href = url;
             });
-            $("#search").click(function () {
-                var act = $("#search-problem").val();
-                query.problem = act;
-                url = location.pathname + "?problem=" + query.problem + "&page=" + query.page;
+            $("#search-btn").click(function () {
+                var act = $("#search-title").val();
+                query.title = act;
+                url = location.pathname + "?title=" + query.title + "&page=" + query.page;
                 location.href = url;
             });
         });
 
     </script>
-    <title>Admin</title>
-    <style>
-        html, body {
-            height: 100%;
-        }
-
-        body {
-            margin: 30px;
-        }
-    </style>
     <script>
         $(function () {
             $(".remove-btn").click(function () {
@@ -78,31 +63,39 @@
                     });
                 }
             });
+        });
+        $(function () {
+            $(".remove-btn").click(function () {
+                if (confirm("You are going to delete contest " + $(this).attr("id"))) {
+                    $.ajax({
+                        type: "delete",
+                        url: "/admin/contest/delete/" + $(this).attr("id"),
+                        success: function () {
+                            location.reload();
+                        }
+                    });
+                }
+            });
         })
     </script>
+    <title>Admin-Contests</title>
 </head>
 <body>
 <div class="container">
-    <a class="btn btn-success" href="/admin/insert">Add a problem</a>
-    <div action="" class="form-inline">Search: <input class="form-control" id="search-problem" name="search"
-                                                      type="text">
-        <button class="btn" id="search">Search</button>
-    </div>
-    <ul class="list-group" th:each="problem,proStat:${problems.content}">
-        <li class="list-group-item list-group-item-action">
-            <span th:text="${conte.id}"></span>
-            <span th:text="${problem.title}"></span>
-            <a class="btn-sm btn-primary float-right" th:href="'/admin/edit/'+${problem.id}">Update</a>
-            <a class="btn-danger btn-sm remove-btn float-right" th:id="${problem.id}">Remove</a></li>
+    <a class="btn btn-success" href="/admin/contest/insert">Insert</a>
+    <div class="form-inline">Search Contest:<input id="search-title" type="text">
+        <a class="btn btn-sm btn-light" id="search-btn">Search</a></div>
+    <ul class="list-group">
+        <li class="list-group-item" th:each="contest:${contests}" th:object="${contest}">
+            <span class="text-center" th:text="*{id}+'  '+*{title}"></span>
+            <a class="btn-sm btn-primary float-right" th:href="'/admin/contest/edit/'+*{id}">Update</a>
+            <a class="btn-danger btn-sm remove-btn float-right" th:id="*{id}">Remove</a></li>
+        </li>
     </ul>
-    <div class="container">
-        <ul class="pagination">
-            <li th:class="'page-item'+${i==problems.number?' active':' '}"
-                th:each="i:${#numbers.sequence(problems.number-5>0?problems.number-5:0 ,problems.number+5>problems.totalPages-1? problems.totalPages-1:problems.number+5)}">
-                <a class="page-link" th:href="@{${url}(page=${i})}" th:text="${i+1}">1</a>
-            </li>
-        </ul>
-    </div>
+    <ul class="pagination">
+        <li class="page-item"><a class="page-link turnpage" page="last-page">Last</a></li>
+        <li class="page-item" id="Next"><a class="page-link turnpage" page="next-page">Next</a></li>
+    </ul>
 </div>
 </body>
 </html>
