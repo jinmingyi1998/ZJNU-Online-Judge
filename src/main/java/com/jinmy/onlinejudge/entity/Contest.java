@@ -1,13 +1,18 @@
 package com.jinmy.onlinejudge.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
@@ -28,30 +33,51 @@ public class Contest {
     @Column(nullable = false)
     private Instant startTime;
     @Column(nullable = false)
-    private Instant lastTime;
+    private Instant endTime;
+
     @Column(nullable = false)
     private Instant createTime;
+    @JsonIgnore
     @OneToMany(mappedBy = "contest")
     private List<ContestComment> contestComments;
+    @JsonIgnore
     @OneToMany(mappedBy = "contest")
     private List<ContestProblem> problems;
+    @OneToMany(mappedBy = "contest", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Solution> solutions;
 
-    public String getNormalStartTime() {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date.from(startTime));
-    }
-
-    public String getNormalLastTime() {
-        return new SimpleDateFormat("HH:mm:ss").format(Date.from(startTime));
-    }
-
-    public Contest(String title, String description, String privilege, String password, Instant startTime, Instant lastTime, Instant createTime, List<ContestProblem> contestProblems, List<ContestComment> contestComments) {
+    public Contest(String title, String description, String privilege, String password, Instant startTime, Instant endTime, Instant createTime, List<ContestProblem> contestProblems, List<ContestComment> contestComments) {
         this.title = title;
         this.description = description;
         this.privilege = privilege;
         this.password = password;
         this.startTime = startTime;
-        this.lastTime = lastTime;
+        this.endTime = endTime;
         this.createTime = createTime;
+    }
+
+    public String getNormalStartTime() {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm").format(Date.from(startTime));
+    }
+
+    public String getNormalEndTime() {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm").format(Date.from(endTime));
+    }
+
+    public void setStartTime(String startTime) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime localDateTime = LocalDateTime.parse(startTime, dtf);
+        this.startTime = Instant.from(localDateTime.atZone(ZoneId.systemDefault()));
+    }
+
+    public void setEndTime(String startTime, String lastTime) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime localDateTime = LocalDateTime.parse(startTime, dtf);
+        this.startTime = Instant.from(localDateTime.atZone(ZoneId.systemDefault()));
+        String ps = "PT" + lastTime.split(":")[0] + "H" + lastTime.split(":")[1] + "M";
+        System.out.println(ps);
+        Duration duration = Duration.parse(ps);
+        this.endTime = this.startTime.plus(duration);
     }
 
     public Contest() {
@@ -66,7 +92,7 @@ public class Contest {
                 ", privilege='" + privilege + '\'' +
                 ", password='" + password + '\'' +
                 ", startTime=" + startTime +
-                ", lastTime=" + lastTime +
+                ", lastTime=" + endTime +
                 ", createTime=" + createTime +
                 '}';
     }

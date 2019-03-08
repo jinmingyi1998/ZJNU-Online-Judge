@@ -31,6 +31,12 @@ public class ContestProblem {
         this.tempTitle = tempTitle;
     }
 
+    public ContestProblem(Problem problem, String tempTitle, Long tempId) {
+        this.problem = problem;
+        this.tempTitle = tempTitle;
+        this.tempId = tempId;
+    }
+
     public ContestProblem() {
 
     }

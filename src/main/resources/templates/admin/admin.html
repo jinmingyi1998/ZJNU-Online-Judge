@@ -84,23 +84,22 @@
 <body>
 <div class="container">
     <a class="btn btn-success" href="/admin/insert">Add a problem</a>
+    <a class="btn btn-primary" href="/admin/contest">Contests</a>
     <div action="" class="form-inline">Search: <input class="form-control" id="search-problem" name="search"
                                                       type="text">
         <button class="btn" id="search">Search</button>
     </div>
     <ul class="list-group" th:each="problem,proStat:${problems.content}">
         <li class="list-group-item list-group-item-action">
-            <span th:text="${conte.id}"></span>
+            <span th:text="${problem.id}"></span>
             <span th:text="${problem.title}"></span>
             <a class="btn-sm btn-primary float-right" th:href="'/admin/edit/'+${problem.id}">Update</a>
             <a class="btn-danger btn-sm remove-btn float-right" th:id="${problem.id}">Remove</a></li>
     </ul>
     <div class="container">
         <ul class="pagination">
-            <li th:class="'page-item'+${i==problems.number?' active':' '}"
-                th:each="i:${#numbers.sequence(problems.number-5>0?problems.number-5:0 ,problems.number+5>problems.totalPages-1? problems.totalPages-1:problems.number+5)}">
-                <a class="page-link" th:href="@{${url}(page=${i})}" th:text="${i+1}">1</a>
-            </li>
+            <li class="page-item"><a class="page-link turnpage" page="last-page">Last</a></li>
+            <li class="page-item" id="Next"><a class="page-link turnpage" page="next-page">Next</a></li>
         </ul>
     </div>
 </div>

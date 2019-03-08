@@ -43,6 +43,10 @@ public class ProblemService {
         return null;
     }
 
+    public boolean isExist(Long id) {
+        return problemRepository.findById(id).isPresent();
+    }
+
     @Transactional
     public List<Problem> getProblemList() {
         List<Problem> problemList = problemRepository.findAll();

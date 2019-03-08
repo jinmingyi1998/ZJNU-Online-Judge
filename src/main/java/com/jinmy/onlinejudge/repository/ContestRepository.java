@@ -19,4 +19,6 @@ public interface ContestRepository extends JpaRepository<Contest, Long> {
     Optional<Contest> findById(Long aLong);
 
     Page<Contest> findByTitleLike(Pageable pageable, String title);
+
+    Contest save(Contest contest);
 }

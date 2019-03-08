@@ -20,6 +20,7 @@
     </style>
     <script th:inline="javascript">
         query.page = [[${contests.number}]];
+        query.maxpage = [[${contests.totalPages}]]
     </script>
     <script>
         if (typeof (query.page) == "undefined") {
@@ -62,15 +63,12 @@
     <div class="form-inline">Search Contest:<input id="search-title" type="text"><a class="btn btn-sm btn-light"
                                                                                     id="search-btn">Search</a></div>
     <ul class="list-group">
-        <li class="list-group-item" th:each="contest:${contests}" th:object="${contest}">
-            <div class="card">
-                <h3><a class="text-center" href="" th:text="*{title}"></a></h3>
+        <li class="list-group-item card" th:each="contest:${contests}" th:object="${contest}">
+            <h3><a class="text-center" th:href="'/contest/'+*{id}" th:text="*{id}+' '+*{title}"></a></h3>
                 <ul class="list-inline">
-                    <li class="list-inline-item text-muted"><a href="">Register</a></li>
                     <li class="list-inline-item text-muted" th:text="'Start Time:'+*{normalStartTime}">Start Time</li>
-                    <li class="text-muted list-inline-item" th:text="'Length:'+*{normalLastTime}">Length</li>
+                    <li class="text-muted list-inline-item" th:text="'End Time:'+*{normalEndTime}">End Time</li>
                 </ul>
-            </div>
         </li>
     </ul>
     <ul class="pagination">

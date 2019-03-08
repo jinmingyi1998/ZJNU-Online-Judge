@@ -38,8 +38,8 @@ public class Solution {
     private Instant submitTime;
     @Column(nullable = false)
     private String ip;
-    @Column(columnDefinition = "bigint default NULL")
-    private Long contest;
+    @ManyToOne
+    private Contest contest;
     @Column(nullable = false, columnDefinition = "integer default -1")
     private Integer time;
     @Column(nullable = false, columnDefinition = "integer default -1")
@@ -72,7 +72,7 @@ public class Solution {
         contest = null;
     }
 
-    public Solution(User user, Problem problem, String language, String source, Instant submitTime, String ip, Long contest, Integer time, Integer memory, Integer length, String result, Boolean share, CompileError ce) {
+    public Solution(User user, Problem problem, String language, String source, Instant submitTime, String ip, Contest contest, Integer time, Integer memory, Integer length, String result, Boolean share, CompileError ce) {
         this.user = user;
         this.problem = problem;
         this.language = language;

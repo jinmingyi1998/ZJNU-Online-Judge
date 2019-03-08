@@ -1,0 +1,233 @@
+<!--
+  ~ Copyright (c) 2019. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="~{fragment/header :: header}"></th:block>
+    <meta charset="UTF-8">
+    <title>Contests</title>
+    <script src="/js/urlcontrol.js"></script>
+    <script language="JavaScript" th:src="@{/js/StatusInModal.js}"></script>
+    <style>
+        a {
+            text-decoration: none;
+        }
+    </style>
+    <script th:inline="javascript">
+        $(function () {
+            $("#submit_btn").click(function () {
+                $("#submit_btn").attr("class", "btn btn-primary btn-lg text-center disabled");
+                $("#submit_btn").text("Submiting...");
+                $.post({
+                    data: $("#form").serialize(),
+                    url: "/submit/" + "[[${problem.id}]]",
+                    cache: false,
+                    dataType: 'text',
+                    success: function (d) {
+                        var x = 0;
+                        $("#prog").width(0);
+                        $(".progress").show();
+                        setTimeout(function () {
+                            $("#prog").width("10%")
+                        }, 200);
+                        setTimeout(function () {
+                            $("#prog").width("50%")
+                        }, 800);
+                        setTimeout(function () {
+                            $("#prog").width("90%")
+                        }, 1600);
+                        setTimeout(function () {
+                            $("#prog").width("100%")
+                        }, 2000);
+                        setTimeout(function () {
+                            if (d == "success") {
+                                location.reload();
+                                scrollTo(0, 0);
+                            } else {
+                                $(".progress").hide();
+                                $("#submit_btn").attr("class", "btn btn-primary btn-lg text-center");
+                                $("#submit_btn").text("Submit");
+                                $("#submit-msg").text(d);
+                                $("#submit-msg").show();
+                            }
+                        }, 2000);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="container">
+    <ul class="nav nav-pills">
+        <li class="nav-item"><a class="nav-link active" data-toggle="pill" href="#overview">Overview</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#problem">Problems</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#status">Status</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#rank">Rank</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#comment">Comments</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="container tab-pane active" id="overview">
+            <div class="list-group">
+                <a class="list-group-item list-group-item-primary" th:each="problem:${problems}"
+                   th:text="${problem.tempId}+' '+${problem.tempTitle}"></a>
+            </div>
+        </div>
+        <div class="container tab-pane fade" id="problem">
+            <div class="card bg-light">
+                <div class="card-header">
+                    <h2 class="card-title"></h2>
+                    <ul class="list-inline">
+                        <li class="list-inline-item">Time Limit</li>
+                        <li class="list-inline-item">Memory Limit</li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">Description</h3>
+                    <div class="card-text"></div>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">Input</h3>
+                    <div class="card-text"></div>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">Input</h3>
+                    <div class="card-text"></div>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">Output</h3>
+                    <div class="card-text"></div>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">Sample Input</h3>
+                    <div class="card-text"></div>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">Sample Output</h3>
+                    <div class="card-text"></div>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">Hint</h3>
+                    <div class="card-text"></div>
+                </div>
+            </div>
+            <div class="container text-center" style="margin-top: 20px">
+                <form id="form">
+                    <div class="form-inline">
+                        <label for="language">Language :</label>
+                        <select class="form-control" id="language" name="language">
+                            <option value="c">C</option>
+                            <option selected value="cpp">C++</option>
+                            <option value="java">Java</option>
+                            <option value="py2">Python2</option>
+                            <option value="py3">Python3</option>
+                        </select>
+                        <div class="form-check">
+                            <label class="form-check-label" for="share">Share</label>
+                            <input class="form-check-input" id="share" name="share" type="checkbox">
+                        </div>
+                    </div>
+                    <textarea class="form-control" cols="40" id="" name="source" rows="20"
+                              style="resize: none;"></textarea>
+                    <div class="alert-warning alert" id="submit-msg" style="display: none"></div>
+                    <div class="progress" style="display: none">
+                        <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" id="prog"
+                             style="width:0%"></div>
+                    </div>
+                    <a class="btn btn-primary btn-lg text-center" id="submit_btn">Submit</a>
+                </form>
+            </div>
+        </div>
+        <div class="container tab-pane fade" id="status">
+            <table class="table-sm table-hover table-responsive-xl table-bordered table-light container-fluid"
+                   style="opacity: 0.8">
+                <thead class="thead-light text-center">
+                <tr>
+                    <th>Run ID</th>
+                    <th>Username</th>
+                    <th>Problem</th>
+                    <th>Result</th>
+                    <th>Time(ms)</th>
+                    <th>Memory(KB)</th>
+                    <th>Length</th>
+                    <th>Language</th>
+                    <th>Submit Time</th>
+                </tr>
+                </thead>
+                <tbody class="text-center">
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="view-code" id="{id}" switch="{result}">
+                        <span class="text-success font-weight-bold" th:case="'Accepted'">Accepted</span>
+                    </td>
+                    <td text="*{time}"></td>
+                    <td text="*{memory/1024}"></td>
+                    <td text="*{length}"></td>
+                    <td><a class="view-code" id="*{id}" text="*{normalLanguage}"></a></td>
+                    <td text="*{normalSubmitTime}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="container tab-pane fade" id="rank"></div>
+        <div class="container tab-pane fade" id="comment"></div>
+    </div>
+</div>
+<div class="modal fade" id="codeModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Source Code</h4>
+                <button class="close" data-dismiss="modal" type="button">&times;</button>
+            </div>
+            <div class="modal-body">
+                <table class="table-sm table-light table-responsive-sm">
+                    <thead class="thead-light text-center">
+                    <tr>
+                        <th>Run ID</th>
+                        <th>Username</th>
+                        <th>Problem</th>
+                        <th>Result</th>
+                        <th>Time(ms)</th>
+                        <th>Memory(B)</th>
+                        <th>Length</th>
+                        <th>Language</th>
+                        <th>Submit Time</th>
+                    </tr>
+                    </thead>
+                    <tbody class="text-center">
+                    <td id="modal-id"></td>
+                    <td id="modal-username"></td>
+                    <td id="modal-problem"></td>
+                    <td id="modal-result"></td>
+                    <td id="modal-time"></td>
+                    <td id="modal-memory"></td>
+                    <td id="modal-length"></td>
+                    <td id="modal-language"></td>
+                    <td id="modal-submit-time"></td>
+                    </tbody>
+                </table>
+                <button class="btn btn-sm share-code btn-danger" id="modal-share" th:if="${session.currentUser!=null}">
+                    Not Shared
+                </button>
+                <pre id="modal-ce"></pre>
+                <pre class="prettyprint"><code id="source_code"></code></pre>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragment/footer :: footer}"></footer>
+</body>
+</html>

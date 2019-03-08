@@ -8,6 +8,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.Optional;
+
+@Transactional
 @Service
 public class ContestService {
     private final int PAGE_SIZE = 30;
@@ -17,6 +21,16 @@ public class ContestService {
     public Page<Contest> getContestPage(int page, String title) {
         if (title.length() == 0)
             return contestRepository.findAll(PageRequest.of(page, PAGE_SIZE, new Sort(Sort.Direction.DESC, "startTime")));
-        return contestRepository.findByTitleLike(PageRequest.of(page, PAGE_SIZE, new Sort(Sort.Direction.DESC, "startTime")), title);
+        return contestRepository.findByTitleLike(PageRequest.of(page, PAGE_SIZE, new Sort(Sort.Direction.DESC, "startTime")), "%" + title + "%");
+    }
+
+    public Contest insertContest(Contest contest) {
+        return contestRepository.save(contest);
+    }
+
+    @Transactional
+    public Contest getContestById(Long id) {
+        Optional<Contest> contest = contestRepository.findById(id);
+        return contest.isPresent() ? contest.get() : null;
     }
 }
