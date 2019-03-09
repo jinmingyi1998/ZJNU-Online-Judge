@@ -8,6 +8,7 @@
 
 package com.jinmy.onlinejudge.repository;
 
+import com.jinmy.onlinejudge.entity.Contest;
 import com.jinmy.onlinejudge.entity.Problem;
 import com.jinmy.onlinejudge.entity.Solution;
 import com.jinmy.onlinejudge.entity.User;
@@ -30,7 +31,7 @@ public interface SolutionRepository extends JpaRepository<Solution, Long>, Query
     @Override
     Page<Solution> findAll(Pageable pageable);
 
-    List<Solution> findAllByUser(User u);
+    List<Solution> findAllByUserAndContest(User u, Contest contest);
 
     Page<Solution> findAllByUser(Pageable pageable, User user);
 

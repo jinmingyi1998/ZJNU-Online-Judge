@@ -8,10 +8,7 @@
 
 package com.jinmy.onlinejudge.service;
 
-import com.jinmy.onlinejudge.entity.CompileError;
-import com.jinmy.onlinejudge.entity.Problem;
-import com.jinmy.onlinejudge.entity.Solution;
-import com.jinmy.onlinejudge.entity.User;
+import com.jinmy.onlinejudge.entity.*;
 import com.jinmy.onlinejudge.repository.CompileErrorRepository;
 import com.jinmy.onlinejudge.repository.SolutionExampleExecutor;
 import com.jinmy.onlinejudge.repository.SolutionRepository;
@@ -20,6 +17,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -36,6 +34,8 @@ public class SolutionService {
     private CompileErrorRepository compileErrorRepository;
     @Autowired
     private SolutionExampleExecutor solutionExampleExecutor;
+    @Autowired
+    private ContestService contestService;
 
     /**
      * @param id solution id
@@ -111,4 +111,7 @@ public class SolutionService {
     }
 
 
+    public List<Solution> getSolutionsOfUserInContest(User u, Contest c) {
+        return solutionRepository.findAllByUserAndContest(u, c);
+    }
 }
