@@ -10,6 +10,7 @@ package com.jinmy.onlinejudge.controller;
 
 import com.jinmy.onlinejudge.entity.*;
 import com.jinmy.onlinejudge.service.*;
+import com.jinmy.onlinejudge.util.Rank;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -114,6 +115,71 @@ public class ContestController {
             response.sendRedirect("/404");
         } catch (IOException e1) {
             e1.printStackTrace();
+        }
+        return null;
+    }
+
+    @PostMapping("/status/view/{id}")
+    public Solution restfulShowSourceCodeInContest(@PathVariable(value = "id") Long id, HttpServletResponse response) {
+        try {
+            Solution solution = solutionService.getSolutionById(id);
+            Contest contest = solution.getContest();
+            for (ContestProblem cp : contest.getProblems()) {
+                if (cp.getProblem().getId() == solution.getProblem().getId()) {
+                    solution.getProblem().setId(cp.getTempId());
+                    break;
+                }
+            }
+            User user = (User) session.getAttribute("currentUser");
+            if (user != null && user.getId() == solution.getUser().getId()) {
+                return solution;
+            }
+        } catch (Exception e) {
+        }
+        try {
+            response.sendRedirect("/404");
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        return null;
+    }
+
+    @PostMapping("/status/share/{id}")
+    public boolean setShare(@PathVariable("id") Long id, HttpServletResponse response) {
+        try {
+            User user = (User) session.getAttribute("currentUser");
+            if (userService.isExist(user.getId())) {
+                Solution solution = solutionService.getSolutionById(id);
+                if (solution.getUser().equals(user)) {
+                    solution.setShare(!solution.getShare());
+                    solutionService.updateSolution(solution);
+                    return solution.getShare();
+                }
+            }
+        } catch (Exception e) {
+        }
+        try {
+            response.sendRedirect("/404");
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        return false;
+    }
+
+    @GetMapping("/rest/rank/{cid}")
+    public Rank getRankOfContest(@PathVariable Long cid, HttpServletResponse response) {
+        try {
+            @NotNull Contest contest = contestService.getContestById(cid);
+            @NotNull Rank rank = new Rank(contest);
+            @NotNull List<Solution> solutions = solutionService.getSolutionsInContest(contest);
+            rank.init(solutions);
+            return rank;
+        } catch (Exception e) {
+        }
+        try {
+            response.sendRedirect("/404");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return null;
     }

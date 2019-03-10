@@ -114,4 +114,8 @@ public class SolutionService {
     public List<Solution> getSolutionsOfUserInContest(User u, Contest c) {
         return solutionRepository.findAllByUserAndContest(u, c);
     }
+
+    public List<Solution> getSolutionsInContest(Contest contest) {
+        return solutionRepository.findAllByContest(contest);
+    }
 }

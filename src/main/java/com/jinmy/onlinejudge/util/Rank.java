@@ -36,6 +36,7 @@ public class Rank {
             if (personMap.containsKey(s.getUser().getId())) {
                 personMap.get(s.getUser().getId()).update(s);
             } else {
+
                 personMap.put(s.getUser().getId(), new Person(contest));
                 personMap.get(s.getUser().getId()).update(s);
             }
@@ -45,6 +46,7 @@ public class Rank {
 
 @Data
 class Person {
+    @JsonIgnore
     private Contest contest;
     private Long penalty;
     private Long ac;
@@ -62,19 +64,20 @@ class Person {
         rp.setId(s.getProblem().getId());
         if (map.containsKey(rp.getId())) {
             rp = map.get(rp.getId());
-            if (rp.isAc()) return;//AC
-            if (s.getResult().equals("Accepted")) {
-                rp.setAc(true);
-                rp.setDuration(Duration.between(contest.getStartTime(), s.getSubmitTime()));
-                this.penalty += rp.getDuration().getSeconds();
-                this.penalty += rp.getWa() * 20L;
-                this.ac++;
-            } else if (s.getResult().indexOf("Runn") != -1 || s.getResult().indexOf("Compile") != -1) {
-                return;
-            } else {
-                rp.setWa(rp.getWa() + 1L);
-            }
         }
+        if (rp.isAc()) return;//AC
+        if (s.getResult().equals("Accepted")) {
+            rp.setAc(true);
+            rp.setDuration(Duration.between(contest.getStartTime(), s.getSubmitTime()));
+            this.penalty += rp.getDuration().getSeconds();
+            this.penalty += rp.getWa() * 20L;
+            this.ac++;
+        } else if (s.getResult().indexOf("Runn") != -1 || s.getResult().indexOf("Compile") != -1) {
+            return;
+        } else {
+            rp.setWa(rp.getWa() + 1L);
+        }
+        map.put(rp.getId(), rp);
     }
 }
 
@@ -88,6 +91,7 @@ class RankProblem {
     public RankProblem() {
         id = 0L;
         wa = 0L;
+        isAc = false;
         duration = Duration.ofSeconds(0);
     }
 

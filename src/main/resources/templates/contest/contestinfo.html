@@ -75,16 +75,17 @@
     </ul>
 
     <div class="tab-content">
-        <div class="container tab-pane active" id="overview">
-            <div class="list-group">
-                <a class="list-group-item list-group-item-primary" data-toggle="pill" href="#problem"
-                   th:each="problem:${problems}" th:text="${problem.tempId}+' '+${problem.tempTitle}"></a>
+        <div class="tab-pane active" id="overview">
+            <div class="list-group container">
+                <li class="list-group-item"
+                    th:each="problem:${problems}" th:text="${problem.tempId}+' '+${problem.tempTitle}"></li>
             </div>
         </div>
 
         <div class="tab-pane fade" id="problem">
-            <div class="list-inline">
-                <a class="list-inline-item change-problem btn btn-primary"
+            <div class="nav nav-pills">
+                <a class="nav-item nav-link change-problem"
+                   data-toggle="pill" href="#problem"
                    th:each="problem:${contest.problems}" th:id="${problem.tempId}"
                    th:text="${problem.tempId}"></a>
             </div>
@@ -151,6 +152,8 @@
             </div>
         </div>
         <div class="container tab-pane fade" id="status">
+            <a class="fa fa-refresh btn btn-success" onclick="getStatusOfMe()"
+               style="font-size: 1.5rem;color: white"></a>
             <table class="table-sm table-hover table-responsive-xl table-bordered table-light container-fluid"
                    style="opacity: 0.8">
                 <thead class="thead-light text-center">
@@ -171,7 +174,9 @@
                 </tbody>
             </table>
         </div>
-        <div class="container tab-pane fade" id="rank"></div>
+        <div class="container tab-pane fade" id="rank">
+
+        </div>
         <div class="container tab-pane fade" id="comment"></div>
     </div>
 </main>
