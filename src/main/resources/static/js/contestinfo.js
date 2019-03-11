@@ -1,24 +1,6 @@
-function changeProblem(cid, pid) {
-    $(".container#problem-container").show();
-    var problem = Object();
-    $.get({
-        url: "/contest/rest/" + cid + "/problem/" + pid,
-        success: function (problem) {
-            $("#problem-title").text(problem.title);
-            $("#problem-time-limit").text(problem.timeLimit);
-            $("#problem-memory-limit").text(problem.memoryLimit);
-            $("#problem-description").text(problem.description);
-            $("#problem-input").text(problem.input);
-            $("#problem-output").text(problem.output);
-            $("#problem-sample-input").text(problem.sampleInput);
-            $("#problem-sample-output").text(problem.sampleOutput);
-            $("#problem-hint").text(problem.hint);
-            $("#submit_btn").attr("problem-id", pid);
-        }
-    });
-}
-
+var cid;
 $(function () {
+    cid = $("main").attr("id");
     changeProblem($("main").attr("id"), $(".change-problem").first().attr("id"));
     $(".change-problem").first().addClass("active");
     $(".change-problem").click(function () {
@@ -103,7 +85,6 @@ function getStatusOfMe() {
                 if (e.language == "py2") e.language = "Python2";
                 if (e.language == "py3") e.language = "Python3";
                 if (e.language == "cpp") e.language = "C++";
-                e.language = e.language.toUpperCase();
                 $("#status-tbody").append(tem[0] + e.id + tem[1] + e.user.username + tem[2] +
                     e.problem.id + tem[3] + e.result + tem[4] + e.time + tem[5] + e.memory +
                     tem[6] + e.length + tem[7] + e.language + tem[8] + e.submitTime + tem[9]);
@@ -117,6 +98,65 @@ function getStatusOfMe() {
                     }
                 );
             });
+        }
+    });
+}
+
+function getRankOfContest() {
+    $.get(
+        {
+            url: "/contest/rest/rank/" + cid,
+            success: function (rank) {
+                peo = rank.people;
+                psize = $("#problem-number").text();
+                rankbody = $("#rank-tbody");
+                peo.forEach(function (e) {
+                    var html_str = "";
+                    var plist = new Array();
+                    html_str += "<tr><td>" + e.user.name + "</td>";
+                    html_str += "<td>" + e.penalty + "</td>";
+                    html_str += "<td>" + e.ac + "</td>";
+                    e.problems.forEach(function (pp) {
+                        plist[pp.pid] = pp;
+                    });
+                    for (var i = 1; i <= psize; i++) {
+                        html_str += "<td>";
+                        if (typeof (plist) == "undefined") {
+                            html_str += "</td>";
+                            continue;
+                        }
+                        var str = "";
+                        if (plist[i].ac == true) {
+                            str = plist[i].duration + "(" + (parseInt(plist[i].wa) + 1) + ")";
+                        } else {
+                            str = "(" + plist.wa + ")";
+                        }
+                        html_str += str + "</td>";
+                    }
+                    html_str += "</tr>";
+                    rankbody.append(html_str);
+                });
+            }
+        }
+    );
+}
+
+function changeProblem(cid, pid) {
+    $("#problem-container").show();
+    var problem = Object();
+    $.get({
+        url: "/contest/rest/" + cid + "/problem/" + pid,
+        success: function (problem) {
+            $("#problem-title").text(problem.title);
+            $("#problem-time-limit").text(problem.timeLimit);
+            $("#problem-memory-limit").text(problem.memoryLimit);
+            $("#problem-description").text(problem.description);
+            $("#problem-input").text(problem.input);
+            $("#problem-output").text(problem.output);
+            $("#problem-sample-input").text(problem.sampleInput);
+            $("#problem-sample-output").text(problem.sampleOutput);
+            $("#problem-hint").text(problem.hint);
+            $("#submit_btn").attr("problem-id", pid);
         }
     });
 }

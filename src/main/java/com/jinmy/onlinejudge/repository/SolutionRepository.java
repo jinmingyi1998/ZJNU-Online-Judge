@@ -14,6 +14,7 @@ import com.jinmy.onlinejudge.entity.Solution;
 import com.jinmy.onlinejudge.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.QueryByExampleExecutor;
 
@@ -33,7 +34,7 @@ public interface SolutionRepository extends JpaRepository<Solution, Long>, Query
 
     List<Solution> findAllByUserAndContest(User u, Contest contest);
 
-    List<Solution> findAllByContest(Contest contest);
+    List<Solution> findAllByContest(Contest contest, Sort sort);
 
     Page<Solution> findAllByUser(Pageable pageable, User user);
 

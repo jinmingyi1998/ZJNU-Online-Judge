@@ -65,8 +65,8 @@
     </script>
 </head>
 <body>
-<main class="container" th:id="${contest.id}">
-    <ul class="nav nav-pills">
+<main class="container-fluid" th:id="${contest.id}">
+    <ul class="container nav nav-pills">
         <li class="nav-item"><a class="nav-link active" data-toggle="pill" href="#overview">Overview</a></li>
         <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#problem">Problems</a></li>
         <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#status">Status</a></li>
@@ -82,14 +82,15 @@
             </div>
         </div>
 
-        <div class="tab-pane fade" id="problem">
+        <div class="tab-pane fade container" id="problem">
+            <span id="problem-number" style="display: none" th:text="${contest.problems.size()}"></span>
             <div class="nav nav-pills">
                 <a class="nav-item nav-link change-problem"
                    data-toggle="pill" href="#problem"
                    th:each="problem:${contest.problems}" th:id="${problem.tempId}"
                    th:text="${problem.tempId}"></a>
             </div>
-            <div class="container" id="problem-container" style="display:none;">
+            <div id="problem-container" style="display:none;">
                 <div class="card bg-light">
                     <div class="card-header">
                         <h2 class="card-title" id="problem-title"></h2>
@@ -175,7 +176,23 @@
             </table>
         </div>
         <div class="container tab-pane fade" id="rank">
+            <a class="fa fa-refresh btn btn-success" onclick="getRankOfContest()"
+               style="font-size: 1.5rem;color: white"></a>
+            <table class="table-sm table-hover table-responsive-xl table-bordered table-light container-fluid"
+                   style="opacity: 0.8">
+                <thead class="thead-light text-center">
+                <tr>
+                    <th style="width: 10rem">User</th>
+                    <th style="width: 5rem">Penalty</th>
+                    <th style="width: 3rem">Solved</th>
+                    <th th:each="problem:${contest.problems}" th:text="${problem.tempId}"></th>
+                </tr>
+                </thead>
 
+                <tbody class="text-center" id="rank-tbody">
+
+                </tbody>
+            </table>
         </div>
         <div class="container tab-pane fade" id="comment"></div>
     </div>

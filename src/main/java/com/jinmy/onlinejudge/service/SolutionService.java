@@ -116,6 +116,6 @@ public class SolutionService {
     }
 
     public List<Solution> getSolutionsInContest(Contest contest) {
-        return solutionRepository.findAllByContest(contest);
+        return solutionRepository.findAllByContest(contest, new Sort(Sort.Direction.ASC, "submitTime"));
     }
 }
