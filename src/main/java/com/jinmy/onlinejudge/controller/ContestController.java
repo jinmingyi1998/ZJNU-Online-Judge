@@ -175,6 +175,7 @@ public class ContestController {
             rank.init(solutions);
             return rank;
         } catch (Exception e) {
+            e.printStackTrace();
         }
         try {
             response.sendRedirect("/404");

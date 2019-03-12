@@ -24,6 +24,8 @@ public class Rank {
     @JsonIgnore
     Map<Long, Person> personMap = new HashMap<>();//User Id :: Person
     List<Person> people;
+    @JsonIgnore
+    Map<Long, Long> durationMap = new HashMap<>();////temp id :: minimal duration seconds
 
     public Rank(Contest contest) {
         this.contest = contest;
@@ -42,11 +44,26 @@ public class Rank {
                 personMap.put(s.getUser().getId(), new Person(contest));
                 personMap.get(s.getUser().getId()).update(s);
             }
+            if (s.getResult().equals("Accepted")) {
+                if (durationMap.containsKey(s.getId())) {
+                    durationMap.put(s.getProblem().getId(),
+                            Math.min(Duration.between(contest.getStartTime(), s.getSubmitTime()).getSeconds(),
+                                    durationMap.get(s.getId())));
+                } else {
+                    durationMap.put(s.getProblem().getId(), Duration.between(contest.getStartTime(), s.getSubmitTime()).getSeconds());
+                }
+            }
         }
         people = new ArrayList<>();
-
         for (Map.Entry<Long, Person> entry : personMap.entrySet()) {
             entry.getValue().getResult();
+            for (RankProblem rp : entry.getValue().problems) {
+                if (rp.isAc()) {
+                    if (rp.duration.getSeconds() == durationMap.get(rp.getPid())) {
+                        rp.setFirstblood(true);
+                    }
+                }
+            }
             people.add(entry.getValue());
         }
         people.sort((o1, o2) -> {
@@ -113,12 +130,14 @@ class Person {
 
 @Data
 class RankProblem {
+    private boolean firstblood;
     Duration duration;
     private boolean isAc;
     private Long wa;
     private Long pid;
 
     public RankProblem() {
+        firstblood = false;
         pid = 0L;
         wa = 0L;
         isAc = false;

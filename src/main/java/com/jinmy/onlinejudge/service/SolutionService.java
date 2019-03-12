@@ -10,7 +10,6 @@ package com.jinmy.onlinejudge.service;
 
 import com.jinmy.onlinejudge.entity.*;
 import com.jinmy.onlinejudge.repository.CompileErrorRepository;
-import com.jinmy.onlinejudge.repository.SolutionExampleExecutor;
 import com.jinmy.onlinejudge.repository.SolutionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -32,8 +31,6 @@ public class SolutionService {
     private SolutionRepository solutionRepository;
     @Autowired
     private CompileErrorRepository compileErrorRepository;
-    @Autowired
-    private SolutionExampleExecutor solutionExampleExecutor;
     @Autowired
     private ContestService contestService;
 
@@ -63,7 +60,8 @@ public class SolutionService {
         s.setResult(result);
         ExampleMatcher exampleMatcher = ExampleMatcher.matching().withIgnoreNullValues();
         Example<Solution> example = Example.of(s, exampleMatcher);
-        return solutionExampleExecutor.findAll(example, PageRequest.of(page, PAGE_SIZE, new Sort(Sort.Direction.DESC, "id")));
+        return solutionRepository.findAll(example, PageRequest.of(page, PAGE_SIZE, new Sort(Sort.Direction.DESC, "id")));
+        //return solutionExampleExecutor.findAll(example, );
     }
 
     /**

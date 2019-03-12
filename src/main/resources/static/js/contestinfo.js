@@ -68,8 +68,21 @@ function getStatusOfMe() {
     $.get({
         url: "/contest/rest/status/" + cid,
         success: function (data) {
+            var users = Array();
+            var problems = Array();
             $("#status-tbody").empty();
             data.forEach(function (e) {
+                if (typeof (e.user.id) == "undefined") {
+                    e.user = users[e.user];
+                } else {
+                    users[e.user.id] = e.user;
+                }
+                if (typeof (e.problem.id) == "undefined") {
+                    e.problem = problems[e.problem];
+                } else {
+                    problems[e.problem.id] = e.problem;
+                }
+
                 var tem = "<tr class='status_row'>" +
                     "<td>*</td>" +
                     "<td>*</td>" +
@@ -120,16 +133,18 @@ function getRankOfContest() {
                         plist[pp.pid] = pp;
                     });
                     for (var i = 1; i <= psize; i++) {
-                        html_str += "<td>";
                         if (typeof (plist) == "undefined") {
-                            html_str += "</td>";
+                            html_str += "<td></td>";
                             continue;
                         }
-                        var str = "";
+                        html_str += "<td ";
+                        var str = " ";
+                        if (plist[i].firstblood == true)
+                            str += "class='bg-success'";
                         if (plist[i].ac == true) {
-                            str = plist[i].duration + "(" + (parseInt(plist[i].wa) + 1) + ")";
+                            str += plist[i].duration + ">(" + (parseInt(plist[i].wa) + 1) + ")";
                         } else {
-                            str = "(" + plist.wa + ")";
+                            str += "class='bg-danger'>(" + plist.wa + ")";
                         }
                         html_str += str + "</td>";
                     }
