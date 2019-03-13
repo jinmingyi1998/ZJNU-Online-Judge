@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 enum Visibility {
@@ -52,8 +53,9 @@ public class Team {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false, length = 255, unique = true)
     private String name;
+
     @ManyToMany
     private List<Contest> contests;
     @Column(nullable = false)
@@ -69,6 +71,13 @@ public class Team {
     private List<TeamRole> teamRoles;
 
     protected Team() {
+        name = "";
+        introduction = "";
+        joinPolicy = JoinPolicy.free;
+        contests = new ArrayList<>();
+        visibility = Visibility.pub;
+        createTime = Instant.now();
+        teamRoles = new ArrayList<>();
     }
 
     public Team(String name, List<Contest> contests, Visibility visibility, JoinPolicy joinPolicy, String introduction, Instant createTime, List<TeamRole> teamRoles) {
@@ -78,6 +87,16 @@ public class Team {
         this.joinPolicy = joinPolicy;
         this.introduction = introduction;
         this.createTime = createTime;
+    }
+
+    public Team(String name, JoinPolicy joinPolicy, String introduction) {
+        this.name = name;
+        this.joinPolicy = joinPolicy;
+        this.introduction = introduction;
+        contests = new ArrayList<>();
+        visibility = Visibility.pub;
+        createTime = Instant.now();
+        teamRoles = new ArrayList<>();
     }
 
     @Override

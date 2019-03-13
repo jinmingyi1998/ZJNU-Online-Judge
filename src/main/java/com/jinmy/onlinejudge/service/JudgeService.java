@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 public class JudgeService {
     @Autowired
     JudgeQueue judgeQueue;
-
     public void submit(Solution solution) {
-        judgeQueue.solve(solution);
+        if (solution.getContest().getPattern().equals("acm"))
+            judgeQueue.solve(solution);
     }
 }

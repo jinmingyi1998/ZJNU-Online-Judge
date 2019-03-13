@@ -9,11 +9,12 @@
 package com.jinmy.onlinejudge.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
@@ -52,14 +53,16 @@ public class Problem {
     private Integer accepted = 0;
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Tag> tags;
-    @JsonIgnore
+    @JsonBackReference
     @OneToMany(mappedBy = "problem")
-    private List<ProblemComment> problemComments;
-    @JsonIgnore
+    private List<ProblemComment> problemComments = new ArrayList<>();
+    @JsonBackReference
     @OneToMany(mappedBy = "problem")
-    private List<Solution> solutions;
+    private List<Solution> solutions = new ArrayList<>();
 
-    protected Problem() {
+    public Problem() {
+        problemComments = null;
+        solutions = null;
     }
 
     public Problem(String title, String description, String input, String output, String sampleInput, String sampleOutput, String hint, String source, Integer timeLimit, Integer memoryLimit) {

@@ -15,15 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
 
-enum Role {
-    admin("Administrator"), manager("Manager"), member("Member");
 
-    String name;
-
-    Role(String s) {
-        name = s;
-    }
-}
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Data
@@ -38,15 +30,12 @@ public class TeamRole {
     @ManyToOne
     private User user;
     private Role role;
-
     public TeamRole(Team team, User user, Role role) {
         this.team = team;
         this.user = user;
         this.role = role;
     }
-
     public TeamRole() {
-
     }
 
     @Override
@@ -57,5 +46,14 @@ public class TeamRole {
                 ", user=" + user +
                 ", role=" + role +
                 '}';
+    }
+
+    public enum Role {
+        admin("Administrator"), manager("Manager"), member("Member");
+        String name;
+
+        Role(String s) {
+            name = s;
+        }
     }
 }

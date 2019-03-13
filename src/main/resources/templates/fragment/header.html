@@ -21,7 +21,6 @@
         html, body {
             height: 100%;
             width: 100%;
-
         }
 
         body {
@@ -29,8 +28,7 @@
             margin: 0;
             margin-top: 20px;
             padding-top: 60px;
-            background: linear-gradient(#448ef6,#75c2f6,#65daf7,#b7fbff,#fff4e0);
-            background-attachment: fixed;
+            background: linear-gradient(#448ef6, #75c2f6, #65daf7, #b7fbff, #fff4e0) fixed;
         }
 
         a {
@@ -54,6 +52,7 @@
             <li class="nav-item"><a class="nav-link" href="/problems">Problem</a></li>
             <li class="nav-item"><a class="nav-link" href="/contest">Contests</a></li>
             <li class="nav-item"><a class="nav-link" href="/status">Status</a></li>
+            <li class="nav-item"><a class="nav-link" href="/team">Team</a></li>
             <li class="nav-item">
                 <a class="nav-link" th:href="@{/login}" th:if="${session.currentUser== null}">Sign in</a>
                 <a class="nav-link" th:href="@{/login}" th:text="${session.currentUser.getName()}"

@@ -1,5 +1,6 @@
 package com.jinmy.onlinejudge.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 
@@ -36,6 +37,7 @@ public class Solution {
     private Instant submitTime;
     @Column(nullable = false)
     private String ip;
+    @JsonIgnore
     @ManyToOne
     private Contest contest;
     @Column(nullable = false, columnDefinition = "integer default -1")
@@ -52,6 +54,7 @@ public class Solution {
     private CompileError ce;
 
     public Solution() {
+        contest = null;
     }
 
     public Solution(User user, Problem problem, String language, String source, String ip, Boolean share) {

@@ -1,6 +1,5 @@
 package com.jinmy.onlinejudge.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -35,14 +34,18 @@ public class Contest {
 
     @Column(nullable = false)
     private Instant createTime;
-    @JsonIgnore
     @OneToMany(mappedBy = "contest")
     private List<ContestComment> contestComments;
-    @JsonIgnore
     @OneToMany(mappedBy = "contest")
     private List<ContestProblem> problems;
     @OneToMany(mappedBy = "contest", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Solution> solutions;
+    @Column(nullable = false, columnDefinition = "varchar(20) default 'acm'")
+    private String pattern;
+
+    public boolean isEnded() {
+        return Instant.now().compareTo(endTime) > 0;
+    }
 
     public Contest(String title, String description, String privilege, String password, Instant startTime, Instant endTime, Instant createTime, List<ContestProblem> contestProblems, List<ContestComment> contestComments) {
         this.title = title;

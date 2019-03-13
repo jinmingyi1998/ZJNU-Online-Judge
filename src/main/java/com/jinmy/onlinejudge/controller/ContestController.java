@@ -123,7 +123,7 @@ public class ContestController {
     public Solution restfulShowSourceCodeInContest(@PathVariable(value = "id") Long id, HttpServletResponse response) {
         try {
             Solution solution = solutionService.getSolutionById(id);
-            Contest contest = solution.getContest();
+            Contest contest = contestService.getContestById(solution.getContest().getId());
             for (ContestProblem cp : contest.getProblems()) {
                 if (cp.getProblem().getId() == solution.getProblem().getId()) {
                     solution.getProblem().setId(cp.getTempId());
@@ -165,6 +165,7 @@ public class ContestController {
         }
         return false;
     }
+
 
     @GetMapping("/rest/rank/{cid}")
     public Rank getRankOfContest(@PathVariable Long cid, HttpServletResponse response) {

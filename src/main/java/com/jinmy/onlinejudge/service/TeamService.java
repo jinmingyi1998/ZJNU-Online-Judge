@@ -3,6 +3,7 @@ package com.jinmy.onlinejudge.service;
 import com.jinmy.onlinejudge.entity.Team;
 import com.jinmy.onlinejudge.entity.TeamRole;
 import com.jinmy.onlinejudge.entity.User;
+import com.jinmy.onlinejudge.repository.TeamRepository;
 import com.jinmy.onlinejudge.repository.TeamRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,8 @@ import java.util.List;
 public class TeamService {
     @Autowired
     TeamRoleRepository teamRoleRepository;
+    @Autowired
+    TeamRepository teamRepository;
 
     public List<Team> getTeamsOfUser(User u) {
         List<TeamRole> teamRoles = teamRoleRepository.findAllByUser(u);
@@ -22,5 +25,17 @@ public class TeamService {
             teams.add(t.getTeam());
         }
         return teams;
+    }
+
+    public boolean teamNameExist(String name) {
+        return teamRepository.findByName(name).isPresent();
+    }
+
+    public Team insertTeam(Team team) {
+        return teamRepository.save(team);
+    }
+
+    public TeamRole joinTeam(TeamRole t) {
+        return teamRoleRepository.save(t);
     }
 }

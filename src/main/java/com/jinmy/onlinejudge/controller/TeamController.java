@@ -1,13 +1,12 @@
 package com.jinmy.onlinejudge.controller;
 
 import com.jinmy.onlinejudge.entity.Team;
+import com.jinmy.onlinejudge.entity.TeamRole;
 import com.jinmy.onlinejudge.entity.User;
 import com.jinmy.onlinejudge.service.TeamService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
@@ -41,5 +40,33 @@ public class TeamController {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @GetMapping("/create")
+    public ModelAndView createTeam() {
+        return new ModelAndView("team/team_create");
+    }
+
+    @PostMapping("/rest/create")
+    public String createTeam(Team team) {
+        try {
+            Team t = teamService.insertTeam(team);
+            User u = (User) session.getAttribute("currentUser");
+            TeamRole teamRole = new TeamRole(t, u, TeamRole.Role.admin);
+            teamService.joinTeam(teamRole);
+            return "success";
+        } catch (Exception e) {
+        }
+        return "false";
+    }
+
+    @GetMapping("/rest/checkname")
+    public String checkName(@RequestParam String name) {
+        if (name.length() > 30)
+            return "Name Too Long";
+        if (teamService.teamNameExist(name)) {
+            return "Name exist";
+        }
+        return "success";
     }
 }
