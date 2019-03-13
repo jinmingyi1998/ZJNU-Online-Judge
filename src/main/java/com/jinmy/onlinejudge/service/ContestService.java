@@ -1,6 +1,7 @@
 package com.jinmy.onlinejudge.service;
 
 import com.jinmy.onlinejudge.entity.Contest;
+import com.jinmy.onlinejudge.repository.ContestProblemRepository;
 import com.jinmy.onlinejudge.repository.ContestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,10 @@ public class ContestService {
     private final int PAGE_SIZE = 30;
     @Autowired
     ContestRepository contestRepository;
+    @Autowired
+    ContestProblemRepository contestProblemRepository;
+    @Autowired
+    SolutionService solutionService;
 
     public Page<Contest> getContestPage(int page, String title) {
         if (title.length() == 0)
@@ -31,6 +36,10 @@ public class ContestService {
     @Transactional
     public Contest getContestById(Long id) {
         Optional<Contest> contest = contestRepository.findById(id);
-        return contest.isPresent() ? contest.get() : null;
+        if (contest.isPresent()) {// initialize the contest
+            //contest.get().setSolutions(solutionService.getSolutionsInContest(contest.get()));
+            contest.get().setProblems(contestProblemRepository.findAllByContest(contest.get()));
+            return contest.get();
+        } else return null;
     }
 }

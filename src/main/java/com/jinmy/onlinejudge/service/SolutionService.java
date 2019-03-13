@@ -84,6 +84,10 @@ public class SolutionService {
         return solutionPage;
     }
 
+    public List<Solution> getSolutionsOfUser(User user) {
+        return solutionRepository.findAllByUser(user, new Sort(Sort.Direction.DESC, "id"));
+    }
+
     /**
      * get a page with sort
      *
@@ -110,7 +114,8 @@ public class SolutionService {
 
 
     public List<Solution> getSolutionsOfUserInContest(User u, Contest c) {
-        return solutionRepository.findAllByUserAndContest(u, c);
+        List<Solution> solutions = solutionRepository.findAllByUserAndContest(u, c);
+        return solutions;
     }
 
     public List<Solution> getSolutionsInContest(Contest contest) {

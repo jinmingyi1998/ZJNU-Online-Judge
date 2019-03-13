@@ -39,6 +39,8 @@ public interface SolutionRepository extends JpaRepository<Solution, Long>, Query
 
     Page<Solution> findAllByUser(Pageable pageable, User user);
 
+    List<Solution> findAllByUser(User user, Sort sort);
+
     List<Solution> findAllByResult(String result);
 
     List<Solution> findAllByProblem(Problem problem);
