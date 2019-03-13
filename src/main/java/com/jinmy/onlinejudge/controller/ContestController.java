@@ -9,6 +9,7 @@
 package com.jinmy.onlinejudge.controller;
 
 import com.jinmy.onlinejudge.entity.*;
+import com.jinmy.onlinejudge.repository.ContestProblemRepository;
 import com.jinmy.onlinejudge.service.*;
 import com.jinmy.onlinejudge.util.Rank;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -42,6 +44,8 @@ public class ContestController {
     UserService userService;
     @Autowired
     JudgeService judgeService;
+    @Autowired
+    ContestProblemRepository contestProblemRepository;
 
     @GetMapping
     public ModelAndView contestPage(@RequestParam(value = "page", defaultValue = "0") int page,
@@ -250,5 +254,88 @@ public class ContestController {
             }
         }
         return null;
+    }
+
+    @GetMapping("/background/{cid}")
+    public ModelAndView backgroundOfContest(@PathVariable Long cid, HttpServletResponse response) {
+        try {
+            ModelAndView m = new ModelAndView("contest/background");
+            Contest contest = contestService.getContestById(cid);
+            m.addObject("contest", contest);
+            return m;
+        } catch (Exception e) {
+        }
+        try {
+            response.sendRedirect("/404");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    @PostMapping("/background/edit/{cid}")
+    public String insertContestAction(@PathVariable Long cid,
+                                      @RequestParam(value = "title") String title,
+                                      @RequestParam(value = "description") String description,
+                                      @RequestParam(value = "privilege", defaultValue = "public") String privilege,
+                                      @RequestParam(value = "password", defaultValue = "") String password,
+                                      @RequestParam(value = "startTime") String startTime,
+                                      @RequestParam(value = "lastTime") String lastTime,
+                                      @RequestParam(value = "list[]") String[] ids) {
+        try {
+            @NotNull Contest contest = contestService.getContestById(cid);
+            contest.setTitle(title);
+            contest.setCreateTime(Instant.now());
+            contest.setDescription(description);
+            contest.setPrivilege(privilege);
+            contest.setStartTime(startTime);
+            contest.setEndTime(startTime, lastTime);
+            contest.setPassword(password);
+            List<ContestProblem> contestProblems = new ArrayList<>();
+            Long _cnt = 1L;
+            for (int i = 0; i < ids.length; i++) {
+                String[] _s = ids[i].split("&", 2);
+                Long id = Long.parseLong(_s[0]);
+                Problem p = problemService.getProblemById(id);
+                if (p != null) {
+                    contestProblems.add(new ContestProblem(p, _s[1], _cnt++));
+                }
+            }
+            for (ContestProblem cp : contestProblems) {
+                cp.setContest(contest);
+                contestProblemRepository.save(cp);
+            }
+            return "success";
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    @GetMapping("/rejudge/{cid}")
+    public String Rejudge(@PathVariable Long cid) {
+        Contest contest=contestService.getContestById(cid);
+        RejudgeThread rejudgeThread=new RejudgeThread();
+        List<Solution>solutions=solutionService.getSolutionsInContest(contest);
+        if (!contest.getPattern().equals("acm")){
+            solutions.sort((o1, o2) -> (int) (o2.getId()-o1.getId()));
+        }
+        rejudgeThread.solutions=solutions;
+        rejudgeThread.run();
+        return "Running";
+    }
+    class RejudgeThread extends Thread {
+        List<Solution> solutions;
+        @Override
+        public void run() {
+            for (Solution s : solutions) {
+                try {
+                    Thread.sleep(1500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                judgeService.submit(s);
+            }
+        }
     }
 }

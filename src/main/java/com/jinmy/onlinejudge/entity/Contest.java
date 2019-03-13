@@ -55,6 +55,11 @@ public class Contest {
     public boolean isEnded() {
         return Instant.now().compareTo(endTime) > 0;
     }
+    public String getLength(){
+        Duration d=Duration.between(startTime,endTime);
+        Long minutes=d.toMinutes();
+        return (minutes/60)+":"+(minutes%60);
+    }
 
     public Contest(String title, String description, String privilege, String password, Instant startTime, Instant endTime, Instant createTime, List<ContestProblem> contestProblems, List<ContestComment> contestComments) {
         this.title = title;
