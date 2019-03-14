@@ -334,7 +334,7 @@ public class ContestController {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                judgeService.submit(s);
+                judgeService.judge(s);
             }
         }
     }

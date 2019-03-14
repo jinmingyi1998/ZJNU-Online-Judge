@@ -4,10 +4,7 @@ import com.jinmy.onlinejudge.entity.Problem;
 import com.jinmy.onlinejudge.entity.Solution;
 import com.jinmy.onlinejudge.entity.User;
 import com.jinmy.onlinejudge.repository.TagRepository;
-import com.jinmy.onlinejudge.service.JudgeService;
-import com.jinmy.onlinejudge.service.ProblemService;
-import com.jinmy.onlinejudge.service.SolutionService;
-import com.jinmy.onlinejudge.service.UserService;
+import com.jinmy.onlinejudge.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.NotNull;
 import java.sql.Date;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -39,6 +37,8 @@ public class ProblemController {
     private UserService userService;
     @Autowired
     private TagRepository tagRepository;
+    @Autowired
+    private UserAuthorityService userAuthorityService;
 
     @GetMapping("/showproblem")
     public ModelAndView showproblem(@RequestParam("id") Long id, HttpServletResponse response) {
@@ -76,13 +76,9 @@ public class ProblemController {
             }
         }
         session.setAttribute("last_submit", Instant.now());
-        User user = (User) session.getAttribute("currentUser");
-        if (user == null) {// user doesn't login
+        @NotNull User user = (User) session.getAttribute("currentUser");
+        if (!userAuthorityService.isLogin(user)) {// user doesn't login
             log.error("User not exist");
-            return "Please Login";
-        }
-        if (!userService.isExist(user.getId())) {// user not found
-            log.error("User not found");
             return "Please Login";
         }
         Problem problem = problemService.getProblemById(id);

@@ -11,18 +11,7 @@ import javax.validation.constraints.Size;
 import java.time.Instant;
 import java.util.Objects;
 
-enum Privilege {
-    admin("admin"), teacher("teacher"), student("student");
-    private String name;
 
-    Privilege(String s) {
-        name = s;
-    }
-
-    public String getName() {
-        return name;
-    }
-}
 
 //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Data
@@ -77,6 +66,19 @@ public class User {
     private String cls;//class
     @Column
     private Privilege privilege;
+
+    public enum Privilege {
+        admin("admin"), teacher("teacher"), student("student");
+        private String name;
+
+        Privilege(String s) {
+            name = s;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
 
     protected User() {
     }
