@@ -1,0 +1,32 @@
+<!--
+  ~ Copyright (c) 2019. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="~{fragment/header :: header}"></th:block>
+    <meta charset="UTF-8">
+    <title th:text="'Hi - '+${user.name}"></title>
+
+</head>
+<body>
+<main class="container" height="100%" width="100%">
+    <h1 th:text="${user.username}"></h1>
+    <h2 th:text="${user.name}"></h2>
+    <div class="card">
+        <div class="card-body">
+            <dl class="card-text">
+                <dt class="col-sm-3">Register:</dt>
+                <dd class="col-sm-9" th:text="${user.registertime}"></dd>
+            </dl>
+        </div>
+    </div>
+</main>
+<footer th:replace="~{fragment/footer :: footer}"></footer>
+</body>
+</html>

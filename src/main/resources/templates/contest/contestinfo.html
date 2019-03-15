@@ -67,14 +67,13 @@
 <body>
 <main class="container-fluid" th:id="${contest.id}">
     <ul class="container nav nav-pills">
-        <li class="nav-item"><a class="nav-link active" data-toggle="pill" href="#overview">Overview</a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#problem">Problems</a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#status">Status</a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#rank">Rank</a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#comment">Comments</a></li>
+        <li class="nav-item"><span class="nav-link active" data-toggle="pill" href="#overview">Overview</span></li>
+        <li class="nav-item"><span class="nav-link" data-toggle="pill" href="#problem">Problems</span></li>
+        <li class="nav-item"><span class="nav-link" data-toggle="pill" href="#status">Status</span></li>
+        <li class="nav-item"><span class="nav-link" data-toggle="pill" href="#rank">Rank</span></li>
+        <li class="nav-item"><span class="nav-link" data-toggle="pill" href="#comment">Comments</span></li>
     </ul>
-
-    <div class="tab-content">
+    <div class="tab-content" style="margin-top: 2rem">
         <div class="tab-pane active" id="overview">
             <div class="list-group container">
                 <li class="list-group-item"
@@ -84,11 +83,12 @@
 
         <div class="tab-pane fade container" id="problem">
             <span id="problem-number" style="display: none" th:text="${contest.problems.size()}"></span>
-            <div class="nav nav-pills">
-                <a class="nav-item nav-link change-problem"
-                   data-toggle="pill" href="#problem"
-                   th:each="problem:${contest.problems}" th:id="${problem.tempId}"
-                   th:text="${problem.tempId}"></a>
+            <div class="nav nav-pills" style="margin: 1rem">
+                <h2>Problem:</h2>
+                <li class="nav-item nav-link change-problem"
+                    data-toggle="pill" href="#problem"
+                    th:each="problem:${contest.problems}" th:id="${problem.tempId}"
+                    th:text="${problem.tempId}"></li>
             </div>
             <div id="problem-container" style="display:none;">
                 <div class="card bg-light">

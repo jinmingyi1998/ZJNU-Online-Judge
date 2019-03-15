@@ -100,7 +100,7 @@ function getStatusOfMe() {
                 if (e.language == "cpp") e.language = "C++";
                 $("#status-tbody").append(tem[0] + e.id + tem[1] + e.user.username + tem[2] +
                     e.problem.id + tem[3] + e.result + tem[4] + e.time + tem[5] + e.memory +
-                    tem[6] + e.length + tem[7] + e.language + tem[8] + e.submitTime + tem[9]);
+                    tem[6] + e.length + tem[7] + e.language + tem[8] + e.normalSubmitTime + tem[9]);
                 if (e.result == "Accepted") {
                     $(".status_row").last().children(".result").addClass("text-success font-weight-bold");
                 } else {
@@ -123,6 +123,7 @@ function getRankOfContest() {
                 peo = rank.people;
                 psize = $("#problem-number").text();
                 rankbody = $("#rank-tbody");
+                rankbody.empty();
                 peo.forEach(function (e) {
                     var html_str = "";
                     var plist = new Array();

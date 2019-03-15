@@ -74,7 +74,7 @@
                         <ul class="list-inline">
                             <li class="list-inline-item">
                                 <h4 class="card-title">
-                                    <a th:href="'/showproblem?id='+*{id}"
+                                    <a th:href="'/problems/'+*{id}"
                                        th:text="${problem.id}+'  '+${problem.title}"></a></h4></li>
                             <li class="list-inline-item float-right" th:each="ta:*{tags}">
                                 <a class="badge badge-pill badge-info"

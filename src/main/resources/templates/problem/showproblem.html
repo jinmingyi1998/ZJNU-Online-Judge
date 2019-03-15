@@ -20,7 +20,7 @@
                 $("#submit_btn").text("Submiting...");
                 $.post({
                     data: $("#form").serialize(),
-                    url: "/submit/" + "[[${problem.id}]]",
+                    url: "/problems/submit/" + "[[${problem.id}]]",
                     cache: false,
                     dataType: 'text',
                     success: function (d) {
@@ -144,6 +144,11 @@
                    th:href="'/problems/tags?tag='+${tag.name}" th:text="${tag.name}"></a>
             </div>
             <div class="container-fluid">
+                <button class="btn btn-primary" data-target="#statuModal" data-toggle="modal" id="leader-board">Leader
+                    board
+                </button>
+            </div>
+            <div class="container-fluid">
                 <table class="table table-light table-hover"
                        th:if="${solutions.size()>0&&session.currentUser!=null}">
                     <thead class="thead-light">
@@ -222,6 +227,56 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="statuModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Top 50</h4>
+                <button class="close" data-dismiss="modal" type="button">&times;</button>
+            </div>
+            <div class="modal-body">
+                <table class="table-sm table-light table-responsive-sm">
+                    <thead class="thead-light text-center">
+                    <tr>
+                        <th>Run ID</th>
+                        <th>Username</th>
+                        <th>Time(ms)</th>
+                        <th>Memory(B)</th>
+                        <th>Length</th>
+                        <th>Language</th>
+                        <th>Submit Time</th>
+                    </tr>
+                    </thead>
+                    <tbody class="text-center" id="top-list">
+                    <tr v-for="s in status">
+                        <li>{{s.id}}</li>
+                        <li>{{s.user.name}}</li>
+                        <li>{{s.time}}</li>
+                        <li>{{s.memory}}</li>
+                        <li>{{s.length}}</li>
+                        <li>{{s.language}}</li>
+                        <li>{{s.normalSubmitTime}}</li>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    new Vue({
+        el: '#top-list',
+        data: {status: []},
+        methods: {
+            getStatus: function () {
+                ;
+            }
+        }
+    })
+</script>
 <footer th:replace="~{fragment/footer :: footer}"></footer>
 </body>
 </html>

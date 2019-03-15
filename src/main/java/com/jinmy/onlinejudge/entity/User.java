@@ -8,6 +8,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Objects;
 
@@ -66,6 +68,10 @@ public class User {
     private String cls;//class
     @Column
     private Privilege privilege;
+
+    public String getNormalRegisterTime() {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date.from(registertime));
+    }
 
     public enum Privilege {
         admin("admin"), teacher("teacher"), student("student");

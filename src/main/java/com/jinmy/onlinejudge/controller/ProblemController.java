@@ -8,7 +8,6 @@ import com.jinmy.onlinejudge.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -22,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
+@RequestMapping("/problems")
 @RestController
 public class ProblemController {
     private final int PAGE_SIZE = 30;
@@ -40,11 +40,11 @@ public class ProblemController {
     @Autowired
     private UserAuthorityService userAuthorityService;
 
-    @GetMapping("/showproblem")
-    public ModelAndView showproblem(@RequestParam("id") Long id, HttpServletResponse response) {
+    @GetMapping("/{id}")
+    public ModelAndView showproblem(@PathVariable Long id, HttpServletResponse response) {
         Problem problem = problemService.getProblemById(id);
         ModelAndView m = new ModelAndView("problem/showproblem");
-        if (problem == null) {
+        if (problem == null || problem.getActive() == false) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return null;
         } else
@@ -59,8 +59,8 @@ public class ProblemController {
     }
 
     @PostMapping("/submit/{id}")
-    public String submitProblem(Model m, @PathVariable("id") Long id,
-                                HttpServletResponse response, HttpServletRequest request,
+    public String submitProblem(@PathVariable("id") Long id,
+                                HttpServletRequest request,
                                 @RequestParam(value = "language", defaultValue = "cpp") String language,
                                 @RequestParam(value = "source") String source,
                                 @RequestParam(value = "share", defaultValue = "false") boolean share) {
@@ -82,7 +82,7 @@ public class ProblemController {
             return "Please Login";
         }
         Problem problem = problemService.getProblemById(id);
-        if (problem == null) {
+        if (problem == null || problem.getActive() == false) {
             return "Problem Not Exist";
         }
         Solution solution = new Solution(user, problem, language, source, request.getRemoteAddr(), share);
@@ -91,9 +91,9 @@ public class ProblemController {
         return "success";
     }
 
-    @GetMapping("/problems")
+    @GetMapping
     public ModelAndView showProblemList(@RequestParam(value = "page", defaultValue = "0") int page,
-                                        @RequestParam(value = "search", defaultValue = "") String search) {
+                                        @RequestParam(value = "problem", defaultValue = "") String search) {
         ModelAndView m = new ModelAndView("problem/problemlist");
         page = Math.max(page, 0);
         Page<Problem> problemPage = problemService.getProblemPage(page, PAGE_SIZE, search);
@@ -102,7 +102,7 @@ public class ProblemController {
         return m;
     }
 
-    @GetMapping("/problems/tags")
+    @GetMapping("/tags")
     public ModelAndView showProblemListByTag(@RequestParam(value = "page", defaultValue = "0") int page,
                                              @RequestParam(value = "tag", defaultValue = "") String tagname) {
         ModelAndView m = new ModelAndView("problem/tagproblems");

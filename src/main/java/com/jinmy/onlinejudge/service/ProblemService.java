@@ -80,13 +80,27 @@ public class ProblemService {
         try {
             if (search.length() > 0) {
                 try {
+                    return problemRepository.findAllByActiveAndIdOrTitleLike(PageRequest.of(page, size, _sort), true, Long.parseLong(search), "%" + search + "%");
+                } catch (NumberFormatException e) {
+                    return problemRepository.findAllByActiveAndTitleLike(PageRequest.of(page, size, _sort), true, "%" + search + "%");
+                }
+            }
+        } catch (Exception e) {
+        }
+        return problemRepository.findAllByActive(PageRequest.of(page, size, _sort), true);
+    }
+
+    public Page<Problem> getAdminProblemPage(int page, int size, String search) {
+        Sort _sort = new Sort(Sort.Direction.ASC, "id");
+        try {
+            if (search.length() > 0) {
+                try {
                     return problemRepository.findAllByIdOrTitleLike(PageRequest.of(page, size, _sort), Long.parseLong(search), "%" + search + "%");
                 } catch (NumberFormatException e) {
                     return problemRepository.findAllByTitleLike(PageRequest.of(page, size, _sort), "%" + search + "%");
                 }
             }
         } catch (Exception e) {
-            return problemRepository.findAll(PageRequest.of(page, size, _sort));
         }
         return problemRepository.findAll(PageRequest.of(page, size, _sort));
     }

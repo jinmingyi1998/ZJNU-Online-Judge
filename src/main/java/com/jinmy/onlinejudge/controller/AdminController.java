@@ -35,10 +35,10 @@ public class AdminController {
     ContestProblemRepository contestProblemRepository;
 
     @GetMapping
-    public ModelAndView index(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "search", defaultValue = "") String search) {
+    public ModelAndView index(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "problem", defaultValue = "") String search) {
         ModelAndView m = new ModelAndView("admin/admin");
         page = Math.max(page, 0);
-        Page<Problem> problemPage = problemService.getProblemPage(page, 40, search);
+        Page<Problem> problemPage = problemService.getAdminProblemPage(page, 40, search);
         m.addObject("problems", problemPage);
         return m;
     }
@@ -153,5 +153,4 @@ public class AdminController {
         }
         return null;
     }
-
 }
