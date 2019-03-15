@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2019. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+ * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+ * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+ * Vestibulum commodo. Ut rhoncus gravida arcu.
+ */
+
 package com.jinmy.onlinejudge.controller;
 
 import com.jinmy.onlinejudge.entity.Problem;
@@ -15,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
 import java.sql.Date;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -100,6 +109,21 @@ public class ProblemController {
         m.addObject("problems", problemPage);
         m.addObject("tags", tagRepository.findAll());
         return m;
+    }
+
+    @GetMapping("/status/top/{pid}")
+    public List<Solution> getTopOfProblem(@PathVariable Long pid,HttpServletResponse response) {
+        try{
+            @NotNull Problem problem=problemService.getProblemById(pid);
+            List <Solution> solutions=solutionService.getTop50OfProblem(problem);
+            return solutions;
+        }catch (Exception e){}
+        try {
+            response.sendRedirect("/404");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @GetMapping("/tags")

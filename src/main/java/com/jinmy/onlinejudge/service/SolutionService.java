@@ -64,6 +64,12 @@ public class SolutionService {
         //return solutionExampleExecutor.findAll(example, );
     }
 
+    public List<Solution> getTop50OfProblem(Problem problem){
+        return solutionRepository.findFirst50ByResultAndProblemOrderByTimeAsc("Accepted",problem);
+    }
+
+
+
     /**
      * get a page by user id
      *

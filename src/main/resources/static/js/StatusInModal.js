@@ -7,7 +7,7 @@
  */
 
 $(function () {
-    $(".view-code").click(function () {
+    $("body").on("click",".view-code",function () {
         var id = $(this).attr("id");
         $.post(
             {

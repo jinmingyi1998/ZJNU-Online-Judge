@@ -7,7 +7,8 @@
   -->
 
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="~{fragment/header :: header}"></th:block>
     <meta charset="UTF-8">
@@ -171,7 +172,23 @@
                 </tr>
                 </thead>
                 <tbody class="text-center" id="status-tbody">
-
+                <tr v-for="s in status" class="status_row">
+                    <td>{{s.id}}</td>
+                    <td>{{s.user.name}}</td>
+                    <td>{{s.problem.id}}</td>
+                    <td class="result view-code" v-bind:id="s.id"
+                        v-bind:class="{ 'text-success' : s.result=='Accepted',
+                         'font-weight-bold' : s.result=='Accepted','text-danger':s.result!='Accepted' }">
+                        {{s.result}}
+                    </td>
+                    <td>{{s.time}}</td>
+                    <td>{{s.memory}}</td>
+                    <td>{{s.length}}</td>
+                    <td class="view-code" :id="s.id"
+                        v-bind:class="{ 'text-success' : s.result=='Accepted',
+                         'text-danger':s.result!='Accepted' }">{{s.language}}</td>
+                    <td>{{s.normalSubmitTime}}</td>
+                </tr>
                 </tbody>
             </table>
         </div>
@@ -190,7 +207,6 @@
                 </thead>
 
                 <tbody class="text-center" id="rank-tbody">
-
                 </tbody>
             </table>
         </div>
@@ -243,6 +259,14 @@
         </div>
     </div>
 </div>
+<script>
+    var ve=new Vue({
+        el:"#status-tbody",
+        data:{
+            status:[]
+        }
+    });
+</script>
 <footer th:replace="~{fragment/footer :: footer}"></footer>
 </body>
 </html>

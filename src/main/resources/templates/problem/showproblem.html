@@ -60,7 +60,7 @@
 <body>
 <div class="container " height="100%">
     <div class="row">
-        <div class="col-9">
+        <main class="col-9" th:id="${problem.id}">
             <div class="card bg-light">
                 <div class="card-header">
                     <h2 class="card-title" th:text="${problem.title}"></h2>
@@ -120,7 +120,7 @@
                     <a class="btn btn-primary btn-lg text-center" id="submit_btn">Submit</a>
                 </form>
             </div>
-        </div>
+        </main>
         <div class="col-3">
             <div class="container-fluid bg-light rounded" style="opacity: 0.9">
                 <table class="table-sm table">
@@ -181,6 +181,46 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="statuModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Top 50</h4>
+                <button class="close" data-dismiss="modal" type="button">&times;</button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-light table-responsive-sm table-bordered table-hover">
+                    <thead class="thead-light text-center">
+                    <tr>
+                        <th>Run ID</th>
+                        <th>Username</th>
+                        <th>Time(ms)</th>
+                        <th>Memory(B)</th>
+                        <th>Length</th>
+                        <th>Language</th>
+                        <th>Submit Time</th>
+                    </tr>
+                    </thead>
+                    <tbody class="text-center" id="top-list">
+                    <tr v-for="s in status">
+                        <td :id="s.id">{{s.id}}</td>
+                        <td>{{s.user.name}}</td>
+                        <td>{{s.time}}</td>
+                        <td>{{s.memory}}</td>
+                        <td>{{s.length}}</td>
+                        <td class="text-success view-code" :id="s.id">{{s.language}}</td>
+                        <td>{{s.normalSubmitTime}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="codeModal">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -227,55 +267,21 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="statuModal">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Top 50</h4>
-                <button class="close" data-dismiss="modal" type="button">&times;</button>
-            </div>
-            <div class="modal-body">
-                <table class="table-sm table-light table-responsive-sm">
-                    <thead class="thead-light text-center">
-                    <tr>
-                        <th>Run ID</th>
-                        <th>Username</th>
-                        <th>Time(ms)</th>
-                        <th>Memory(B)</th>
-                        <th>Length</th>
-                        <th>Language</th>
-                        <th>Submit Time</th>
-                    </tr>
-                    </thead>
-                    <tbody class="text-center" id="top-list">
-                    <tr v-for="s in status">
-                        <li>{{s.id}}</li>
-                        <li>{{s.user.name}}</li>
-                        <li>{{s.time}}</li>
-                        <li>{{s.memory}}</li>
-                        <li>{{s.length}}</li>
-                        <li>{{s.language}}</li>
-                        <li>{{s.normalSubmitTime}}</li>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
 <script>
-    new Vue({
+    var vm=new Vue({
         el: '#top-list',
-        data: {status: []},
-        methods: {
-            getStatus: function () {
-                ;
-            }
+        data: {
+            status:[]
         }
-    })
+    });
+    $("#leader-board").click(function () {
+        $.get({
+            url:"/problems/status/top/"+$("main").attr("id"),
+            success:function (res) {
+                vm._data.status=res;
+            }
+        });
+    });
 </script>
 <footer th:replace="~{fragment/footer :: footer}"></footer>
 </body>

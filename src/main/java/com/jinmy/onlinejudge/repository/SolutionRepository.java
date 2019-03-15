@@ -47,6 +47,9 @@ public interface SolutionRepository extends JpaRepository<Solution, Long>, Query
 
     Page<Solution> findAllByResult(Pageable pageable, String result);
 
+    //Top 50
+    List<Solution> findFirst50ByResultAndProblemOrderByTimeAsc(String res,Problem problem);
+
     @Override
     <S extends Solution> Page<S> findAll(Example<S> example, Pageable pageable);
 

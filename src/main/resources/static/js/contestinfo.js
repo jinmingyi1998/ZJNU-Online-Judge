@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2019. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+ * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+ * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+ * Vestibulum commodo. Ut rhoncus gravida arcu.
+ */
+
 var cid;
 $(function () {
     cid = $("main").attr("id");
@@ -68,49 +76,7 @@ function getStatusOfMe() {
     $.get({
         url: "/contest/rest/status/" + cid,
         success: function (data) {
-            var users = Array();
-            var problems = Array();
-            $("#status-tbody").empty();
-            data.forEach(function (e) {
-                if (typeof (e.user.id) == "undefined") {
-                    e.user = users[e.user];
-                } else {
-                    users[e.user.id] = e.user;
-                }
-                if (typeof (e.problem.id) == "undefined") {
-                    e.problem = problems[e.problem];
-                } else {
-                    problems[e.problem.id] = e.problem;
-                }
-
-                var tem = "<tr class='status_row'>" +
-                    "<td>*</td>" +
-                    "<td>*</td>" +
-                    "<td>*</td>" +
-                    "<td class='result view-code'>*</td>" +
-                    "<td>*</td>" +
-                    "<td>*</td>" +
-                    "<td>*</td>" +
-                    "<td class='view-code'>*</td>" +
-                    "<td>*</td>" +
-                    "</tr>";
-                tem = tem.split("*");
-                if (e.language == "py2") e.language = "Python2";
-                if (e.language == "py3") e.language = "Python3";
-                if (e.language == "cpp") e.language = "C++";
-                $("#status-tbody").append(tem[0] + e.id + tem[1] + e.user.username + tem[2] +
-                    e.problem.id + tem[3] + e.result + tem[4] + e.time + tem[5] + e.memory +
-                    tem[6] + e.length + tem[7] + e.language + tem[8] + e.normalSubmitTime + tem[9]);
-                if (e.result == "Accepted") {
-                    $(".status_row").last().children(".result").addClass("text-success font-weight-bold");
-                } else {
-                    $(".status_row").last().children(".result").addClass("text-danger");
-                }
-                $(".status_row").last().children(".view-code").each(function () {
-                        $(this).attr("id", e.id)
-                    }
-                );
-            });
+            ve._data.status=data;
         }
     });
 }
@@ -126,7 +92,7 @@ function getRankOfContest() {
                 rankbody.empty();
                 peo.forEach(function (e) {
                     var html_str = "";
-                    var plist = new Array();
+                    var plist = [];
                     html_str += "<tr><td>" + e.user.name + "</td>";
                     html_str += "<td>" + e.penalty + "</td>";
                     html_str += "<td>" + e.ac + "</td>";
