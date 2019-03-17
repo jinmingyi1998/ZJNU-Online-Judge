@@ -18,11 +18,18 @@
 <main class="container" height="100%" width="100%">
     <h1 th:text="${user.username}"></h1>
     <h2 th:text="${user.name}"></h2>
+    <h2 class="badge-secondary badge" th:text="${user.privilege.name}"></h2>
     <div class="card">
         <div class="card-body">
             <dl class="card-text">
                 <dt class="col-sm-3">Register:</dt>
-                <dd class="col-sm-9" th:text="${user.registertime}"></dd>
+                <dd class="col-sm-9" th:text="${user.normalRegisterTime}"></dd>
+                <dt class="col-sm-3">School</dt>
+                <dd class="col-sm-9" th:text="${user.school}"></dd>
+                <dt class="col-sm-3">Solved</dt>
+                <dd class="col-sm-9" th:text="${user.solve}"></dd>
+                <dt class="col-sm-3">Submitted</dt>
+                <dd class="col-sm-9" th:text="${user.submit}"></dd>
             </dl>
         </div>
     </div>

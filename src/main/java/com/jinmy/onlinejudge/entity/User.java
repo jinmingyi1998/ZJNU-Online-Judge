@@ -62,17 +62,15 @@ public class User {
     @CreatedDate
     @Column(nullable = false)
     private Instant registertime;
+
+    public User() {
+    }
     @Column(length = 200)
     private String school;
     @Column(length = 200)
     private String cls;//class
     @Column
     private Privilege privilege;
-
-    public String getNormalRegisterTime() {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date.from(registertime));
-    }
-
     public enum Privilege {
         admin("admin"), teacher("teacher"), student("student");
         private String name;
@@ -86,7 +84,8 @@ public class User {
         }
     }
 
-    protected User() {
+    public String getNormalRegisterTime() {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date.from(registertime));
     }
 
     public User(@NotEmpty(message = "username cannot be empty") @Size(min = 4, max = 30) String username, @NotEmpty(message = "name cannot be empty") @Size(min = 2, max = 30) String name, @NotEmpty(message = "email cannot be empty") @Size(min = 4, max = 50) @Email(message = "email format error") String email, @NotEmpty(message = "username cannot be empty") @Size(min = 4, max = 30) String password, Integer submit, Integer solve, Boolean banned, Instant registertime, String school, String cls) {
