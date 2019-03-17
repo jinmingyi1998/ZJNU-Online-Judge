@@ -8,10 +8,13 @@
 
 package com.jinmy.onlinejudge.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.Date;
 
 //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Data
@@ -29,6 +32,11 @@ public abstract class Comment {
     private User user;
     @Column(columnDefinition = "LONGTEXT")
     private String text;
+
+    @JsonManagedReference
+    public String getNormalPostTime() {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date.from(postTime));
+    }
 }
 
 

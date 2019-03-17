@@ -45,10 +45,10 @@ public class Rank {
                 personMap.get(s.getUser().getId()).update(s);
             }
             if (s.getResult().equals("Accepted")) {
-                if (durationMap.containsKey(s.getId())) {
+                if (durationMap.containsKey(s.getProblem().getId())) {
                     durationMap.put(s.getProblem().getId(),
                             Math.min(Duration.between(contest.getStartTime(), s.getSubmitTime()).getSeconds(),
-                                    durationMap.get(s.getId())));
+                                    durationMap.get(s.getProblem().getId())));
                 } else {
                     durationMap.put(s.getProblem().getId(), Duration.between(contest.getStartTime(), s.getSubmitTime()).getSeconds());
                 }
@@ -72,7 +72,6 @@ public class Rank {
             return (int) (-o1.getAc() + o2.getAc());
         });
     }
-
 }
 
 @Data
@@ -112,7 +111,7 @@ class Person {
             this.penalty += rp.duration.getSeconds();
             this.penalty += rp.getWa() * 20 * 60L;
             this.ac++;
-        } else if (s.getResult().indexOf("Runn") != -1 || s.getResult().indexOf("Compile") != -1) {
+        } else if (s.getResult().indexOf("Runn") != -1 || s.getResult().indexOf("Compi") != -1) {
             return;
         } else {
             rp.setWa(rp.getWa() + 1L);

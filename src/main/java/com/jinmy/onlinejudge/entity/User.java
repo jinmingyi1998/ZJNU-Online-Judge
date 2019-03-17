@@ -69,8 +69,8 @@ public class User {
     private String school;
     @Column(length = 200)
     private String cls;//class
-    @Column
-    private Privilege privilege;
+    @Column(columnDefinition = "integer default 2")
+    private Privilege privilege = Privilege.student;
     public enum Privilege {
         admin("admin"), teacher("teacher"), student("student");
         private String name;
@@ -99,6 +99,7 @@ public class User {
         this.registertime = registertime;
         this.school = school;
         this.cls = cls;
+        privilege = Privilege.student;
     }
 
     public User(@NotEmpty(message = "username cannot be empty") @Size(min = 4, max = 30) String username, @NotEmpty(message = "name cannot be empty") @Size(min = 2, max = 30) String name, @NotEmpty(message = "email cannot be empty") @Size(min = 4, max = 50) @Email(message = "email format error") String email, @NotEmpty(message = "username cannot be empty") @Size(min = 4, max = 30) String password, String school, String cls) {
@@ -112,6 +113,7 @@ public class User {
         banned = false;
         solve = 0;
         submit = 0;
+        privilege = Privilege.student;
     }
 
     @Override

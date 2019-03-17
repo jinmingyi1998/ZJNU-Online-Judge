@@ -47,6 +47,7 @@ public class ContestController {
     @Autowired
     ContestProblemRepository contestProblemRepository;
 
+
     @GetMapping
     public ModelAndView contestPage(@RequestParam(value = "page", defaultValue = "0") int page,
                                     @RequestParam(value = "title", defaultValue = "") String title) {
@@ -189,13 +190,12 @@ public class ContestController {
         }
         return null;
     }
-
-
     @GetMapping("/rest/{cid}/comments")
     public List<ContestComment> getCommentsOfContest(@PathVariable Long cid) {
         try {
             @NotNull Contest contest = contestService.getContestById(cid);
-            return contest.getContestComments();
+            List<ContestComment> contestComments = contestService.getCommentsOfContest(contest);
+            return contestComments;
         } catch (Exception e) {
         }
         return null;

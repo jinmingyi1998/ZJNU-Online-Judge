@@ -19,7 +19,7 @@ public class UserSpaceController {
     @Autowired
     UserService userService;
 
-    @GetMapping("/{id}")
+    @GetMapping("/{uid}")
     public ModelAndView userSpace(HttpServletResponse response, @PathVariable Long uid) {
         try {
             ModelAndView m = new ModelAndView("user/userspace");

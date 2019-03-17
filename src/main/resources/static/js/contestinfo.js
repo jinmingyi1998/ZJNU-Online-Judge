@@ -12,7 +12,7 @@ $(function () {
     changeProblem($("main").attr("id"), $(".change-problem").first().attr("id"));
     $(".change-problem").first().addClass("active");
     $(".change-problem").click(function () {
-        changeProblem($("main").attr("id"), $(this).attr("id"))
+        changeProblem(cid, $(this).attr("id"))
     });
     $(function () {
         $("body").on('click', '.view-code', function () {
@@ -71,12 +71,13 @@ $(function () {
         });
     });
 });
+
 function getStatusOfMe() {
     cid = $("main").attr("id");
     $.get({
         url: "/contest/rest/status/" + cid,
         success: function (data) {
-            ve._data.status=data;
+            ve._data.status = data;
         }
     });
 }
@@ -100,7 +101,7 @@ function getRankOfContest() {
                         plist[pp.pid] = pp;
                     });
                     for (var i = 1; i <= psize; i++) {
-                        if (typeof (plist) == "undefined") {
+                        if (typeof (plist[i]) == "undefined") {
                             html_str += "<td></td>";
                             continue;
                         }
@@ -109,9 +110,9 @@ function getRankOfContest() {
                         if (plist[i].firstblood == true)
                             str += "class='bg-success'";
                         if (plist[i].ac == true) {
-                            str += plist[i].duration + ">(" + (parseInt(plist[i].wa) + 1) + ")";
+                            str += ">" + plist[i].duration + "(" + (parseInt(plist[i].wa) + 1) + ")";
                         } else {
-                            str += "class='bg-danger'>(" + plist.wa + ")";
+                            str += "class='bg-danger'>(" + plist[i].wa + ")";
                         }
                         html_str += str + "</td>";
                     }
@@ -139,6 +140,15 @@ function changeProblem(cid, pid) {
             $("#problem-sample-output").text(problem.sampleOutput);
             $("#problem-hint").text(problem.hint);
             $("#submit_btn").attr("problem-id", pid);
+        }
+    });
+}
+
+function getComments() {
+    $.get({
+        url: "/contest/rest/" + cid + "/comments",
+        success: function (res) {
+            ce._data.comments = res;
         }
     });
 }

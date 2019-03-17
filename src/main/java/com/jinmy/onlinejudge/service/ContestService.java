@@ -1,6 +1,8 @@
 package com.jinmy.onlinejudge.service;
 
 import com.jinmy.onlinejudge.entity.Contest;
+import com.jinmy.onlinejudge.entity.ContestComment;
+import com.jinmy.onlinejudge.repository.ContestCommentRepository;
 import com.jinmy.onlinejudge.repository.ContestProblemRepository;
 import com.jinmy.onlinejudge.repository.ContestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Transactional
@@ -22,6 +25,8 @@ public class ContestService {
     ContestProblemRepository contestProblemRepository;
     @Autowired
     SolutionService solutionService;
+    @Autowired
+    ContestCommentRepository contestCommentRepository;
 
     public Page<Contest> getContestPage(int page, String title) {
         if (title.length() == 0)
@@ -41,5 +46,10 @@ public class ContestService {
             contest.get().setProblems(contestProblemRepository.findAllByContest(contest.get()));
             return contest.get();
         } else return null;
+    }
+
+    public List<ContestComment> getCommentsOfContest(Contest c) {
+        List<ContestComment> contestComments = contestCommentRepository.findAllByContest(c);
+        return contestComments;
     }
 }

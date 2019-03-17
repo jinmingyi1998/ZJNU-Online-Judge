@@ -56,7 +56,7 @@
             <li class="nav-item"><a class="nav-link" href="/team">Team</a></li>
             <li class="nav-item">
                 <a class="nav-link" th:href="@{/login}" th:if="${session.currentUser== null}">Sign in</a>
-                <a class="nav-link" th:href="'/user'+${session.currentUser.id}"
+                <a class="nav-link" th:href="'/user/'+${session.currentUser.id}"
                    th:text="${session.currentUser.name}"
                    th:unless="${session.currentUser== null}">Username</a>
             </li>
