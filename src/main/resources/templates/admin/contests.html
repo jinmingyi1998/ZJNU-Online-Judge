@@ -88,7 +88,7 @@
     <ul class="list-group">
         <li class="list-group-item" th:each="contest:${contests}" th:object="${contest}">
             <span class="text-center" th:text="*{id}+'  '+*{title}"></span>
-            <a class="btn-sm btn-primary float-right" th:href="'/admin/contest/edit/'+*{id}">Update</a>
+            <a class="btn-sm btn-primary float-right" th:href="'/contest/background/'+*{id}">Update</a>
             <a class="btn-danger btn-sm remove-btn float-right" th:id="*{id}">Remove</a></li>
         </li>
     </ul>

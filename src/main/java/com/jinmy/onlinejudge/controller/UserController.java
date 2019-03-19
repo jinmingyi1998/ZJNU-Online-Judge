@@ -25,10 +25,14 @@ public class UserController {
     @PostMapping("/register")
     public String registerUser(User user) {
         User u = new User(user.getUsername(), user.getName(), user.getEmail(), user.getPassword(), user.getSchool(), user.getCls());
-        User t_user = userService.registerUser(u);
-        if (t_user != null)
-            return "success";
-        else return "false";
+        try {
+            User t_user = userService.registerUser(u);
+            if (t_user != null)
+                return "success";
+            else return "false";
+        } catch (Exception e) {
+            return "false";
+        }
     }
 
     @GetMapping("/login")

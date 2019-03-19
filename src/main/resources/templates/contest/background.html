@@ -11,26 +11,24 @@
 <head>
     <th:block th:insert="~{fragment/header :: header}"></th:block>
     <meta charset="UTF-8">
-    <title>Contests</title>
-    <script src="/js/urlcontrol.js"></script>
-    <script src="/js/contestinfo.js"></script>
+    <title>Contests Background</title>
     <script language="JavaScript" th:src="@{/js/StatusInModal.js}"></script>
     <script>
         $(function () {
-            $("#plus-problem").click(function () {
+            $("body").on("click", "#plus-problem", function () {
                 $(this).before("<div class=\"problem-input form-inline\">" +
                     "                id:<input type=\"text\" class=\"form-control plus-problems\">" +
                     "                alias:<input class=\"problem-name form-control\">" +
                     "                <span class=\"fa fa-minus-square remove-problem\" style=\"font-size: 1.5rem;color: red\"></span>" +
                     "            </div>");
             });
-            $(".remove-problem").click(function () {
+            $("body").on("click", ".remove-problem", function () {
                 $(this).parent().remove();
             });
-            $(".plus-problems").change(function () {
+            $("body").on("change", ".plus-problems", function () {
                 var obj = $(this);
                 $.get({
-                    url: "/admin/contest/get-problem-name/" + $(this).val(),
+                    url: "/admin/contest/get-problem-name/" + obj.val(),
                     success: function (data) {
                         obj.siblings(".problem-name").val(data);
                     }
@@ -63,14 +61,17 @@
         function Rejudge() {
             if (confirm("Sure??Rejudge/Judge??")) {
                 $.get({
-
+                    url: "/contest/rejudge/" + $("#id").val(),
+                    success: function (res) {
+                        alert(res);
+                    }
                 });
             }
         }
     </script>
 </head>
 <body>
-<main>
+<main class="container">
     <button class="btn btn-danger btn-sm">Rejudge/Judge</button>
     <form>
 

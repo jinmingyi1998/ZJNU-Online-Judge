@@ -20,17 +20,17 @@
     <script src="/js/bootstrap-datetimepicker.min.js"></script>
     <script>
         $(function () {
-            $("#plus-problem").click(function () {
+            $("body").on("click", "#plus-problem", function () {
                 $(this).before("<div class=\"problem-input form-inline\">" +
                     "                id:<input type=\"text\" class=\"form-control plus-problems\">" +
                     "                alias:<input class=\"problem-name form-control\">" +
                     "                <span class=\"fa fa-minus-square remove-problem\" style=\"font-size: 1.5rem;color: red\"></span>" +
                     "            </div>");
             });
-            $(".remove-problem").click(function () {
+            $("body").on("click", ".remove-problem", function () {
                 $(this).parent().remove();
             });
-            $(".plus-problems").change(function () {
+            $("body").on("click", ".plus-problems", function () {
                 var obj = $(this);
                 $.get({
                     url: "/admin/contest/get-problem-name/" + $(this).val(),

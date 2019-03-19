@@ -213,7 +213,7 @@
         <div class="container tab-pane fade" id="comment">
             <ul class="list-group" id="comments">
                 <li :key="comment.id" class="list-group-item" v-for="comment in comments">
-                    <a>{{comment.user.name}}</a>&nbsp; @ &nbsp;<span>{{comment.normalPostTime}}</span>
+                    <a :href="user_url(comment.user.id)">{{comment.user.name}}</a>&nbsp; @ &nbsp;<span>{{comment.normalPostTime}}</span>
                     <span v-if="comment.fatherId!=null">{{comment}}</span>
                     <pre>{{comment.text}}</pre>
                 </li>
@@ -279,7 +279,7 @@
         data: {
             comments: []
         },
-        method: {
+        methods: {
             user_url: function (x) {
                 return "/user/" + x;
             }

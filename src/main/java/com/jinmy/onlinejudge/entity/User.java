@@ -63,6 +63,9 @@ public class User {
     @Column(nullable = false)
     private Instant registertime;
 
+    @Column(columnDefinition = "integer default 0")
+    private Integer score;
+
     public User() {
     }
     @Column(length = 200)
