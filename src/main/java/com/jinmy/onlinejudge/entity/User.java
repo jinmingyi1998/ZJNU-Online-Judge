@@ -53,10 +53,11 @@ public class User {
     @Size(min = 4, max = 30)
     @Column(nullable = false, length = 30)
     private String password;
-    @Column(nullable = false, columnDefinition = "integer default 0")
+    @Column(columnDefinition = "integer default 0")
     private Integer submit;
-    @Column(nullable = false, columnDefinition = "integer default 0")
+    @Column(columnDefinition = "integer default 0")
     private Integer solve;
+
     @Column(nullable = false)
     private Boolean banned;
     @CreatedDate
@@ -66,8 +67,6 @@ public class User {
     @Column(columnDefinition = "integer default 0")
     private Integer score;
 
-    public User() {
-    }
     @Column(length = 200)
     private String school;
     @Column(length = 200)
@@ -87,6 +86,8 @@ public class User {
         }
     }
 
+    public User() {
+    }
     public String getNormalRegisterTime() {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date.from(registertime));
     }
@@ -135,6 +136,10 @@ public class User {
                 ", cls='" + cls + '\'' +
                 ", privilege=" + privilege +
                 '}';
+    }
+
+    public void addSocre(int score) {
+        this.score += score;
     }
 
     public boolean userValidator() {

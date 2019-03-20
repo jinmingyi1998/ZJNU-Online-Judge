@@ -10,12 +10,15 @@ package com.jinmy.onlinejudge.service;
 
 import com.jinmy.onlinejudge.entity.*;
 import com.jinmy.onlinejudge.repository.CompileErrorRepository;
+import com.jinmy.onlinejudge.repository.ContestProblemRepository;
 import com.jinmy.onlinejudge.repository.SolutionRepository;
+import com.jinmy.onlinejudge.repository.UserProblemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +36,12 @@ public class SolutionService {
     private CompileErrorRepository compileErrorRepository;
     @Autowired
     private ContestService contestService;
+    @Autowired
+    ContestProblemRepository contestProblemRepository;
+    @Autowired
+    private UserProblemRepository userProblemRepository;
+    @Autowired
+    private ProblemService problemService;
 
     /**
      * @param id solution id
@@ -64,10 +73,9 @@ public class SolutionService {
         //return solutionExampleExecutor.findAll(example, );
     }
 
-    public List<Solution> getTop50OfProblem(Problem problem){
-        return solutionRepository.findFirst50ByResultAndProblemOrderByTimeAsc("Accepted",problem);
+    public List<Solution> getTop50OfProblem(Problem problem) {
+        return solutionRepository.findFirst50ByResultAndProblemOrderByTimeAsc("Accepted", problem);
     }
-
 
 
     /**
@@ -126,5 +134,62 @@ public class SolutionService {
 
     public List<Solution> getSolutionsInContest(Contest contest) {
         return solutionRepository.findAllByContest(contest, new Sort(Sort.Direction.ASC, "submitTime"));
+    }
+
+    public void addSubmit(Solution solution) {
+        try {
+            @NotNull User user = solution.getUser();
+            @NotNull Problem problem = solution.getProblem();
+            user.setSubmit(user.getSubmit() + 1);
+            problem.setSubmit(problem.getSubmit() + 1);
+            userService.saveOrUpdateUser(user);
+            problemService.updateProblem(problem);
+            try {
+                @NotNull Contest contest = solution.getContest();
+                contest = contestService.getContestById(contest.getId());
+                for (ContestProblem cp : contest.getProblems()) {
+                    if (cp.getProblem().getId() == problem.getId()) {
+                        cp.setSubmitted(cp.getSubmitted() + 1);
+                        contestProblemRepository.save(cp);
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    public void addAccepted(Solution solution) {
+        try {
+            @NotNull User user = solution.getUser();
+            @NotNull Problem problem = solution.getProblem();
+            UserProblem userProblem = new UserProblem(user, problem);
+            try {
+                Optional<UserProblem> userProblem1 = userProblemRepository.findByUserAndProblem(user, problem);
+                if (!userProblem1.isPresent()) {
+                    userProblemRepository.save(userProblem);
+                    user.addSocre(problem.getScore());
+                    user.setSolve(user.getSolve() + 1);
+                    problem.setAccepted(problem.getAccepted() + 1);
+                    userService.saveOrUpdateUser(user);
+                    problemService.updateProblem(problem);
+                }
+                try {
+                    @NotNull Contest contest = solution.getContest();
+                    contest = contestService.getContestById(contest.getId());
+                    for (ContestProblem cp : contest.getProblems()) {
+                        if (cp.getProblem().getId() == problem.getId()) {
+                            cp.setAccepted(cp.getAccepted() + 1);
+                            contestProblemRepository.save(cp);
+                            break;
+                        }
+                    }
+                } catch (Exception e) {
+                }
+            } catch (Exception e) {
+            }
+        } catch (Exception e) {
+        }
     }
 }

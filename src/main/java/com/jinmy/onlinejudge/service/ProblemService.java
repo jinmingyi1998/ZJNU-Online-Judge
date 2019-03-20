@@ -77,17 +77,20 @@ public class ProblemService {
 
     public Page<Problem> getProblemPage(int page, int size, String search) {
         Sort _sort = new Sort(Sort.Direction.ASC, "id");
+        Page<Problem> problemPage = null;
         try {
             if (search.length() > 0) {
                 try {
-                    return problemRepository.findAllByActiveAndIdOrTitleLike(PageRequest.of(page, size, _sort), true, Long.parseLong(search), "%" + search + "%");
+                    problemPage = problemRepository.findAllByActiveAndIdOrTitleLike(PageRequest.of(page, size, _sort), true, Long.parseLong(search), "%" + search + "%");
                 } catch (NumberFormatException e) {
-                    return problemRepository.findAllByActiveAndTitleLike(PageRequest.of(page, size, _sort), true, "%" + search + "%");
+                    problemPage = problemRepository.findAllByActiveAndTitleLike(PageRequest.of(page, size, _sort), true, "%" + search + "%");
                 }
-            }
+            } else
+                problemPage = problemRepository.findAllByActive(PageRequest.of(page, size, _sort), true);
         } catch (Exception e) {
+            problemPage = problemRepository.findAllByActive(PageRequest.of(page, size, _sort), true);
         }
-        return problemRepository.findAllByActive(PageRequest.of(page, size, _sort), true);
+        return problemPage;
     }
 
     public Page<Problem> getAdminProblemPage(int page, int size, String search) {

@@ -30,7 +30,7 @@
             $("body").on("click", ".remove-problem", function () {
                 $(this).parent().remove();
             });
-            $("body").on("click", ".plus-problems", function () {
+            $("body").on("change", ".plus-problems", function () {
                 var obj = $(this);
                 $.get({
                     url: "/admin/contest/get-problem-name/" + $(this).val(),
@@ -53,6 +53,7 @@
                         password: $("#password").val(),
                         startTime: $("#startTime").val(),
                         lastTime: $("#lastTime").val(),
+                        pattern: $("#pattern").val(),
                         list: problems
                     },
                     success: function (data) {
@@ -77,6 +78,12 @@
             Privilege: <select class="form-control" id="privilege" name="privilege">
             <option value="public">Public</option>
             <option value="private">Private</option>
+        </select>
+        </div>
+        <div class="form-group">
+            Pattern: <select class="form-control" id="pattern" name="pattern">
+            <option value="acm">ACM</option>
+            <option value="oi">OI</option>
         </select>
         </div>
         <div class="form-group">

@@ -40,7 +40,7 @@
                     problems.push($(this).val() + "&" + $(this).siblings(".problem-name").val());
                 });
                 $.post({
-                    url: "/contest/background/edit/"+$("#id").val(),
+                    url: "/contest/background/edit/" + $("#id").val(),
                     data: {
                         title: $("#title").val(),
                         description: $("#description").val(),
@@ -48,6 +48,7 @@
                         password: $("#password").val(),
                         startTime: $("#startTime").val(),
                         lastTime: $("#lastTime").val(),
+                        pattern: $("#pattern").val(),
                         list: problems
                     },
                     success: function (data) {
@@ -76,10 +77,15 @@
     <form>
 
         <div class="form-inline">
-            ID: <input type="text" th:value="${contest.id}" id="id" readonly > Title:<input class="form-control" id="title" name="title" type="text" th:value="${contest.title}">
+            ID: <input id="id" readonly th:value="${contest.id}" type="text"> Title:<input class="form-control"
+                                                                                           id="title" name="title"
+                                                                                           th:value="${contest.title}"
+                                                                                           type="text">
         </div>
         <div class="form-group">
-            Description:<input class="form-control" id="description" name="description" type="text" th:value="${contest.description}">
+            Description:<input class="form-control" id="description" name="description"
+                               th:value="${contest.description}"
+                               type="text">
         </div>
         <div class="form-group">
             Privilege: <select class="form-control" id="privilege" name="privilege" th:value="${contest.privilege}">
@@ -88,14 +94,23 @@
         </select>
         </div>
         <div class="form-group">
-            Password:(Private 填写)<input class="form-control" id="password" name="password" type="text" th:value="${contest.password}">
+            Pattern: <select class="form-control" id="pattern" name="pattern" th:value="${contest.pattern}">
+            <option value="acm">ACM</option>
+            <option value="oi">OI</option>
+        </select>
+        </div>
+        <div class="form-group">
+            Password:(Private 填写)<input class="form-control" id="password" name="password"
+                                        th:value="${contest.password}"
+                                        type="text">
         </div>
         <div class="form-group">
             Start Time: <input class="form-control form-datetime" data-date-format="yyyy-mm-dd hh:ii" id="startTime"
                                name="startTime" type="text">
         </div>
         <div class="form-group">
-            Length: <input class="form-control " id="lastTime" name="lastTime" type="time" th:value="${contest.length}">
+            Length: <input class="form-control " id="lastTime" name="lastTime" th:value="${contest.length}"
+                           type="time">
         </div>
         <div class="form-group">
             Problems :

@@ -13,12 +13,20 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
     <link rel="stylesheet" th:href="@{/css/font-awesome.css}">
     <script th:src="@{/js/jquery-3.2.1.min.js}"></script>
+    <script src="/js/showdown.min.js"></script>
     <script th:src="@{/js/popper.min.js}"></script>
     <script th:src="@{/js/bootstrap.js}"></script>
     <script src="/js/run_prettify.js"></script>
     <script src="/js/vue.min.js"></script>
     <link href="/css/sunburst.css" rel="stylesheet">
     <style>
+        pre {
+            white-space: pre-wrap;
+            white-space: -moz-pre-wrap;
+            white-space: -pre-wrap;
+            white-space: -o-pre-wrap;
+            word-wrap: break-word;
+        }
         html, body {
             height: 100%;
             width: 100%;
@@ -40,6 +48,20 @@
             text-decoration: none;
         }
     </style>
+    <script async src="/js/MathJax.js?config=TeX-AMS_CHTML" type="text/javascript"></script>
+    <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+      processEscapes: true
+    },
+    "HTML-CSS": { fonts: ["TeX"] }
+  });
+
+    </script>
 </head>
 <body>
 <nav class="navbar navbar-expand-xl navbar-dark bg-dark  fixed-top">

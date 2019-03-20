@@ -113,6 +113,7 @@ public class ContestController {
                     }
                 }
             }
+            solutions.sort((o1, o2) -> (int) (o2.getId() - o1.getId()));
             return solutions;
         } catch (Exception e) {
         }

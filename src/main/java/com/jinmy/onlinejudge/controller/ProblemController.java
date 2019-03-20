@@ -94,8 +94,10 @@ public class ProblemController {
         if (problem == null || problem.getActive() == false) {
             return "Problem Not Exist";
         }
+        //null检验完成
+
         Solution solution = new Solution(user, problem, language, source, request.getRemoteAddr(), share);
-        solution = solutionService.insertSolution(solution);
+
         judgeService.submit(solution);
         return "success";
     }

@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Data
 @Slf4j
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "problem_id"}))
 public class UserProblem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,4 +21,8 @@ public class UserProblem {
     public UserProblem() {
     }
 
+    public UserProblem(User user, Problem problem) {
+        this.user = user;
+        this.problem = problem;
+    }
 }

@@ -13,57 +13,7 @@
     <th:block th:insert="~{fragment/header :: header}"></th:block>
     <meta charset="UTF-8">
     <title>Contests</title>
-    <script src="/js/urlcontrol.js"></script>
-    <script src="/js/contestinfo.js"></script>
-    <script language="JavaScript" th:src="@{/js/StatusInModal.js}"></script>
-    <style>
-        a {
-            text-decoration: none;
-        }
-    </style>
-    <script>
-        $(function () {
-            $("#submit_btn").click(function () {
-                $("#submit_btn").attr("class", "btn btn-primary btn-lg text-center disabled");
-                $("#submit_btn").text("Submiting...");
-                $.post({
-                    data: $("#form").serialize(),
-                    url: "/contest/" + $("main").attr("id") + "/submit/" + $("#submit_btn").attr("problem-id"),
-                    cache: false,
-                    dataType: 'text',
-                    success: function (d) {
-                        var x = 0;
-                        $("#prog").width(0);
-                        $(".progress").show();
-                        setTimeout(function () {
-                            $("#prog").width("10%")
-                        }, 200);
-                        setTimeout(function () {
-                            $("#prog").width("50%")
-                        }, 800);
-                        setTimeout(function () {
-                            $("#prog").width("90%")
-                        }, 1600);
-                        setTimeout(function () {
-                            $("#prog").width("100%")
-                        }, 2000);
-                        setTimeout(function () {
-                            if (d == "success") {
-                                location.reload();
-                                scrollTo(0, 0);
-                            } else {
-                                $(".progress").hide();
-                                $("#submit_btn").attr("class", "btn btn-primary btn-lg text-center");
-                                $("#submit_btn").text("Submit");
-                                $("#submit-msg").text(d);
-                                $("#submit-msg").show();
-                            }
-                        }, 2000);
-                    }
-                });
-            });
-        });
-    </script>
+
 </head>
 <body>
 <main class="container-fluid" th:id="${contest.id}">
@@ -78,13 +28,17 @@
         <div class="tab-pane active" id="overview">
             <div class="list-group container">
                 <li class="list-group-item"
-                    th:each="problem:${problems}" th:text="${problem.tempId}+' '+${problem.tempTitle}"></li>
+                    th:each="problem:${problems}" th:object="${problem}">
+                    <span th:text="*{tempId}">Problem id</span>&nbsp;<span th:text="*{tempTitle}">tempTitle</span>
+                    <div class="float-right"><span class="text-success" th:text="*{accepted}">solve</span>/<span
+                            th:text="*{submitted}">submit</span></div>
+                </li>
             </div>
         </div>
 
         <div class="tab-pane fade container" id="problem">
             <span id="problem-number" style="display: none" th:text="${contest.problems.size()}"></span>
-            <div class="nav nav-pills" style="margin: 1rem">
+            <div class="nav nav-pills bg-light rounded w-50" style="margin: 1rem;opacity: 0.7; padding: 0.5rem;">
                 <h2>Problem:</h2>
                 <li class="nav-item nav-link change-problem"
                     data-toggle="pill" href="#problem"
@@ -122,7 +76,7 @@
                     </div>
                     <div class="card-body">
                         <h3 class="card-title">Hint</h3>
-                        <div class="card-text" id="problem-hint"></div>
+                        <pre class="card-text" id="problem-hint"></pre>
                     </div>
                 </div>
                 <div class="container text-center" style="margin-top: 20px">
@@ -268,6 +222,8 @@
     </div>
 </div>
 <script>
+    var markdown = new showdown.Converter();
+
     var ve=new Vue({
         el:"#status-tbody",
         data:{
@@ -287,5 +243,51 @@
     });
 </script>
 <footer th:replace="~{fragment/footer :: footer}"></footer>
+<script src="/js/urlcontrol.js"></script>
+<script src="/js/contestinfo.js"></script>
+<script language="JavaScript" th:src="@{/js/StatusInModal.js}"></script>
+<script>
+    $(function () {
+        $("#submit_btn").click(function () {
+            $("#submit_btn").attr("class", "btn btn-primary btn-lg text-center disabled");
+            $("#submit_btn").text("Submiting...");
+            $.post({
+                data: $("#form").serialize(),
+                url: "/contest/" + $("main").attr("id") + "/submit/" + $("#submit_btn").attr("problem-id"),
+                cache: false,
+                dataType: 'text',
+                success: function (d) {
+                    var x = 0;
+                    $("#prog").width(0);
+                    $(".progress").show();
+                    setTimeout(function () {
+                        $("#prog").width("10%")
+                    }, 200);
+                    setTimeout(function () {
+                        $("#prog").width("50%")
+                    }, 800);
+                    setTimeout(function () {
+                        $("#prog").width("90%")
+                    }, 1600);
+                    setTimeout(function () {
+                        $("#prog").width("100%")
+                    }, 2000);
+                    setTimeout(function () {
+                        if (d == "success") {
+                            location.reload();
+                            scrollTo(0, 0);
+                        } else {
+                            $(".progress").hide();
+                            $("#submit_btn").attr("class", "btn btn-primary btn-lg text-center");
+                            $("#submit_btn").text("Submit");
+                            $("#submit-msg").text(d);
+                            $("#submit-msg").show();
+                        }
+                    }, 2000);
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

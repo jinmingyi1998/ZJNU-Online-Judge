@@ -37,6 +37,7 @@ public class JudgeQueue {
     @Autowired
     private CompileErrorRepository compileErrorRepository;
 
+
     private ExecutorService executorService;
 
     @PostConstruct
@@ -139,7 +140,7 @@ public class JudgeQueue {
         if (!output.equals("")) {
             //CE
             CompileError ce = new CompileError(solution, output);
-            //compileErrorRepository.save(ce);
+            compileErrorRepository.save(ce);
             solution.setCe(ce);
             solution.setResult("Compile Error");
             solutionService.updateSolution(solution);
@@ -356,5 +357,8 @@ public class JudgeQueue {
             solution.setResult("Compile Error");
         }
         solutionService.updateSolution(solution);
+        if (solution.getResult().equals("Accepted")) {
+            solutionService.addAccepted(solution);
+        }
     }
 }

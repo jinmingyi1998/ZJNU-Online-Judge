@@ -3,10 +3,7 @@ package com.jinmy.onlinejudge.controller;
 import com.jinmy.onlinejudge.entity.User;
 import com.jinmy.onlinejudge.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
@@ -35,4 +32,39 @@ public class UserSpaceController {
         }
         return null;
     }
+
+    @PostMapping("/{uid}")
+    public String userUpdate(HttpServletResponse response, @PathVariable Long uid, User user, @RequestParam(value = "new_password") String password) {
+        try {
+            @NotNull User init_user = userService.getUserById(uid);
+            if (password.equals(init_user.getPassword())) {
+                if (!user.userValidator()) {
+                    return "Format Wrong";
+                }
+                user.setSubmit(init_user.getSubmit());
+                user.setSolve(init_user.getSolve());
+                user.setPrivilege(init_user.getPrivilege());
+                user.setBanned(init_user.getBanned());
+                user.setRegistertime(init_user.getRegistertime());
+                userService.saveOrUpdateUser(user);
+                return "success";
+            } else {
+                return "Password Wrong";
+            }
+        } catch (Exception e) {
+            try {
+                response.sendRedirect("/404");
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+        return "";
+    }
+
+    @GetMapping("/rest/user/{id}")
+    public User getUser(@PathVariable Long id) {
+        @NotNull User user = userService.getUserById(id);
+        return user;
+    }
+
 }

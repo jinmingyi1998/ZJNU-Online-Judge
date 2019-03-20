@@ -12,28 +12,134 @@
     <th:block th:insert="~{fragment/header :: header}"></th:block>
     <meta charset="UTF-8">
     <title th:text="'Hi - '+${user.name}"></title>
+    <script>
+        var pattern = new RegExp("^[a-zA-Z0-9_]{6,15}$");
+        $(function () {
+            $("#submit-btn").click(function () {
+                $.post({
+                    data: $("form").serialize(),
+                    url: "/register",
+                    success: function (data) {
+                        if (data == "success") {
+                            location.href = "/";
+                        } else {
+                            $("#message").text(data);
+                        }
+                    }
+                });
+            });
 
+        });
+
+        function checkInputUsername() {
+            var usr = $("#inputUsername").val();
+            if (pattern.test(usr)) {
+                $("#usr_wrg").fadeOut();
+                return true;
+            } else {
+                $("#usr_wrg").fadeIn();
+                return false;
+            }
+        }
+
+        function checkInputPassword() {
+            var pwd1 = $("#inputPassword").val();
+            var pwd2 = $("#inputPassword2").val();
+            if (pattern.test(pwd1)) {
+                $("#pwd_wrg").fadeOut();
+                if (pwd1 == pwd2) {
+                    $("#pwd2_wrg").fadeOut();
+                    return true;
+                } else {
+                    $("#pwd2_wrg").fadeIn();
+                    return false;
+                }
+            } else {
+                $("#pwd_wrg").fadeIn();
+                return false;
+            }
+        }
+
+        function checkInput() {//always false
+            return checkInputPassword() && checkInputUsername() && false;
+        }
+    </script>
 </head>
 <body>
 <main class="container" height="100%" width="100%">
-    <h1 th:text="${user.username}"></h1>
-    <h2 th:text="${user.name}"></h2>
-    <h2 class="badge-secondary badge" th:text="${user.privilege.name}"></h2>
+    <h1 th:text="${user.username}">username</h1>
+    <h2 th:text="${user.name}"> name </h2>
+    <h2 class="badge-secondary badge" th:text="${user.privilege.name}">user privilege</h2>
     <div class="card">
         <div class="card-body">
             <dl class="card-text">
                 <dt class="col-sm-3">Register:</dt>
-                <dd class="col-sm-9" th:text="${user.normalRegisterTime}"></dd>
+                <dd class="col-sm-9" th:text="${user.normalRegisterTime}">register time</dd>
                 <dt class="col-sm-3">School</dt>
-                <dd class="col-sm-9" th:text="${user.school}"></dd>
+                <dd class="col-sm-9" th:text="${user.school}">school</dd>
+                <dt class="col-3">Score</dt>
+                <dd class="col-9" th:text="${user.score}">socre</dd>
                 <dt class="col-sm-3">Solved</dt>
-                <dd class="col-sm-9" th:text="${user.solve}"></dd>
+                <dd class="col-sm-9" th:text="${user.solve}">solve</dd>
                 <dt class="col-sm-3">Submitted</dt>
-                <dd class="col-sm-9" th:text="${user.submit}"></dd>
+                <dd class="col-sm-9" th:text="${user.submit}">submit</dd>
             </dl>
         </div>
     </div>
+    <button class="btn btn-primary" data-target="#myModal"
+            data-toggle="modal" onclick="updateModal()"
+            th:if="${session.currentUser!=null && session.currentUser.id==user.id}">
+        Update
+    </button>
 </main>
+<div class="modal fade" id="userModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Update</h4>
+                <button class="close" data-dismiss="modal" type="button">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post">
+                    <div class="form-inline">
+                        <label for="name">Name</label><input class="form-control" id="name" name="name" type="text">
+                    </div>
+                    <div class="form-inline">
+                        <label for="email">Email</label><input class="form-control" id="email" name="email" type="text">
+                    </div>
+                    <div class="form-inline">
+                        <label for="password">Old password</label><input class="form-control" id="password"
+                                                                         name="password"
+                                                                         required type="password">
+                    </div>
+                    <div class="form-inline">
+                        <label for="new_password">New password</label><input class="form-control" id="new_password"
+                                                                             name="new_password"
+                                                                             required type="password">
+                    </div>
+                    <div class="form-inline">
+                        <label for="new_password2">New password again</label><input class="form-control"
+                                                                                    id="new_password2"
+                                                                                    type="password">
+                    </div>
+                    <div class="form-inline">
+                        <label for="school">School</label><input class="form-control" id="school" name="school"
+                                                                 type="text">
+                    </div>
+                    <div class="form-inline">
+                        <label for="class">Class</label><input class="form-control" id="class" name="cls" type="text">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" type="button">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+</script>
 <footer th:replace="~{fragment/footer :: footer}"></footer>
 </body>
 </html>

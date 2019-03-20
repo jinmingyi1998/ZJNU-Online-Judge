@@ -69,6 +69,7 @@ public class Contest {
         this.startTime = startTime;
         this.endTime = endTime;
         this.createTime = createTime;
+        this.pattern = "acm";
     }
 
     public String getNormalStartTime() {

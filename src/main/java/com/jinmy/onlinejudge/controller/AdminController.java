@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -80,6 +81,9 @@ public class AdminController {
     @PutMapping("/edit/{pid}")
     public ModelAndView editProblemAction(Problem problem, @PathVariable(value = "pid") Long id, HttpServletResponse response) {
         problem.setId(id);
+        @NotNull Problem initProblem = problemService.getProblemById(id);
+        problem.setSubmit(initProblem.getSubmit());
+        problem.setAccepted(initProblem.getAccepted());
         problemService.updateProblem(problem);
         return editProblem(id, response);
     }
@@ -112,6 +116,7 @@ public class AdminController {
                                       @RequestParam(value = "password", defaultValue = "") String password,
                                       @RequestParam(value = "startTime") String startTime,
                                       @RequestParam(value = "lastTime") String lastTime,
+                                      @RequestParam(value = "pattern") String pattern,
                                       @RequestParam(value = "list[]") String[] ids) {
         Contest contest = new Contest();
         contest.setTitle(title);
@@ -120,6 +125,7 @@ public class AdminController {
         contest.setPrivilege(privilege);
         contest.setStartTime(startTime);
         contest.setEndTime(startTime, lastTime);
+        contest.setPattern(pattern);
         contest.setPassword(password);
         contest = contestService.insertContest(contest);
         List<ContestProblem> contestProblems = new ArrayList<>();

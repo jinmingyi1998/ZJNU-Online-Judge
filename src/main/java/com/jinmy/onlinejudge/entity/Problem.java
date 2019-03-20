@@ -47,10 +47,9 @@ public class Problem {
     private Integer memoryLimit;
     @Column(nullable = false)
     private Boolean active = false;
-    @Column(nullable = false, columnDefinition = "int default 0")
-    private Integer submit = 0;
-    @Column(nullable = false, columnDefinition = "int default 0")
-    private Integer accepted = 0;
+    @Column(columnDefinition = "integer default 0")
+    private Integer score;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Tag> tags;
     @JsonBackReference
@@ -59,13 +58,17 @@ public class Problem {
     @JsonBackReference
     @OneToMany(mappedBy = "problem")
     private List<Solution> solutions = new ArrayList<>();
+    @Column(columnDefinition = "integer default 0")
+    private Integer submit = 0;
+    @Column(columnDefinition = "integer default 0")
+    private Integer accepted = 0;
 
     public Problem() {
         problemComments = null;
         solutions = null;
     }
 
-    public Problem(String title, String description, String input, String output, String sampleInput, String sampleOutput, String hint, String source, Integer timeLimit, Integer memoryLimit) {
+    public Problem(String title, String description, String input, String output, String sampleInput, String sampleOutput, String hint, String source, Integer timeLimit, Integer memoryLimit, Integer score) {
         this.title = title;
         this.description = description;
         this.input = input;
@@ -79,23 +82,9 @@ public class Problem {
         accepted = 0;
         submit = 0;
         active = false;
+        this.score = score;
     }
 
-    public Problem(String title, String description, String input, String output, String sampleInput, String sampleOutput, String hint, String source, Integer timeLimit, Integer memoryLimit, Boolean active) {
-        this.title = title;
-        this.description = description;
-        this.input = input;
-        this.output = output;
-        this.sampleInput = sampleInput;
-        this.sampleOutput = sampleOutput;
-        this.hint = hint;
-        this.source = source;
-        this.timeLimit = timeLimit;
-        this.memoryLimit = memoryLimit;
-        this.active = active;
-        accepted = 0;
-        submit = 0;
-    }
 
     @Override
     public String toString() {

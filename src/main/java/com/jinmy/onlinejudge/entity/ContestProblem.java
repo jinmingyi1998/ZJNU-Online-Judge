@@ -21,6 +21,10 @@ public class ContestProblem {
     private Long tempId;
     @Column
     private String tempTitle;
+    @Column(columnDefinition = "integer default 0")
+    private Integer submitted;
+    @Column(columnDefinition = "integer default 0")
+    private Integer accepted;
 
     public ContestProblem(Problem problem, Contest contest, Long tempId, String tempTitle) {
         this.problem = problem;

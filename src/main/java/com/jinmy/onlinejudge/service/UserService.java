@@ -24,7 +24,7 @@ public class UserService {
     private UserRepository userRepository;
 
     @Transactional
-    User saveOrUpdateUser(User user) {
+    public User saveOrUpdateUser(User user) {
         return userRepository.save(user);
     }
 
@@ -47,7 +47,7 @@ public class UserService {
     }
 
     @Transactional
-    void removeUser(Long id) {
+    public void removeUser(Long id) {
         userRepository.deleteById(id);
     }
 

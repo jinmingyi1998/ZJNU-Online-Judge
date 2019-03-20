@@ -125,6 +125,7 @@ function getRankOfContest() {
 }
 
 function changeProblem(cid, pid) {
+    console.log(1);
     $("#problem-container").show();
     var problem = Object();
     $.get({
@@ -133,13 +134,18 @@ function changeProblem(cid, pid) {
             $("#problem-title").text(problem.title);
             $("#problem-time-limit").text(problem.timeLimit);
             $("#problem-memory-limit").text(problem.memoryLimit);
-            $("#problem-description").text(problem.description);
-            $("#problem-input").text(problem.input);
-            $("#problem-output").text(problem.output);
+            $("#problem-description").html(markdown.makeHtml(problem.description));
+            $("#problem-input").html(markdown.makeHtml(problem.input));
+            $("#problem-output").html(markdown.makeHtml(problem.output));
             $("#problem-sample-input").text(problem.sampleInput);
             $("#problem-sample-output").text(problem.sampleOutput);
-            $("#problem-hint").text(problem.hint);
+            $("#problem-hint").html(markdown.makeHtml(problem.hint));
             $("#submit_btn").attr("problem-id", pid);
+            try {
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            } catch (e) {
+                ;
+            }
         }
     });
 }
