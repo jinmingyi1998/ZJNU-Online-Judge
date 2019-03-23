@@ -70,6 +70,8 @@ $(function () {
             });
         });
     });
+    getStatusOfMe();
+    getRankOfContest();
 });
 
 function getStatusOfMe() {
@@ -125,7 +127,6 @@ function getRankOfContest() {
 }
 
 function changeProblem(cid, pid) {
-    console.log(1);
     $("#problem-container").show();
     var problem = Object();
     $.get({

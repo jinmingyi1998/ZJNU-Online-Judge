@@ -15,9 +15,22 @@ public class UserAuthorityService {
     UserService userService;
 
     public boolean isLogin(User user) {
-        @NotNull User u = (User) session.getAttribute("currentUser");
-        if (userService.isExist(u.getId()) && u.getId() == user.getId())
-            return true;
+        try {
+            @NotNull User u = (User) session.getAttribute("currentUser");
+            if (userService.isExist(u.getId()) && u.getId() == user.getId())
+                return true;
+        } catch (NullPointerException e) {
+        }
+        return false;
+    }
+
+    public boolean isLogin() {
+        try {
+            @NotNull User u = (User) session.getAttribute("currentUser");
+            if (userService.isExist(u.getId()))
+                return true;
+        } catch (Exception e) {
+        }
         return false;
     }
 

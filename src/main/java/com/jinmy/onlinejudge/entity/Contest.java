@@ -31,7 +31,7 @@ public class Contest {
     private String title;
     @Column(length = 255)
     private String description;
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "varchar(20) default 'public'")
     private String privilege;
     @Column(length = 200)
     private String password;

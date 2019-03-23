@@ -46,6 +46,8 @@ public class ContestController {
     JudgeService judgeService;
     @Autowired
     ContestProblemRepository contestProblemRepository;
+    @Autowired
+    UserAuthorityService userAuthorityService;
 
 
     @GetMapping
@@ -58,16 +60,21 @@ public class ContestController {
         return m;
     }
 
-    @GetMapping("/{id}")
-    public ModelAndView contestInfo(@PathVariable(value = "id") Long id, HttpServletResponse response) {
-        ModelAndView m = new ModelAndView("contest/contestinfo");
+    @RequestMapping(value = "/{id}", method = {RequestMethod.GET, RequestMethod.POST})
+    public ModelAndView showContest(@PathVariable(value = "id") Long id, HttpServletResponse response,
+                                    @RequestParam(value = "password", defaultValue = "") String password) {
         try {
+            if (!userAuthorityService.isLogin()) {
+                response.sendRedirect("/login");
+            }
             @NotNull Contest contest = contestService.getContestById(id);
             if (contest.getPrivilege().equals("private")) {
                 if (session.getAttribute("contest" + contest.getId()) == null) {
-                    return null;
+                    if (!checkPassword(contest, password))
+                        return new ModelAndView("/contest/password");
                 }
             }
+            ModelAndView m = new ModelAndView("contest/contestinfo");
             m.addObject("contest", contest);
             m.addObject("problems", contest.getProblems());
             return m;
@@ -80,6 +87,15 @@ public class ContestController {
         }
         return null;
     }
+
+    public Boolean checkPassword(Contest contest, String password) {
+        if (contest.getPassword().equals(password)) {
+            session.setAttribute("contest" + contest.getId(), contest);
+            return true;
+        }
+        return false;
+    }
+
 
     @GetMapping("/rest/{cid}/problem/{pid}")
     public Problem getProblemByContestTempId(@PathVariable(value = "cid") Long cid,
@@ -191,6 +207,7 @@ public class ContestController {
         }
         return null;
     }
+
     @GetMapping("/rest/{cid}/comments")
     public List<ContestComment> getCommentsOfContest(@PathVariable Long cid) {
         try {
@@ -315,18 +332,20 @@ public class ContestController {
 
     @GetMapping("/rejudge/{cid}")
     public String Rejudge(@PathVariable Long cid) {
-        Contest contest=contestService.getContestById(cid);
-        RejudgeThread rejudgeThread=new RejudgeThread();
-        List<Solution>solutions=solutionService.getSolutionsInContest(contest);
-        if (!contest.getPattern().equals("acm")){
-            solutions.sort((o1, o2) -> (int) (o2.getId()-o1.getId()));
+        Contest contest = contestService.getContestById(cid);
+        RejudgeThread rejudgeThread = new RejudgeThread();
+        List<Solution> solutions = solutionService.getSolutionsInContest(contest);
+        if (!contest.getPattern().equals("acm")) {
+            solutions.sort((o1, o2) -> (int) (o2.getId() - o1.getId()));
         }
-        rejudgeThread.solutions=solutions;
+        rejudgeThread.solutions = solutions;
         rejudgeThread.run();
         return "Running";
     }
+
     class RejudgeThread extends Thread {
         List<Solution> solutions;
+
         @Override
         public void run() {
             for (Solution s : solutions) {

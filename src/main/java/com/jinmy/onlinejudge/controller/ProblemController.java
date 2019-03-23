@@ -85,21 +85,25 @@ public class ProblemController {
             }
         }
         session.setAttribute("last_submit", Instant.now());
-        @NotNull User user = (User) session.getAttribute("currentUser");
-        if (!userAuthorityService.isLogin(user)) {// user doesn't login
-            log.error("User not exist");
-            return "Please Login";
-        }
-        Problem problem = problemService.getProblemById(id);
-        if (problem == null || problem.getActive() == false) {
-            return "Problem Not Exist";
-        }
-        //null检验完成
+        try {
+            User user = (User) session.getAttribute("currentUser");
+            if (!userAuthorityService.isLogin(user)) {// user doesn't login
+                log.error("User not exist");
+                return "Please Login";
+            }
+            Problem problem = problemService.getProblemById(id);
+            if (problem == null || problem.getActive() == false) {
+                return "Problem Not Exist";
+            }
+            //null检验完成
 
-        Solution solution = new Solution(user, problem, language, source, request.getRemoteAddr(), share);
+            Solution solution = new Solution(user, problem, language, source, request.getRemoteAddr(), share);
 
-        judgeService.submit(solution);
-        return "success";
+            judgeService.submit(solution);
+            return "success";
+        } catch (Exception e) {
+            return "fail";
+        }
     }
 
     @GetMapping
