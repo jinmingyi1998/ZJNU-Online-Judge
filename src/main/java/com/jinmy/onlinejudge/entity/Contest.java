@@ -44,7 +44,7 @@ public class Contest {
     @Column(nullable = false)
     private Instant createTime;
     @OneToMany(mappedBy = "contest")
-    private List<ContestComment> contestComments;
+    private List<Comment> contestComments;
     @OneToMany(mappedBy = "contest")
     private List<ContestProblem> problems;
     @OneToMany(mappedBy = "contest", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -61,7 +61,7 @@ public class Contest {
         return (minutes/60)+":"+(minutes%60);
     }
 
-    public Contest(String title, String description, String privilege, String password, Instant startTime, Instant endTime, Instant createTime, List<ContestProblem> contestProblems, List<ContestComment> contestComments) {
+    public Contest(String title, String description, String privilege, String password, Instant startTime, Instant endTime, Instant createTime, List<ContestProblem> contestProblems, List<Comment> contestComments) {
         this.title = title;
         this.description = description;
         this.privilege = privilege;

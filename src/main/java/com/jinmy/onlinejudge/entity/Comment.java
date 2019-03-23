@@ -8,6 +8,7 @@
 
 package com.jinmy.onlinejudge.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
@@ -16,15 +17,14 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
 
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Data
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Comment {
+public class Comment {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = true)
+    @Column
     private Long fatherId;
     @Column(nullable = false)
     private Instant postTime;
@@ -32,6 +32,19 @@ public abstract class Comment {
     private User user;
     @Column(columnDefinition = "LONGTEXT")
     private String text;
+    @JsonIgnore
+    @ManyToOne
+    private Contest contest;
+
+    public Comment(User user, String text, Contest contest) {
+        this.user = user;
+        this.text = text;
+        this.contest = contest;
+        postTime=Instant.now();
+    }
+
+    public Comment() {
+    }
 
     @JsonManagedReference
     public String getNormalPostTime() {

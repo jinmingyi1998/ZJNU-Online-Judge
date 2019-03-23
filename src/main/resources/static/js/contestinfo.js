@@ -72,6 +72,7 @@ $(function () {
     });
     getStatusOfMe();
     getRankOfContest();
+    getComments();
 });
 
 function getStatusOfMe() {
@@ -145,7 +146,6 @@ function changeProblem(cid, pid) {
             try {
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
             } catch (e) {
-                ;
             }
         }
     });

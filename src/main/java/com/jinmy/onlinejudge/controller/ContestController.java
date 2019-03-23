@@ -209,14 +209,30 @@ public class ContestController {
     }
 
     @GetMapping("/rest/{cid}/comments")
-    public List<ContestComment> getCommentsOfContest(@PathVariable Long cid) {
+    public List<Comment> getCommentsOfContest(@PathVariable Long cid) {
         try {
             @NotNull Contest contest = contestService.getContestById(cid);
-            List<ContestComment> contestComments = contestService.getCommentsOfContest(contest);
+            List<Comment> contestComments = contestService.getCommentsOfContest(contest);
             return contestComments;
         } catch (Exception e) {
         }
         return null;
+    }
+
+    @PostMapping("/rest/{cid}/comments/post")
+    public String postComments(@RequestParam("post_comment") String text, @PathVariable(value = "cid") Long cid) {
+        try {
+            @NotNull Contest contest = contestService.getContestById(cid);
+            if (userAuthorityService.isLogin()) {
+                User user = (User) session.getAttribute("currentUser");
+                Comment comment = new Comment(user, text, contest);
+                comment = contestService.postComment(comment);
+                return "success";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "failed";
     }
 
     @PostMapping("/{cid}/submit/{pid}")

@@ -1,10 +1,19 @@
+/*
+ * Copyright (c) 2019. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+ * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+ * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+ * Vestibulum commodo. Ut rhoncus gravida arcu.
+ */
+
 package com.jinmy.onlinejudge.service;
 
+import com.jinmy.onlinejudge.entity.Comment;
 import com.jinmy.onlinejudge.entity.Contest;
-import com.jinmy.onlinejudge.entity.ContestComment;
-import com.jinmy.onlinejudge.repository.ContestCommentRepository;
+import com.jinmy.onlinejudge.repository.CommentRepository;
 import com.jinmy.onlinejudge.repository.ContestProblemRepository;
 import com.jinmy.onlinejudge.repository.ContestRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,7 +23,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
-
+@Slf4j
 @Transactional
 @Service
 public class ContestService {
@@ -26,7 +35,7 @@ public class ContestService {
     @Autowired
     SolutionService solutionService;
     @Autowired
-    ContestCommentRepository contestCommentRepository;
+    CommentRepository commentRepository;
 
     public Page<Contest> getContestPage(int page, String title) {
         if (title.length() == 0)
@@ -48,8 +57,13 @@ public class ContestService {
         } else return null;
     }
 
-    public List<ContestComment> getCommentsOfContest(Contest c) {
-        List<ContestComment> contestComments = contestCommentRepository.findAllByContest(c);
-        return contestComments;
+    public List<Comment> getCommentsOfContest(Contest c) {
+        List<Comment> comments = commentRepository.findAllByContest(c);
+        return comments;
+    }
+
+    public Comment postComment(Comment Comment){
+        log.info(Comment.toString());
+        return commentRepository.save(Comment);
     }
 }

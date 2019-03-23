@@ -140,7 +140,8 @@
                     <td>{{s.length}}</td>
                     <td class="view-code" :id="s.id"
                         v-bind:class="{ 'text-success' : s.result=='Accepted',
-                         'text-danger':s.result!='Accepted' }">{{s.language}}</td>
+                         'text-danger':s.result!='Accepted' }">{{s.language}}
+                    </td>
                     <td>{{s.normalSubmitTime}}</td>
                 </tr>
                 </tbody>
@@ -169,9 +170,14 @@
                 <li :key="comment.id" class="list-group-item" v-for="comment in comments">
                     <a :href="user_url(comment.user.id)">{{comment.user.name}}</a>&nbsp; @ &nbsp;<span>{{comment.normalPostTime}}</span>
                     <span v-if="comment.fatherId!=null">{{comment}}</span>
-                    <pre>{{comment.text}}</pre>
+                    <div v-html="mdtext(comment.text)"></div>
                 </li>
             </ul>
+            <div class="container">
+                <div class="alert alert-success">支持 <code>markdown</code> </div>
+                <textarea name="post_comment" id="post_comment" cols="30" rows="5" class="form-control"></textarea>
+                <a class="btn btn-sm btn-primary text-center" id="submit_comment">Post</a>
+            </div>
         </div>
     </div>
 </main>
@@ -224,10 +230,10 @@
 <script>
     var markdown = new showdown.Converter();
 
-    var ve=new Vue({
-        el:"#status-tbody",
-        data:{
-            status:[]
+    var ve = new Vue({
+        el: "#status-tbody",
+        data: {
+            status: []
         }
     });
     var ce = new Vue({
@@ -238,6 +244,9 @@
         methods: {
             user_url: function (x) {
                 return "/user/" + x;
+            },
+            mdtext: function (txt) {
+                return markdown.makeHtml(txt);
             }
         }
     });
@@ -248,6 +257,22 @@
 <script language="JavaScript" th:src="@{/js/StatusInModal.js}"></script>
 <script>
     $(function () {
+        $("#submit_comment").click(function () {
+            tex = $("#post_comment").val();
+            if (tex.length > 5) {
+                $.post({
+                    url: "/contest/rest/" + $("main").attr("id") + "/comments/post",
+                    data: {post_comment: tex},
+                    success: function (res) {
+                        if (res == "success") {
+                            getComments();
+                        } else {
+                            alert(res);
+                        }
+                    }
+                });
+            }
+        });
         $("#submit_btn").click(function () {
             $("#submit_btn").attr("class", "btn btn-primary btn-lg text-center disabled");
             $("#submit_btn").text("Submiting...");
@@ -274,7 +299,6 @@
                     }, 2000);
                     setTimeout(function () {
                         if (d == "success") {
-                            location.reload();
                             scrollTo(0, 0);
                         } else {
                             $(".progress").hide();

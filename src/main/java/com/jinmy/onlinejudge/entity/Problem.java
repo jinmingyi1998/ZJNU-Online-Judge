@@ -54,9 +54,6 @@ public class Problem {
     private List<Tag> tags;
     @JsonBackReference
     @OneToMany(mappedBy = "problem")
-    private List<ProblemComment> problemComments = new ArrayList<>();
-    @JsonBackReference
-    @OneToMany(mappedBy = "problem")
     private List<Solution> solutions = new ArrayList<>();
     @Column(columnDefinition = "integer default 0")
     private Integer submit = 0;
@@ -64,7 +61,6 @@ public class Problem {
     private Integer accepted = 0;
 
     public Problem() {
-        problemComments = null;
         solutions = null;
     }
 
