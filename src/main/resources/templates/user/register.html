@@ -7,11 +7,11 @@
   -->
 
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:insert="~{fragment/header :: header}"></th:block>
     <meta charset="UTF-8">
-    <title>Register</title>
+    <title>注册</title>
     <style>
         html,
         body {
@@ -116,42 +116,36 @@
 <body>
 <div class="container text-center">
     <form action="/register" class="form-signin" method="post">
-        <h1 class="h3 mb-3 font-weight-normal">Sign Up</h1>
+        <h1 class="h3 mb-3 font-weight-normal">注册</h1>
         <div class="alert alert-danger" id="message" style="display: none"></div>
-        <label class="sr-only" for="inputUsername">Username</label>
+        <label class="sr-only" for="inputUsername">用户名</label>
         <input autofocus="" class="form-control" id="inputUsername" name="username" onchange="checkInputUsername()"
                pattern="\w{6,20}"
-               placeholder="Username" required="" type="text">
-        <div class="alert alert-light" id="usr_wrg" style="display:none;">May only contain alphanumeric characters or
-            underline,and cannot begin or end with a underline, 6-15 characters
-        </div>
-        <label class="sr-only" for="inputName">Name</label>
-        <input class="form-control" id="inputName" name="name" placeholder="Name" required="" type="text">
-        <label class="sr-only" for="inputEmail">Email</label>
-        <input class="form-control" id="inputEmail" name="email" placeholder="Email" required type="email">
-        <label class="sr-only" for="inputPassword">Password</label>
-        <input class="form-control" id="inputPassword" name="password" pattern="\w{6,16}" placeholder="Password"
+               placeholder="用户名" required="" type="text">
+        <div class="alert alert-light" id="usr_wrg" style="display:none;">只包含字母数字字符或下划线，并且不能以下划线开头，为6-15个字符</div>
+        <label class="sr-only" for="inputName">姓名</label>
+        <input class="form-control" id="inputName" name="name" placeholder="姓名" required="" type="text">
+        <label class="sr-only" for="inputEmail">电子邮箱</label>
+        <input class="form-control" id="inputEmail" name="email" placeholder="电子邮箱" required type="email">
+        <label class="sr-only" for="inputPassword">密码</label>
+        <input class="form-control" id="inputPassword" name="password" pattern="\w{6,16}" placeholder="密码"
                required
                type="password">
-        <div class="alert alert-light" id="pwd_wrg" style="display: none">May only contain alphanumeric characters or
-            underline,and cannot begin or end with a underline, 6-15 characters
-        </div>
-        <label class="sr-only" for="inputPassword2">Repeat Password</label>
-        <input class="form-control" id="inputPassword2" onchange="checkInputPassword()" placeholder="Repeat Password"
+        <div class="alert alert-light" id="pwd_wrg" style="display: none">只包含字母数字字符或下划线，并且不能以下划线开头，为6-15个字符</div>
+        <label class="sr-only" for="inputPassword2">再次输入密码</label>
+        <input class="form-control" id="inputPassword2" onchange="checkInputPassword()" placeholder="再次输入密码"
                required=""
                type="password">
-        <div class="alert alert-danger" id="pwd2_wrg" style="display: none">Password are different</div>
-        <label class="sr-only" for="inputSchool">School</label>
-        <input class="form-control" id="inputSchool" name="school" placeholder="School" type="text">
-        <label class="sr-only" for="inputClass">Class</label>
-        <input class="form-control" id="inputClass" name="cls" placeholder="Class" type="text">
+        <div class="alert alert-danger" id="pwd2_wrg" style="display: none">两次密码不同</div>
+        <label class="sr-only" for="inputSchool">学校</label>
+        <input class="form-control" id="inputSchool" name="school" placeholder="学校" type="text">
+        <label class="sr-only" for="inputClass">班级</label>
+        <input class="form-control" id="inputClass" name="cls" placeholder="班级" type="text">
         <input class="btn btn-lg btn-primary btn-block" id="submit-btn" onclick="checkInput();return false"
                type="submit"
-               value="Sign up">
+               value="注册">
     </form>
 </div>
-
-
 <footer th:replace="~{fragment/footer :: footer}"></footer>
 </body>
 </html>

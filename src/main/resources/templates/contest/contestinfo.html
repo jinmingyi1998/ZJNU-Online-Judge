@@ -7,7 +7,7 @@
   -->
 
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
+<html xmlns:th="http://www.thymeleaf.org"
       xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="~{fragment/header :: header}"></th:block>
@@ -18,11 +18,11 @@
 <body>
 <main class="container-fluid" th:id="${contest.id}">
     <ul class="container nav nav-pills">
-        <li class="nav-item"><span class="nav-link active" data-toggle="pill" href="#overview">Overview</span></li>
-        <li class="nav-item"><span class="nav-link" data-toggle="pill" href="#problem">Problems</span></li>
-        <li class="nav-item"><span class="nav-link" data-toggle="pill" href="#status">Status</span></li>
-        <li class="nav-item"><span class="nav-link" data-toggle="pill" href="#rank">Rank</span></li>
-        <li class="nav-item"><span class="nav-link" data-toggle="pill" href="#comment">Comments</span></li>
+        <li class="nav-item"><span class="nav-link active" data-toggle="pill" href="#overview">总览</span></li>
+        <li class="nav-item"><span class="nav-link" data-toggle="pill" href="#problem">题目</span></li>
+        <li class="nav-item"><span class="nav-link" data-toggle="pill" href="#status">提交记录</span></li>
+        <li class="nav-item"><span class="nav-link" data-toggle="pill" href="#rank">排行榜</span></li>
+        <li class="nav-item"><span class="nav-link" data-toggle="pill" href="#comment">评论</span></li>
     </ul>
     <div class="tab-content" style="margin-top: 2rem">
         <div class="tab-pane active" id="overview">
@@ -39,7 +39,7 @@
         <div class="tab-pane fade container" id="problem">
             <span id="problem-number" style="display: none" th:text="${contest.problems.size()}"></span>
             <div class="nav nav-pills bg-light rounded w-50" style="margin: 1rem;opacity: 0.7; padding: 0.5rem;">
-                <h2>Problem:</h2>
+                <h2>题目列表:</h2>
                 <li class="nav-item nav-link change-problem"
                     data-toggle="pill" href="#problem"
                     th:each="problem:${contest.problems}" th:id="${problem.tempId}"
@@ -115,14 +115,14 @@
                 <thead class="thead-light text-center">
                 <tr>
                     <th>Run ID</th>
-                    <th>Username</th>
-                    <th>Problem</th>
-                    <th>Result</th>
-                    <th>Time(ms)</th>
-                    <th>Memory(KB)</th>
-                    <th>Length</th>
-                    <th>Language</th>
-                    <th>Submit Time</th>
+                    <th><i class="fa fa-user"></i>用户名</th>
+                    <th><i class="fa fa-question-circle-o"></i>题目</th>
+                    <th><i class="fa fa-check-circle"></i>结果</th>
+                    <th><i class="fa fa-clock-o"></i>用时(ms)</th>
+                    <th><i class="fa fa-database"></i>内存(KB)</th>
+                    <th><i class="fa fa-files-o"></i>代码长度</th>
+                    <th><i class="fa fa-keyboard-o"></i>语言</th>
+                    <th><i class="fa fa-calendar"></i>提交时间</th>
                 </tr>
                 </thead>
                 <tbody class="text-center" id="status-tbody">
@@ -154,13 +154,12 @@
                    style="opacity: 0.8">
                 <thead class="thead-light text-center">
                 <tr>
-                    <th style="width: 10rem">User</th>
-                    <th style="width: 5rem">Penalty</th>
-                    <th style="width: 3rem">Solved</th>
+                    <th style="width: 10rem">用户</th>
+                    <th style="width: 5rem">总用时</th>
+                    <th style="width: 6rem">通过数</th>
                     <th th:each="problem:${contest.problems}" th:text="${problem.tempId}"></th>
                 </tr>
                 </thead>
-
                 <tbody class="text-center" id="rank-tbody">
                 </tbody>
             </table>
@@ -173,10 +172,10 @@
                     <div v-html="mdtext(comment.text)"></div>
                 </li>
             </ul>
-            <div class="container">
+            <div class="container" style="margin-top: 6rem">
                 <div class="alert alert-success">支持 <code>markdown</code> </div>
                 <textarea name="post_comment" id="post_comment" cols="30" rows="5" class="form-control"></textarea>
-                <a class="btn btn-sm btn-primary text-center" id="submit_comment">Post</a>
+                <a class="btn btn-sm btn-primary text-center" id="submit_comment">发送</a>
             </div>
         </div>
     </div>

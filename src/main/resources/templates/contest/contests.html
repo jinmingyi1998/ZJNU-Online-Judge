@@ -7,11 +7,11 @@
   -->
 
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:insert="~{fragment/header :: header}"></th:block>
     <meta charset="UTF-8">
-    <title>Contests</title>
+    <title>训练&比赛</title>
     <script src="/js/urlcontrol.js"></script>
     <style>
         a {
@@ -60,20 +60,21 @@
 </head>
 <body>
 <div class="container" height="100%" width="100%">
-    <div class="form-inline">Search Contest:<input id="search-title" type="text"><a class="btn btn-sm btn-light"
-                                                                                    id="search-btn">Search</a></div>
+    <div class="form-inline">查找比赛:<input id="search-title" type="text"><a class="btn btn-sm btn-light"
+                                                                          id="search-btn">查找</a></div>
     <ul class="list-group">
         <li class="list-group-item card" th:each="contest:${contests}" th:object="${contest}">
             <h3><a class="text-center" th:href="'/contest/'+*{id}" th:text="*{id}+' '+*{title}"></a></h3>
                 <ul class="list-inline">
-                    <li class="list-inline-item text-muted" th:text="'Start Time:'+*{normalStartTime}">Start Time</li>
-                    <li class="text-muted list-inline-item" th:text="'End Time:'+*{normalEndTime}">End Time</li>
+                    <li class="list-inline-item text-muted" th:text="'开始时间:'+*{normalStartTime}">开始</li>
+                    <li class="text-muted list-inline-item" th:text="'结束时间:'+*{normalEndTime}">结束时间</li>
+                    <li class="text-muted list-inline-item" th:text="*{runStatu}">已结束</li>
                 </ul>
         </li>
     </ul>
     <ul class="pagination">
-        <li class="page-item"><a class="page-link turnpage" page="last-page">Last</a></li>
-        <li class="page-item" id="Next"><a class="page-link turnpage" page="next-page">Next</a></li>
+        <li class="page-item"><a class="page-link turnpage" page="last-page">上一页</a></li>
+        <li class="page-item" id="Next"><a class="page-link turnpage" page="next-page">下一页</a></li>
     </ul>
 </div>
 <footer th:replace="~{fragment/footer :: footer}"></footer>

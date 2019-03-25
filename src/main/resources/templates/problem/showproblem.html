@@ -7,7 +7,7 @@
   -->
 
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:insert="~{fragment/header :: header}"></th:block>
     <meta charset="UTF-8">
@@ -15,6 +15,15 @@
     <script src="/js/StatusInModal.js"></script>
     <script th:inline="javascript">
         $(function () {
+            try {
+                $(".md-text").each(function () {
+                    str = markdown.makeHtml($(this).text());
+                    $(this).html(markdown.makeHtml(str));
+                });
+            } catch (e) {
+                console.log("md error")
+            }
+            ;
             $("#submit_btn").click(function () {
                 $("#submit_btn").attr("class", "btn btn-primary btn-lg text-center disabled");
                 $("#submit_btn").text("Submiting...");
@@ -66,38 +75,34 @@
                     <h2 class="card-title" th:text="${problem.title}"></h2>
                 </div>
                 <div class="card-body">
-                    <h3 class="card-title">Description</h3>
-                    <div class="card-text" th:utext="${problem.description}"></div>
+                    <h3 class="card-title">题目描述</h3>
+                    <div class="card-text md-text" th:utext="${problem.description}"></div>
                 </div>
                 <div class="card-body">
-                    <h3 class="card-title">Input</h3>
-                    <div class="card-text" th:utext="${problem.input}"></div>
+                    <h3 class="card-title">输入</h3>
+                    <div class="card-text md-text" th:utext="${problem.input}"></div>
                 </div>
                 <div class="card-body">
-                    <h3 class="card-title">Input</h3>
-                    <div class="card-text" th:utext="${problem.input}"></div>
+                    <h3 class="card-title">输出</h3>
+                    <div class="card-text md-text" th:utext="${problem.output}"></div>
                 </div>
                 <div class="card-body">
-                    <h3 class="card-title">Output</h3>
-                    <div class="card-text" th:utext="${problem.output}"></div>
-                </div>
-                <div class="card-body">
-                    <h3 class="card-title">Sample Input</h3>
+                    <h3 class="card-title">样例输入</h3>
                     <div class="card-text" th:utext="${problem.sampleInput}"></div>
                 </div>
                 <div class="card-body">
-                    <h3 class="card-title">Sample Output</h3>
+                    <h3 class="card-title">样例输出</h3>
                     <div class="card-text" th:utext="${problem.sampleOutput}"></div>
                 </div>
                 <div class="card-body">
-                    <h3 class="card-title">Hint</h3>
-                    <div class="card-text" th:utext="${problem.hint}"></div>
+                    <h3 class="card-title">提示</h3>
+                    <div class="card-text md-text" th:utext="${problem.hint}"></div>
                 </div>
             </div>
             <div class="container text-center" style="margin-top: 20px">
                 <form id="form">
                     <div class="form-inline">
-                        <label for="language">Language :</label>
+                        <label for="language">语言 :</label>
                         <select class="form-control" id="language" name="language">
                             <option value="c">C</option>
                             <option selected value="cpp">C++</option>
@@ -106,7 +111,7 @@
                             <option value="py3">Python3</option>
                         </select>
                         <div class="form-check">
-                            <label class="form-check-label" for="share">Share</label>
+                            <label class="form-check-label" for="share">分享代码</label>
                             <input class="form-check-input" id="share" name="share" type="checkbox">
                         </div>
                     </div>
@@ -125,27 +130,26 @@
             <div class="container-fluid bg-light rounded" style="opacity: 0.9">
                 <table class="table-sm table">
                     <tr>
-                        <td>Time Limit</td>
+                        <td>时间限制</td>
                         <td th:text="${problem.timeLimit}"></td>
                     </tr>
                     <tr>
-                        <td>Memory Limit</td>
+                        <td>空间限制</td>
                         <td th:text="${problem.memoryLimit/1024}+'KB'"></td>
                     </tr>
                     <tr>
-                        <td>Source</td>
+                        <td>来源</td>
                         <td th:text="${problem.source}"></td>
                     </tr>
                 </table>
             </div>
             <div class="container-fluid bg-light rounded" style="opacity: 0.8">
-                <h1 class="text-center">Tags</h1>
+                <h1 class="text-center">标签</h1>
                 <a class="badge badge-pill badge-primary" th:each="tag:${problem.tags}"
                    th:href="'/problems/tags?tag='+${tag.name}" th:text="${tag.name}"></a>
             </div>
             <div class="container-fluid">
-                <button class="btn btn-primary" data-target="#statuModal" data-toggle="modal" id="leader-board">Leader
-                    board
+                <button class="btn btn-primary" data-target="#statuModal" data-toggle="modal" id="leader-board">提交排行
                 </button>
             </div>
             <div class="container-fluid">
@@ -268,6 +272,7 @@
     </div>
 </div>
 <script>
+    var markdown = new showdown.Converter();
     var vm=new Vue({
         el: '#top-list',
         data: {

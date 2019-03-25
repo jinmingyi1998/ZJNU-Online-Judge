@@ -1,0 +1,57 @@
+<!--
+  ~ Copyright (c) 2019. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  -->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<th:block th:insert="~{fragment/header :: header}"></th:block>
+<head>
+    <meta charset="UTF-8">
+    <title>Learn</title>
+</head>
+<body>
+<div class="container" id="v-row">
+    <div class="row">
+        <div class="col-3" style="margin-top: 3rem" v-for="v in videos">
+            <div class="card" style="height: 100%;">
+                <img alt="" class="card-img-top" style="width: 100%;height: 9rem;" v-bind:src="v.thumburl">
+                <div class="card-body">
+                    <div class="card-title">
+                        <h5><a style="color: black" v-bind:href="geturl(v.id)">{{v.name}}</a></h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    vlist = new Vue({
+        el: "#v-row",
+        data: {videos: []},
+        methods: {
+            geturl: function (id) {
+                return 'video/' + id;
+            }
+        }
+    });
+
+    function getList() {
+        $.get({
+            url: "/video/rest/list",
+            success: function (res) {
+                vlist._data.videos = res;
+            }
+        });
+    }
+
+    $(function () {
+        getList();
+    });
+</script>
+<footer th:replace="~{fragment/footer :: footer}"></footer>
+</body>
+</html>

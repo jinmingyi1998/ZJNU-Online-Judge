@@ -7,7 +7,7 @@
   -->
 
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:insert="~{fragment/header :: header}"></th:block>
     <meta charset="UTF-8">
@@ -62,9 +62,9 @@
 <body>
 <div class="container" height="100%">
     <form class="container form-inline">
-        Username:<input class="form-control" id="search-username" name="username" type="text">
-        Problem: <input class="form-control" id="search-problem" name="problem" type="text">
-        Result:<select class="form-control" id="search-result" name="result">
+        用户名:<input class="form-control" id="search-username" name="username" type="text">
+        题目: <input class="form-control" id="search-problem" name="problem" type="text">
+        结果:<select class="form-control" id="search-result" name="result">
         <option selected value="">All</option>
         <option value="Accepted">Accepted</option>
         <option value="Wrong Answer">Wrong Answer</option>
@@ -80,14 +80,14 @@
         <thead class="thead-light text-center">
         <tr>
             <th>Run ID</th>
-            <th>Username</th>
-            <th>Problem</th>
-            <th>Result</th>
-            <th>Time(ms)</th>
-            <th>Memory(KB)</th>
-            <th>Length</th>
-            <th>Language</th>
-            <th>Submit Time</th>
+            <th><i class="fa fa-user"></i>用户名</th>
+            <th><i class="fa fa-question-circle-o"></i>题目</th>
+            <th><i class="fa fa-check-circle"></i>结果</th>
+            <th><i class="fa fa-clock-o"></i>用时(ms)</th>
+            <th><i class="fa fa-database"></i>内存(KB)</th>
+            <th><i class="fa fa-files-o"></i>代码长度</th>
+            <th><i class="fa fa-keyboard-o"></i>语言</th>
+            <th><i class="fa fa-calendar"></i>提交时间</th>
         </tr>
         </thead>
         <tbody class="text-center">
@@ -112,9 +112,9 @@
     </table>
     <div class="container text-center">
         <ul class="pagination">
-            <li class="page-item"><a class="page-link" id="top-page">Top</a></li>
-            <li class="page-item"><a class="page-link" id="last-page">Last</a></li>
-            <li class="page-item"><a class="page-link" id="next-page">Next</a></li>
+            <li class="page-item"><a class="page-link" id="top-page">第一页</a></li>
+            <li class="page-item"><a class="page-link" id="last-page">上一页</a></li>
+            <li class="page-item"><a class="page-link" id="next-page">下一页</a></li>
         </ul>
     </div>
 </div>
@@ -130,14 +130,14 @@
                     <thead class="thead-light text-center">
                     <tr>
                         <th>Run ID</th>
-                        <th>Username</th>
-                        <th>Problem</th>
-                        <th>Result</th>
-                        <th>Time(ms)</th>
-                        <th>Memory(B)</th>
-                        <th>Length</th>
-                        <th>Language</th>
-                        <th>Submit Time</th>
+                        <th><i class="fa fa-user"></i>用户名</th>
+                        <th><i class="fa fa-question-circle-o"></i>题目</th>
+                        <th><i class="fa fa-check-circle"></i>结果</th>
+                        <th><i class="fa fa-clock-o"></i>用时(ms)</th>
+                        <th><i class="fa fa-database"></i>内存(Byte)</th>
+                        <th><i class="fa fa-files-o"></i>代码长度</th>
+                        <th><i class="fa fa-keyboard-o"></i>语言</th>
+                        <th><i class="fa fa-calendar"></i>提交时间</th>
                     </tr>
                     </thead>
                     <tbody class="text-center">

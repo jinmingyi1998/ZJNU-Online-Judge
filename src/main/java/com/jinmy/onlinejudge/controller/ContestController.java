@@ -265,7 +265,8 @@ public class ContestController {
                 return "Please Login";
             }
             Contest contest = contestService.getContestById(cid);
-
+            if (contest.isEnded())
+                return "Ended!";
             Problem problem = null;
             for (int i = 0; i < contest.getProblems().size(); i++) {
                 if (contest.getProblems().get(i).getTempId() == pid) {

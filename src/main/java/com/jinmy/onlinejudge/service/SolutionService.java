@@ -13,6 +13,7 @@ import com.jinmy.onlinejudge.repository.CompileErrorRepository;
 import com.jinmy.onlinejudge.repository.ContestProblemRepository;
 import com.jinmy.onlinejudge.repository.SolutionRepository;
 import com.jinmy.onlinejudge.repository.UserProblemRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class SolutionService {
     public static final String[] STATUS = {"Accepted", "Wrong Answer", "Compile Error",
@@ -144,17 +146,14 @@ public class SolutionService {
             problem.setSubmit(problem.getSubmit() + 1);
             userService.saveOrUpdateUser(user);
             problemService.updateProblem(problem);
-            try {
-                @NotNull Contest contest = solution.getContest();
-                contest = contestService.getContestById(contest.getId());
-                for (ContestProblem cp : contest.getProblems()) {
-                    if (cp.getProblem().getId() == problem.getId()) {
-                        cp.setSubmitted(cp.getSubmitted() + 1);
-                        contestProblemRepository.save(cp);
-                        break;
-                    }
+            @NotNull Contest contest = solution.getContest();
+            contest = contestService.getContestById(contest.getId());
+            for (ContestProblem cp : contest.getProblems()) {
+                if (cp.getProblem().getId() == problem.getId()) {
+                    cp.setSubmitted(cp.getSubmitted() + 1);
+                    contestProblemRepository.save(cp);
+                    break;
                 }
-            } catch (Exception e) {
             }
         } catch (Exception e) {
         }
@@ -165,31 +164,26 @@ public class SolutionService {
             @NotNull User user = solution.getUser();
             @NotNull Problem problem = solution.getProblem();
             UserProblem userProblem = new UserProblem(user, problem);
-            try {
-                Optional<UserProblem> userProblem1 = userProblemRepository.findByUserAndProblem(user, problem);
-                if (!userProblem1.isPresent()) {
-                    userProblemRepository.save(userProblem);
-                    user.addSocre(problem.getScore());
-                    user.setSolve(user.getSolve() + 1);
-                    problem.setAccepted(problem.getAccepted() + 1);
-                    userService.saveOrUpdateUser(user);
-                    problemService.updateProblem(problem);
+            Optional<UserProblem> userProblem1 = userProblemRepository.findByUserAndProblem(user, problem);
+            if (!userProblem1.isPresent()) {
+                userProblemRepository.save(userProblem);
+                user.addSocre(problem.getScore());
+                user.setSolve(user.getSolve() + 1);
+                problem.setAccepted(problem.getAccepted() + 1);
+                userService.saveOrUpdateUser(user);
+                problemService.updateProblem(problem);
+            }
+            @NotNull Contest contest = solution.getContest();
+            contest = contestService.getContestById(contest.getId());
+            for (ContestProblem cp : contest.getProblems()) {
+                if (cp.getProblem().getId() == problem.getId()) {
+                    cp.setAccepted(cp.getAccepted() + 1);
+                    contestProblemRepository.save(cp);
+                    break;
                 }
-                try {
-                    @NotNull Contest contest = solution.getContest();
-                    contest = contestService.getContestById(contest.getId());
-                    for (ContestProblem cp : contest.getProblems()) {
-                        if (cp.getProblem().getId() == problem.getId()) {
-                            cp.setAccepted(cp.getAccepted() + 1);
-                            contestProblemRepository.save(cp);
-                            break;
-                        }
-                    }
-                } catch (Exception e) {
-                }
-            } catch (Exception e) {
             }
         } catch (Exception e) {
+            log.error("accept add failed");
         }
     }
 }

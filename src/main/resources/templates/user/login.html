@@ -7,11 +7,11 @@
   -->
 
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:insert="~{fragment/header :: header}"></th:block>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>登录</title>
     <script>
         $(function () {
             $("#submit-btn").click(function () {
@@ -78,19 +78,17 @@
     </style>
 </head>
 <body>
-
-
 <div class="container text-center">
     <form class="form-signin">
-        <h1 class="h3 mb-3 font-weight-normal">Sign in</h1>
+        <h1 class="h3 mb-3 font-weight-normal">登录</h1>
         <div class="alert alert-warning" id="message" style="display: none"></div>
-        <label class="sr-only" for="inputUsername">Username</label>
-        <input autofocus class="form-control" id="inputUsername" name="username" placeholder="Username" required=""
+        <label class="sr-only" for="inputUsername">用户名</label>
+        <input autofocus class="form-control" id="inputUsername" name="username" placeholder="用户名" required=""
                type="text">
-        <label class="sr-only" for="inputPassword">Password</label>
-        <input class="form-control" id="inputPassword" name="password" placeholder="Password" required type="password">
+        <label class="sr-only" for="inputPassword">密码</label>
+        <input class="form-control" id="inputPassword" name="password" placeholder="密码" required type="password">
         <input class="btn btn-lg btn-primary btn-block" id="submit-btn" onclick="return false" type="submit"
-               value="Sign in">
+               value="登录">
     </form>
 </div>
 

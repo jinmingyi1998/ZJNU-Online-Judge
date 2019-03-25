@@ -52,8 +52,16 @@ public class Contest {
     @Column(nullable = false, columnDefinition = "varchar(20) default 'acm'")
     private String pattern;
 
-    public boolean isEnded() {
+    public Boolean isEnded() {
         return Instant.now().compareTo(endTime) > 0;
+    }
+
+    public String getRunStatu() {
+        if (Instant.now().compareTo(endTime) > 0)
+            return "已结束";
+        else if (Instant.now().compareTo(startTime) > 0)
+            return "进行中";
+        else return "未开始";
     }
     public String getLength(){
         Duration d=Duration.between(startTime,endTime);
