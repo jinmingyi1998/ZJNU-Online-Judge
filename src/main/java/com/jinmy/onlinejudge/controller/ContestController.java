@@ -71,7 +71,7 @@ public class ContestController {
             if (contest.getPrivilege().equals("private")) {
                 if (session.getAttribute("contest" + contest.getId()) == null) {
                     if (!checkPassword(contest, password))
-                        return new ModelAndView("/contest/password");
+                        return new ModelAndView("contest/password");
                 }
             }
             ModelAndView m = new ModelAndView("contest/contestinfo");
@@ -266,7 +266,7 @@ public class ContestController {
             }
             Contest contest = contestService.getContestById(cid);
             if (contest.isEnded())
-                return "Ended!";
+                return "The contest has ended!";
             Problem problem = null;
             for (int i = 0; i < contest.getProblems().size(); i++) {
                 if (contest.getProblems().get(i).getTempId() == pid) {

@@ -94,7 +94,7 @@
         <tr th:each="solution,iter:${solutions}" th:object="${solution}">
             <td th:text="*{id}"></td>
             <td th:text="*{user.username}"></td>
-            <td><a th:href="'/showproblem?id='+*{problem.id}" th:text="*{problem.id}"></a></td>
+            <td><a th:href="'/problems/'+*{problem.id}" th:text="*{problem.id}"></a></td>
             <td class="view-code" th:id="*{id}" th:switch="*{result}">
                 <span class="text-success font-weight-bold" th:case="'Accepted'">Accepted</span>
                 <span class="text-muted" th:case="'Compile Error'" th:text="*{result}"></span>

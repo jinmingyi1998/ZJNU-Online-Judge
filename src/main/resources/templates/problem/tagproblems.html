@@ -86,7 +86,8 @@
         <div class="col-3">
             <div class="container-fluid bg-light rounded" style="opacity: 0.8">
                 <h1>Tags</h1>
-                <a class="badge badge-success badge-pill font-weight-bold" style="font-size: 1rem" th:each="tag:${tags}"
+                <a class="badge badge-secondary badge-pill font-weight-bold" style="font-size: 1rem"
+                   th:each="tag:${tags}"
                    th:href="'/problems/tags?tag='+${tag.name}" th:text="${tag.name}"></a>
             </div>
         </div>

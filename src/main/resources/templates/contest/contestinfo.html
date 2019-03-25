@@ -18,14 +18,14 @@
 <body>
 <main class="container-fluid" th:id="${contest.id}">
     <ul class="container nav nav-pills">
-        <li class="nav-item"><span class="nav-link active" data-toggle="pill" href="#overview">总览</span></li>
-        <li class="nav-item"><span class="nav-link" data-toggle="pill" href="#problem">题目</span></li>
+        <li class="nav-item"><span class="nav-link" data-toggle="pill" href="#overview">总览</span></li>
+        <li class="nav-item"><span class="nav-link active" data-toggle="pill" href="#problem">题目</span></li>
         <li class="nav-item"><span class="nav-link" data-toggle="pill" href="#status">提交记录</span></li>
         <li class="nav-item"><span class="nav-link" data-toggle="pill" href="#rank">排行榜</span></li>
         <li class="nav-item"><span class="nav-link" data-toggle="pill" href="#comment">评论</span></li>
     </ul>
-    <div class="tab-content" style="margin-top: 2rem">
-        <div class="tab-pane active" id="overview">
+    <div class="tab-content container" style="margin-top: 2rem">
+        <div class="tab-pane" id="overview">
             <div class="list-group container">
                 <li class="list-group-item"
                     th:each="problem:${problems}" th:object="${problem}">
@@ -36,7 +36,7 @@
             </div>
         </div>
 
-        <div class="tab-pane fade container" id="problem">
+        <div class="tab-pane container active" id="problem">
             <span id="problem-number" style="display: none" th:text="${contest.problems.size()}"></span>
             <div class="nav nav-pills bg-light rounded w-50" style="margin: 1rem;opacity: 0.7; padding: 0.5rem;">
                 <h2>题目列表:</h2>
@@ -50,39 +50,41 @@
                     <div class="card-header">
                         <h2 class="card-title" id="problem-title"></h2>
                         <ul class="list-inline">
-                            <li class="list-inline-item">Time Limit :<span id="problem-time-limit"></span></li>
-                            <li class="list-inline-item">Memory Limit : <span id="problem-memory-limit"></span></li>
+                            <li class="list-inline-item"><i class="fa fa-clock-o"></i>时间限制 :<span
+                                    id="problem-time-limit"></span></li>
+                            <li class="list-inline-item"><i class="fa fa-database"></i>内存限制 : <span
+                                    id="problem-memory-limit"></span></li>
                         </ul>
                     </div>
                     <div class="card-body">
-                        <h3 class="card-title">Description</h3>
+                        <h3 class="card-title">题目描述</h3>
                         <div class="card-text" id="problem-description"></div>
                     </div>
                     <div class="card-body">
-                        <h3 class="card-title">Input</h3>
+                        <h3 class="card-title">输入</h3>
                         <div class="card-text" id="problem-input"></div>
                     </div>
                     <div class="card-body">
-                        <h3 class="card-title">Output</h3>
+                        <h3 class="card-title">输出</h3>
                         <div class="card-text" id="problem-output"></div>
                     </div>
                     <div class="card-body">
-                        <h3 class="card-title">Sample Input</h3>
-                        <div class="card-text" id="problem-sample-input"></div>
+                        <h3 class="card-title">样例输入</h3>
+                        <pre class="card-text" id="problem-sample-input"></pre>
                     </div>
                     <div class="card-body">
-                        <h3 class="card-title">Sample Output</h3>
-                        <div class="card-text" id="problem-sample-output"></div>
+                        <h3 class="card-title">样例输出</h3>
+                        <pre class="card-text" id="problem-sample-output"></pre>
                     </div>
                     <div class="card-body">
-                        <h3 class="card-title">Hint</h3>
+                        <h3 class="card-title">提示</h3>
                         <pre class="card-text" id="problem-hint"></pre>
                     </div>
                 </div>
                 <div class="container text-center" style="margin-top: 20px">
                     <form id="form">
                         <div class="form-inline">
-                            <label for="language">Language :</label>
+                            <label for="language">语言 :</label>
                             <select class="form-control" id="language" name="language">
                                 <option value="c">C</option>
                                 <option selected value="cpp">C++</option>
@@ -91,7 +93,7 @@
                                 <option value="py3">Python3</option>
                             </select>
                             <div class="form-check">
-                                <label class="form-check-label" for="share">Share</label>
+                                <label class="form-check-label" for="share">分享代码</label>
                                 <input class="form-check-input" id="share" name="share" type="checkbox">
                             </div>
                         </div>
@@ -102,7 +104,7 @@
                             <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" id="prog"
                                  style="width:0%"></div>
                         </div>
-                        <a class="btn btn-primary btn-lg text-center" id="submit_btn">Submit</a>
+                        <a class="btn btn-primary btn-lg text-center" id="submit_btn">提交</a>
                     </form>
                 </div>
             </div>
@@ -147,7 +149,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="container tab-pane fade" id="rank">
+        <div class="container tab-pane" id="rank">
             <a class="fa fa-refresh btn btn-success" onclick="getRankOfContest()"
                style="font-size: 1.5rem;color: white"></a>
             <table class="table-sm table-hover table-responsive-xl table-bordered table-light container-fluid"
@@ -164,7 +166,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="container tab-pane fade" id="comment">
+        <div class="container tab-pane" id="comment">
             <ul class="list-group" id="comments">
                 <li :key="comment.id" class="list-group-item" v-for="comment in comments">
                     <a :href="user_url(comment.user.id)">{{comment.user.name}}</a>&nbsp; @ &nbsp;<span>{{comment.normalPostTime}}</span>
