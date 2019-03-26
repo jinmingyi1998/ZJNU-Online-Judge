@@ -30,7 +30,7 @@ $(function () {
                         }
                         $("#modal-username").text(solution.user.username);
                         $("#modal-problem").text(solution.problem['id']);
-                        $("#modal-result").text(solution.result);
+                        $("#modal-result").text(solution.normalResult);
                         if (solution.result == "Accepted") {
                             $("#modal-result").attr("class", "text-success font-weight-bold");
                         } else {

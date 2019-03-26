@@ -133,16 +133,16 @@
                     <td>{{s.user.name}}</td>
                     <td>{{s.problem.id}}</td>
                     <td class="result view-code" v-bind:id="s.id"
-                        v-bind:class="{ 'text-success' : s.result=='Accepted',
-                         'font-weight-bold' : s.result=='Accepted','text-danger':s.result!='Accepted' }">
-                        {{s.result}}
+                        v-bind:class="{ 'text-success' : s.normalResult=='Accepted',
+                         'font-weight-bold' : s.normalResult=='Accepted','text-danger':s.normalResult!='Accepted' }">
+                        {{s.normalResult}}
                     </td>
                     <td>{{s.time}}</td>
                     <td>{{s.memory}}</td>
                     <td>{{s.length}}</td>
                     <td class="view-code" :id="s.id"
-                        v-bind:class="{ 'text-success' : s.result=='Accepted',
-                         'text-danger':s.result!='Accepted' }">{{s.language}}
+                        v-bind:class="{ 'text-success' : s.normalResult=='Accepted',
+                         'text-danger':s.normalResult!='Accepted' }">{{s.language}}
                     </td>
                     <td>{{s.normalSubmitTime}}</td>
                 </tr>

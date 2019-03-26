@@ -170,7 +170,7 @@
                                   th:text="${solution.result}">Compile Error</span>
                             <span class="text-muted" th:case="'Pending'" th:text="${solution.result}"></span>
                             <span class="text-muted" th:case="'Running*'" th:text="${solution.result}"></span>
-                            <span class="text-danger" th:case="*" th:text="${solution.result}"></span>
+                            <span class="text-danger" th:case="*" th:text="${solution.normalResult}"></span>
                         </td>
                         <td class="font-weight-light text-nowrap"
                             th:text="${solution.normalSubmitTime}"></td>

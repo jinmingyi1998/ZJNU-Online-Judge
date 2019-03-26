@@ -111,7 +111,9 @@ class Person {
             this.penalty += rp.duration.getSeconds();
             this.penalty += rp.getWa() * 20 * 60L;
             this.ac++;
-        } else if (s.getResult().indexOf("Runn") != -1 || s.getResult().indexOf("Compi") != -1) {
+        } else if (s.getResult().indexOf("Runn") != -1 ||
+                s.getResult().indexOf("Compi") != -1 ||
+                s.getResult().indexOf("System") != -1) {
             return;
         } else {
             rp.setWa(rp.getWa() + 1L);

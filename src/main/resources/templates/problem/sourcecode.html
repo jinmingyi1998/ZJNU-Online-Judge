@@ -52,7 +52,7 @@
             <td th:switch="*{result}">
                 <span class="text-success font-weight-bold" th:case="'Accepted'">Accepted</span>
                 <span class="text-muted" th:case="'Compile Error'">Compile Error</span>
-                <span class="text-danger" th:case="*" th:text="${solution.result}"></span>
+                <span class="text-danger" th:case="*" th:text="${solution.normalResult}"></span>
             </td>
             <td th:text="*{time}"></td>
             <td th:text="*{memory/1024}"></td>

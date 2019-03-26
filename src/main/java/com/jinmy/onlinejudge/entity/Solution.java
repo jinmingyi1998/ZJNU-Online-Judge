@@ -54,6 +54,8 @@ public class Solution {
     private Boolean share;
     @OneToOne(mappedBy = "solution", cascade = CascadeType.ALL, orphanRemoval = true)
     private CompileError ce;
+    @Column
+    private Integer caseNumber = 0;
 
     public Solution() {
         contest = null;
@@ -89,6 +91,11 @@ public class Solution {
         this.result = result;
         this.share = share;
         this.ce = ce;
+    }
+
+    public String getNormalResult() {
+        if (result.equals("Accepted")) return result;
+        return result + " on case " + caseNumber;
     }
 
     public String getNormalLanguage() {

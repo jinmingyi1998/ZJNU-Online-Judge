@@ -343,6 +343,7 @@ public class JudgeQueue {
                             break;
                     }
                     if (ret != 0) {
+                        solution.setCaseNumber(case_counter);
                         break;
                     }
                 } else {
