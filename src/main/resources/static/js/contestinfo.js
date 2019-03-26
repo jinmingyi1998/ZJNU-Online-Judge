@@ -134,8 +134,8 @@ function changeProblem(cid, pid) {
         url: "/contest/rest/" + cid + "/problem/" + pid,
         success: function (problem) {
             $("#problem-title").text(problem.title);
-            $("#problem-time-limit").text(problem.timeLimit);
-            $("#problem-memory-limit").text(problem.memoryLimit);
+            $("#problem-time-limit").text(problem.timeLimit+"ms");
+            $("#problem-memory-limit").text(problem.memoryLimit+"Bytes");
             $("#problem-description").html(markdown.makeHtml(problem.description));
             $("#problem-input").html(markdown.makeHtml(problem.input));
             $("#problem-output").html(markdown.makeHtml(problem.output));

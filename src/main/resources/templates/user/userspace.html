@@ -67,30 +67,35 @@
 </head>
 <body>
 <main class="container" height="100%" width="100%">
-    <h1 th:text="${user.username}">username</h1>
-    <h2 th:text="${user.name}"> name </h2>
-    <h2 class="badge-secondary badge" th:text="${user.privilege.name}">user privilege</h2>
-    <div class="card">
-        <div class="card-body">
-            <dl class="card-text">
-                <dt class="col-sm-3">Register:</dt>
-                <dd class="col-sm-9" th:text="${user.normalRegisterTime}">register time</dd>
-                <dt class="col-sm-3">School</dt>
-                <dd class="col-sm-9" th:text="${user.school}">school</dd>
-                <dt class="col-3">Score</dt>
-                <dd class="col-9" th:text="${user.score}">socre</dd>
-                <dt class="col-sm-3">Solved</dt>
-                <dd class="col-sm-9" th:text="${user.solve}">solve</dd>
-                <dt class="col-sm-3">Submitted</dt>
-                <dd class="col-sm-9" th:text="${user.submit}">submit</dd>
-            </dl>
-        </div>
+    <h2><span th:text="${user.name}"></span><small>(</small><small th:text="${user.username}">name</small><small>)</small></h2>
+    <span class="badge-secondary badge" th:text="${user.privilege.name}" style="font-size: 0.9rem;">user privilege</span>
+    <table class="table table-light rounded table-responsive-md table-bordered">
+        <thead>
+        <tr>
+            <th>注册时间</th>
+            <th>学校</th>
+            <th>分数</th>
+            <th>提交</th>
+            <th>通过</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:text="${user.normalRegisterTime}"></td>
+            <td th:text="${user.school}"></td>
+            <td th:text="${user.score}"></td>
+            <td th:text="${user.solve}"></td>
+            <td th:text="${user.submit}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="container text-center">
+        <button class="btn btn-primary mx-auto" data-target="#userModal"
+                data-toggle="modal"
+                th:if="${session.currentUser!=null && session.currentUser.id==user.id}">
+            更新个人信息
+        </button>
     </div>
-    <button class="btn btn-primary" data-target="#myModal"
-            data-toggle="modal" onclick="updateModal()"
-            th:if="${session.currentUser!=null && session.currentUser.id==user.id}">
-        更新个人信息
-    </button>
 </main>
 <div class="modal fade" id="userModal">
     <div class="modal-dialog">

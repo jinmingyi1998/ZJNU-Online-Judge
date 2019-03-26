@@ -111,6 +111,12 @@ public class Team {
                 ", createTime=" + createTime +
                 '}';
     }
+
+    public Boolean validator() {
+        return this.name.length() > 0 &&
+                this.name.length() < 50 &&
+                this.introduction.length() < 2000;
+    }
 }
 
 

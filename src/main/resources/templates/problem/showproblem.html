@@ -23,7 +23,6 @@
             } catch (e) {
                 console.log("md error")
             }
-            ;
             $("#submit_btn").click(function () {
                 $("#submit_btn").attr("class", "btn btn-primary btn-lg text-center disabled");
                 $("#submit_btn").text("Submiting...");
@@ -101,7 +100,7 @@
             </div>
             <div class="container text-center" style="margin-top: 20px">
                 <form id="form">
-                    <div class="form-inline">
+                    <div class="form-inline" style="margin: 1rem">
                         <label for="language">语言 :</label>
                         <select class="form-control" id="language" name="language">
                             <option value="c">C</option>

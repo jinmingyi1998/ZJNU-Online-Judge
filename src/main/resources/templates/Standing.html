@@ -12,7 +12,6 @@
     <th:block th:insert="~{fragment/header :: header}"></th:block>
     <meta charset="UTF-8">
     <title>用户排行</title>
-
 </head>
 <body>
 <main class="container">
@@ -33,8 +32,10 @@
                 </thead>
                 <tbody>
                 <tr th:if="${session.currentUser!=null}" class="font-weight-bold">
-                    <td th:text="${user.standing}"></td>
-                    <td><a th:href="'/user/'+${user.id}" th:text="${user.username}"></a></td>
+                    <td th:text="${user.standing}" th:if="${user.standing>0}"></td>
+                    <td th:unless="${user.standing>0}">>500</td>
+                    <td><span class="badge badge-primary">我</span>&nbsp;<a th:href="'/user/'+${user.id}"
+                                                                           th:text="${user.username}"></a></td>
                     <td th:text="${user.name}"></td>
                     <td th:text="${user.school}"></td>
                     <td th:text="${user.submit}"></td>
@@ -50,14 +51,45 @@
                     <td th:text="${u.submit}">submit</td>
                     <td th:text="${u.solve}" class="text-success">solve</td>
                     <td th:text="${u.ratio}">ratio</td>
-                    <td th:text="${u.score}" class="text-primary">score</td>
+                    <td th:text="${u.score}">score</td>
                 </tr>
                 </tbody>
             </table>
+            <ul class="pagination" style="margin: 1rem">
+                <li class="page-item"><a class="page-link turnpage" page="last-page">上一页</a></li>
+                <li class="page-item"><a class="page-link turnpage" page="0">1</a></li>
+                <li class="page-item"><a class="page-link turnpage" page="1">2</a></li>
+                <li class="page-item"><a class="page-link turnpage" page="2">3</a></li>
+                <li class="page-item"><a class="page-link turnpage" page="3">4</a></li>
+                <li class="page-item"><a class="page-link turnpage" page="4">5</a></li>
+                <li class="page-item"><a class="page-link turnpage" page="5">6</a></li>
+                <li class="page-item"><a class="page-link turnpage" page="6">7</a></li>
+                <li class="page-item"><a class="page-link turnpage" page="7">8</a></li>
+                <li class="page-item"><a class="page-link turnpage" page="8">9</a></li>
+                <li class="page-item"><a class="page-link turnpage" page="9">10</a></li>
+                <li class="page-item" id="Next"><a class="page-link turnpage" page="next-page">下一页</a></li>
+            </ul>
         </div>
-
     </div>
 </main>
+<script src="/js/urlcontrol.js"></script>
+<script>
+    if (typeof (query.page) == "undefined") {
+        query.page = 0;
+    }
+    $(".turnpage").click(function () {
+        var act = $(this).attr("page");
+        if (act == "next-page") {
+            query.page++;
+        } else if (act == "last-page") {
+            query.page--;
+        }else {
+            query.page = parseInt(act);
+        }
+        url = location.pathname + "?page=" + query.page;
+        location.href = url;
+    });
+</script>
 <footer th:replace="~{fragment/footer :: footer}"></footer>
 </body>
 </html>

@@ -14,15 +14,7 @@
     <title th:text="Status"></title>
     <script language="JavaScript" th:src="@{/js/urlcontrol.js}"></script>
     <script language="JavaScript" th:src="@{/js/StatusInModal.js}"></script>
-    <style>
-        table {
-            border-radius: 0.5rem;
-        }
 
-        td {
-            padding: 0.5rem;
-        }
-    </style>
     <script language="JavaScript" th:inline="javascript">
         if (typeof (query.username) == "undefined") {
             query.username = "";
@@ -62,20 +54,23 @@
 <body>
 <div class="container" height="100%">
     <form class="container form-inline">
-        用户名:<input class="form-control" id="search-username" name="username" type="text">
-        题目: <input class="form-control" id="search-problem" name="problem" type="text">
-        结果:<select class="form-control" id="search-result" name="result">
-        <option selected value="">All</option>
-        <option value="Accepted">Accepted</option>
-        <option value="Wrong Answer">Wrong Answer</option>
-        <option value="Time Limit Exceed">Time Limit Exceed</option>
-        <option value="Memory Limit Exceed">Memory Limit Exceed</option>
-        <option value="Compile Error">Compile Error</option>
-        <option value="Runtime Error">Runtime Error</option>
-    </select>
-        <input class="btn btn-primary" id="search-submit" onclick="return false" type="submit" value="Go">
+        <label for="search-username" style="font-size: 1.5rem;margin-right:0.5rem;margin-left: 1rem">用户名:</label>
+        <input class="form-control" id="search-username" name="username" type="text">
+        <label for="search-problem" style="margin-left: 1rem;margin-right:0.5rem;font-size: 1.5rem">题目:</label>
+        <input class="form-control" id="search-problem" name="problem" type="text">
+        <label for="search-result" style="margin-left: 1rem;margin-right:0.5rem;font-size: 1.5rem">结果:</label>
+        <select class="form-control" id="search-result" name="result">
+            <option selected value="">All</option>
+            <option value="Accepted">Accepted</option>
+            <option value="Wrong Answer">Wrong Answer</option>
+            <option value="Time Limit Exceed">Time Limit Exceed</option>
+            <option value="Memory Limit Exceed">Memory Limit Exceed</option>
+            <option value="Compile Error">Compile Error</option>
+            <option value="Runtime Error">Runtime Error</option>
+        </select>
+        <input class="btn btn-primary" id="search-submit" style="margin: 0.5rem" onclick="return false" type="submit" value="Go">
     </form>
-    <table class="table-sm table-hover table-responsive-xl table-bordered table-light container-fluid"
+    <table class="table-sm table-hover table-responsive-sm table-bordered table-light container-fluid"
            style="opacity: 0.8;margin:1rem">
         <thead class="thead-light text-center">
         <tr>
