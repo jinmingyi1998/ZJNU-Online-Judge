@@ -60,9 +60,11 @@
 </head>
 <body>
 <div class="container" height="100%" width="100%">
-    <div class="form-inline">查找比赛:<input id="search-title" type="text"><a class="btn btn-sm btn-light"
-                                                                          id="search-btn">查找</a></div>
-    <ul class="list-group">
+    <div class="form-inline">
+        <label for="search-title" style="font-size: 1.5rem">查找比赛:</label>
+        <input id="search-title" type="text" class="form-control">
+        <a class="btn btn-light"id="search-btn">查找</a></div>
+    <ul class="list-group" style="margin-top: 1rem;margin-bottom: 1rem;">
         <li class="list-group-item card" th:each="contest:${contests}" th:object="${contest}">
             <h3><a class="text-center" th:href="'/contest/'+*{id}" th:text="*{id}+' '+*{title}"></a></h3>
                 <ul class="list-inline">

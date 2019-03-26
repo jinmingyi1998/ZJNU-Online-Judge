@@ -16,12 +16,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
+    public List<User> userStanding() {
+        List<User>userPage=userRepository.findFirst500ByBannedIsFalseOrderByScoreDescSolveDesc();
+        return userPage;
+    }
 
     @Transactional
     public User saveOrUpdateUser(User user) {

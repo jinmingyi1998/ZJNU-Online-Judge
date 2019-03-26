@@ -163,26 +163,30 @@ public class SolutionService {
         try {
             @NotNull User user = solution.getUser();
             @NotNull Problem problem = solution.getProblem();
+            problem.setAccepted(problem.getAccepted() + 1);
+            problemService.updateProblem(problem);
             UserProblem userProblem = new UserProblem(user, problem);
             Optional<UserProblem> userProblem1 = userProblemRepository.findByUserAndProblem(user, problem);
             if (!userProblem1.isPresent()) {
                 userProblemRepository.save(userProblem);
                 user.addSocre(problem.getScore());
                 user.setSolve(user.getSolve() + 1);
-                problem.setAccepted(problem.getAccepted() + 1);
                 userService.saveOrUpdateUser(user);
-                problemService.updateProblem(problem);
             }
-            @NotNull Contest contest = solution.getContest();
-            contest = contestService.getContestById(contest.getId());
-            for (ContestProblem cp : contest.getProblems()) {
-                if (cp.getProblem().getId() == problem.getId()) {
-                    cp.setAccepted(cp.getAccepted() + 1);
-                    contestProblemRepository.save(cp);
-                    break;
+            try {
+                @NotNull Contest contest = solution.getContest();
+                contest = contestService.getContestById(contest.getId());
+                for (ContestProblem cp : contest.getProblems()) {
+                    if (cp.getProblem().getId() == problem.getId()) {
+                        cp.setAccepted(cp.getAccepted() + 1);
+                        contestProblemRepository.save(cp);
+                        break;
+                    }
                 }
+            } catch (NullPointerException e) {
             }
         } catch (Exception e) {
+            log.error(e.getMessage());
             log.error("accept add failed");
         }
     }

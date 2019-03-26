@@ -357,9 +357,9 @@ public class JudgeQueue {
         } else {
             solution.setResult("Compile Error");
         }
-        solutionService.updateSolution(solution);
         if (solution.getResult().equals("Accepted")) {
             solutionService.addAccepted(solution);
         }
+        solutionService.updateSolution(solution);
     }
 }

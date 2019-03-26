@@ -12,47 +12,13 @@
     <th:block th:insert="~{fragment/header :: header}"></th:block>
     <meta charset="UTF-8">
     <title>Teams</title>
-    <script>
-        $(function () {
-            $("#name").change(function () {
-                var tname = $(this).val();
-                $.get({
-                    url: "/team/rest/checkname",
-                    data: {
-                        name: tname
-                    },
-                    success: function (res) {
-                        if (res != "success") {
-                            $("#input-name").text(res);
-                            $("#input-name").show();
-                        } else {
-                            $("#input-name").hide();
-                        }
-                    }
-                });
-            });
-        });
 
-        function createTeam() {
-            $.post({
-                url: "/team/rest/create",
-                data: $("#team-form").serialize(),
-                cache: false,
-                dataType: 'text',
-                success: function (res) {
-                    if (res == "success") {
-                        alert("Success");
-                        location.href = "/team";
-                    }
-                }
-            });
-        }
-    </script>
 </head>
 <body>
 <main class="container-fluid" height="100%" width="100%">
     <form class="container" id="team-form">
-        <div class="form-inline"><span class="font-weight-bold bg-warning" id="input-name" style="display: none"></span>
+        <span class="font-weight-bold  alert alert-danger" id="input-name" style="display: none"></span>
+        <div class="form-inline">
             Name: <input class="form-control" id="name" name="name" type="text">
         </div>
         <div class="form-group">
@@ -70,6 +36,43 @@
         <button class="btn btn-primary" onclick="createTeam()">Create</button>
     </form>
 </main>
+<script>
+    $(function () {
+        $("#name").change(function () {
+            var tname = $(this).val();
+            $.get({
+                url: "/team/rest/checkname",
+                data: {
+                    name: tname
+                },
+                success: function (res) {
+                    if (res != "success") {
+                        $("#input-name").text(res);
+                        $("#input-name").show();
+                    } else {
+                        $("#input-name").hide();
+                    }
+                }
+            });
+        });
+    });
+
+    function createTeam() {
+        $.post({
+            url: "/team/rest/create",
+            data: $("#team-form").serialize(),
+            cache: false,
+            dataType: 'text',
+            success: function (res) {
+                console.log(res);
+                if (res == "success") {
+                    alert("Success");
+                    location.href = "/team";
+                }
+            }
+        });
+    }
+</script>
 <footer th:replace="~{fragment/footer :: footer}"></footer>
 </body>
 </html>

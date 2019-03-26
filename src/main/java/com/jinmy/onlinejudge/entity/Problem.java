@@ -104,6 +104,7 @@ public class Problem {
 
     public String getRatio() {
         if (this.submit == 0) return "0%";
-        return this.accepted * 1.0 / this.submit * 100.0 + "%";
+        double ratio=this.accepted * 1.0 / this.submit * 100.0;
+        return  String.format("%.2f%%",ratio);
     }
 }

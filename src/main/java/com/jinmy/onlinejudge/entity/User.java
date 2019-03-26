@@ -13,8 +13,6 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Objects;
 
-
-
 //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Data
 @Log4j2
@@ -65,7 +63,7 @@ public class User {
     private Instant registertime;
 
     @Column(columnDefinition = "integer default 0")
-    private Integer score;
+    private Integer score=0;
 
     @Column(length = 200)
     private String school;
@@ -73,6 +71,8 @@ public class User {
     private String cls;//class
     @Column(columnDefinition = "integer default 2")
     private Privilege privilege = Privilege.student;
+
+    private int standing;
     public enum Privilege {
         admin("admin"), teacher("teacher"), student("student");
         private String name;
@@ -84,6 +84,12 @@ public class User {
         public String getName() {
             return name;
         }
+    }
+
+    public String getRatio(){
+        if (submit==0)return "0.00%";
+        double ratio=solve/submit*100;
+        return String.format("%.2f%%",ratio);
     }
 
     public User() {

@@ -122,7 +122,7 @@
                         <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" id="prog"
                              style="width:0%"></div>
                     </div>
-                    <a class="btn btn-primary btn-lg text-center" id="submit_btn">Submit</a>
+                    <a class="btn btn-primary btn-lg text-center text-light" id="submit_btn" style="margin-top: 1rem">Submit</a>
                 </form>
             </div>
         </main>
@@ -143,19 +143,14 @@
                     </tr>
                 </table>
             </div>
-            <div class="container-fluid bg-light rounded" style="opacity: 0.8">
-                <h1 class="text-center">标签</h1>
+            <div class="container-fluid bg-light rounded" style="opacity: 0.8;padding: 0.5rem;margin-bottom: 1rem">
+                <h2 class="text-center">标签</h2>
                 <a class="badge badge-pill badge-primary" th:each="tag:${problem.tags}"
                    th:href="'/problems/tags?tag='+${tag.name}" th:text="${tag.name}"></a>
             </div>
-            <div class="container-fluid">
-                <button class="btn btn-primary" data-target="#statuModal" data-toggle="modal" id="leader-board">提交排行
-                </button>
-            </div>
-            <div class="container-fluid" style="margin-top: 2rem">
+            <div class="container-fluid" style="margin-top: 2rem" th:if="${solutions.size()>0&&session.currentUser!=null}">
                 <h4>提交记录</h4>
-                <table class="table table-light table-hover"
-                       th:if="${solutions.size()>0&&session.currentUser!=null}">
+                <table class="table table-light table-hover">
                     <thead class="thead-light">
                     <tr>
                         <th>提交结果</th>
@@ -182,6 +177,10 @@
                     </tr>
                     </tbody>
                 </table>
+            </div>
+            <div class="container-fluid rounded">
+                <button class="btn btn-lg btn-light btn-block" style="width: 100%;margin: 0;opacity: 0.8" data-target="#statuModal" data-toggle="modal" id="leader-board">提交排行
+                </button>
             </div>
         </div>
     </div>
