@@ -28,13 +28,15 @@ public class TeamService {
         }
         return teams;
     }
-    public List<TeamRole>getUsersOfTeam(Team t){
+
+    public List<TeamRole> getUsersOfTeam(Team t) {
         return teamRoleRepository.findAllByTeam(t);
     }
+
     @Transactional
-    public Team getTeamById(Long id)throws NullPointerException{
-        Optional<Team> team=teamRepository.findById(id);
-        if (team.isPresent())return team.get();
+    public Team getTeamById(Long id) throws NullPointerException {
+        Optional<Team> team = teamRepository.findById(id);
+        if (team.isPresent()) return team.get();
         throw new NullPointerException("team not found");
     }
 
@@ -48,5 +50,22 @@ public class TeamService {
 
     public TeamRole joinTeam(TeamRole t) {
         return teamRoleRepository.save(t);
+    }
+
+    public List<Team> searchTeam(String search_by, String text) {
+        List<Team> teams = new ArrayList<>();
+        if (search_by.equals("name")) {
+            teams = teamRepository.findAllByNameLike("%" + text + "%");
+        } else if (search_by.equals("id")) {
+            try {
+                Optional<Team> team = teamRepository.findById(Long.parseLong(text));
+                if (team.isPresent()) teams.add(team.get());
+            } catch (Exception e) {
+                return teams;
+            }
+        } else {
+            teams = teamRepository.findAll();
+        }
+        return teams;
     }
 }

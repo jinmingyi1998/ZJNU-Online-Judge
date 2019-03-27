@@ -26,6 +26,8 @@ public class Tag {
     private String name;
     @ManyToMany(mappedBy = "tags", fetch = FetchType.EAGER)
     private List<Problem> problems;
+    @Column(columnDefinition = "bigint default 0" ,nullable = false)
+    private Long score;
 
     public Tag(String name) {
         this.name = name;

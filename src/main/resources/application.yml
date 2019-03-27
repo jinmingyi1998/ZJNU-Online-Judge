@@ -2,7 +2,7 @@ spring:
   datasource:
     username: jinmy
     password: 1234
-    url: jdbc:mysql://localhost:3306/onlinejudge
+    url: jdbc:mysql://localhost:3306/onlinejudge?useUnicode=yes&characterEncoding=UTF-8
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate:

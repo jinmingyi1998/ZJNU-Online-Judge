@@ -8,6 +8,7 @@
 
 package com.jinmy.onlinejudge.controller;
 
+import com.jinmy.onlinejudge.entity.Article;
 import com.jinmy.onlinejudge.entity.Problem;
 import com.jinmy.onlinejudge.entity.Solution;
 import com.jinmy.onlinejudge.entity.User;
@@ -155,5 +156,24 @@ public class ProblemController {
         } catch (NullPointerException e) {
             return "false";
         }
+    }
+
+    @GetMapping("/article/{pid}")
+    public ModelAndView problemArticle(@PathVariable(value = "pid") Long pid, HttpServletResponse response) {
+        ModelAndView m = new ModelAndView("problem/article");
+        try {
+            @NotNull Problem problem = problemService.getProblemById(pid);
+            List<Article> articles = problemService.getArticlesOfProblem(problem);
+            m.addObject("articles", articles);
+            m.addObject("problem",problem);
+        } catch (Exception e) {
+            try {
+                response.sendRedirect("/404");
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            return null;
+        }
+        return m;
     }
 }

@@ -142,12 +142,12 @@
                     </tr>
                 </table>
             </div>
-            <div class="container-fluid bg-light rounded" style="opacity: 0.8;padding: 0.5rem;margin-bottom: 1rem">
+            <div class="container-fluid bg-light rounded p-2 mb-3" style="opacity: 0.8;">
                 <h2 class="text-center">标签</h2>
                 <a class="badge badge-pill badge-primary" th:each="tag:${problem.tags}"
                    th:href="'/problems/tags?tag='+${tag.name}" th:text="${tag.name}"></a>
             </div>
-            <div class="container-fluid" style="margin-top: 2rem" th:if="${solutions.size()>0&&session.currentUser!=null}">
+            <div class="container-fluid mb-3"  th:if="${solutions.size()>0&&session.currentUser!=null}">
                 <h4>提交记录</h4>
                 <table class="table table-light table-hover">
                     <thead class="thead-light">
@@ -177,9 +177,12 @@
                     </tbody>
                 </table>
             </div>
-            <div class="container-fluid rounded">
-                <button class="btn btn-lg btn-light btn-block" style="width: 100%;margin: 0;opacity: 0.8" data-target="#statuModal" data-toggle="modal" id="leader-board">提交排行
+            <div class="container-fluid rounded mb-3 p-0">
+                <button class="btn btn-lg btn-light btn-block p-2" style="opacity: 0.8" data-target="#statuModal" data-toggle="modal" id="leader-board">提交排行
                 </button>
+            </div>
+            <div class="container-fluid rounded mb-3 p-0">
+                <a class="btn btn-lg btn-light btn-block p-2" style="opacity: 0.8" th:href="@{/problems/article/{pid}(pid=${problem.id})}" >查看题解</a>
             </div>
         </div>
     </div>
@@ -261,7 +264,7 @@
                     Not Shared
                 </button>
                 <pre id="modal-ce" class="pre-scrollable"></pre>
-                <pre class="prettyprint pre-scrollable"><code id="source_code"></code></pre>
+                <pre class="prettyprint pre-scrollable" id="source_code"></pre>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>

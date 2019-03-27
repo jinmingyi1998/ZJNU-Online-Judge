@@ -8,8 +8,10 @@
 
 package com.jinmy.onlinejudge.service;
 
+import com.jinmy.onlinejudge.entity.Article;
 import com.jinmy.onlinejudge.entity.Problem;
 import com.jinmy.onlinejudge.entity.Tag;
+import com.jinmy.onlinejudge.repository.ArticleRepository;
 import com.jinmy.onlinejudge.repository.ProblemRepository;
 import com.jinmy.onlinejudge.repository.TagRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,9 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class ProblemService {
+    @Autowired
+    private ArticleRepository articleRepository;
+
     @Autowired
     private ProblemRepository problemRepository;
     @Autowired
@@ -111,5 +116,10 @@ public class ProblemService {
 
     public void delete(Long id) {
         problemRepository.deleteById(id);
+    }
+
+    public List<Article>getArticlesOfProblem(Problem problem){
+        List<Article>articles= articleRepository.findAllByProblemOrderByIdDesc(problem);
+        return articles;
     }
 }

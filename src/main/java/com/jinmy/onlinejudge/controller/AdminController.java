@@ -35,6 +35,23 @@ public class AdminController {
     @Autowired
     ContestProblemRepository contestProblemRepository;
 
+    @GetMapping("/update/tag/score")
+    public String updateTagScore(){
+        List<Tag>tags=tagService.getTagList();
+        for(int i=0;i<tags.size();i++){
+            tags.get(i).setScore(0l);
+        }
+        tagService.updateManyTags(tags);
+        List<Problem>problems=problemService.getProblemList();
+        for (Problem p :problems) {
+            for(int i=0;i<p.getTags().size();i++){
+                p.getTags().get(i).setScore(p.getTags().get(i).getScore()+p.getScore());
+            }
+            tagService.updateManyTags(p.getTags());
+        }
+        return "success!";
+    }
+
     @GetMapping
     public ModelAndView index(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "problem", defaultValue = "") String search) {
         ModelAndView m = new ModelAndView("admin/admin");

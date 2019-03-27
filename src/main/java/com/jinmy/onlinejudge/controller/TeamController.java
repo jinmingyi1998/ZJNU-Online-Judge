@@ -57,6 +57,15 @@ public class TeamController {
         return null;
     }
 
+    @GetMapping("/search")
+    public ModelAndView getTeamList(@RequestParam(value = "search_by", defaultValue = "") String searchBy,
+                                    @RequestParam(value = "search", defaultValue = "") String search) {
+        ModelAndView m = new ModelAndView("team/findteam");
+        List<Team> teams = teamService.searchTeam(searchBy, search);
+        m.addObject("teams",teams);
+        return m;
+    }
+
     @GetMapping("/create")
     public ModelAndView createTeam() {
         return new ModelAndView("team/team_create");

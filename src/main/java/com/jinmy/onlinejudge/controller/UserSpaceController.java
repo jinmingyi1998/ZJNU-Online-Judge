@@ -76,12 +76,12 @@ public class UserSpaceController {
 
 
     @GetMapping("/rest/pie/{uid}")
-    public RadarGraph getRadarGraph(@PathVariable(value = "uid") Long uid, HttpServletResponse response) {
+    public PieGraph getRadarGraph(@PathVariable(value = "uid") Long uid, HttpServletResponse response) {
         try {
             @NotNull User user = userService.getUserById(uid);
-            RadarGraph radarGraph = new RadarGraph(user);
-            return radarGraph;
-        }catch (Exception e){
+            PieGraph pieGraph = new PieGraph();
+            return pieGraph;
+        } catch (Exception e) {
             try {
                 response.sendRedirect("/404");
             } catch (IOException e1) {
@@ -92,33 +92,64 @@ public class UserSpaceController {
     }
 
     @Data
-    class RadarGraph {
-        int total=0;
-        int prime = 0;
-        int medium = 0;
-        int advance = 0;
+    class Graph {
+        Radargraph radarGraph = new Radargraph();
+        PieGraph pieGraph = new PieGraph();
         int ratio = 0;
         int solve = 0;
+        int submit = 0;
 
-
-        public RadarGraph(User user) {
+        public Graph(User user) {
             solve = user.getSolve();
+            submit = user.getSubmit();
             ratio = (int) (1.0 * user.getSolve() / user.getSubmit() * 100);
             List<UserProblem> userProblems = solutionService.getUserSolvedProblem(user);
-            prime = medium = advance = 0;
+            pieGraph.prime = pieGraph.medium = pieGraph.advance = 0;
             for (UserProblem up : userProblems) {
                 for (Tag t : up.getProblem().getTags()) {
                     if (t.getId() == 1l) {
-                        prime++;
+                        pieGraph.prime++;
                     } else if (t.getId() == 2l) {
-                        medium++;
+                        pieGraph.medium++;
                     } else if (t.getId() == 3l) {
-                        advance++;
+                        pieGraph.advance++;
+                    } else if (t.getName().equals("数据结构")) {
+                        radarGraph.ds++;
+                    } else if (t.getName().equals("动态规划")) {
+                        radarGraph.dp++;
+                    } else if (t.getName().equals("搜索")) {
+                        radarGraph.search++;
+                    } else if (t.getName().equals("数论")) {
+                        radarGraph.math++;
+                    } else if (t.getName().equals("图论")) {
+                        radarGraph.graph++;
+                    } else if (t.getName().equals("计算几何")) {
+                        radarGraph.geometry++;
+                    } else if (t.getName().equals("字符串")) {
+                        radarGraph.string++;
                     }
                 }
             }
-            total=prime+medium+advance;
         }
+    }
+
+
+    @Data
+    class Radargraph {
+        int ds;
+        int string;
+        int math;
+        int search;
+        int graph;
+        int dp;
+        int geometry;
+    }
+
+    @Data
+    class PieGraph {
+        int prime = 0;
+        int medium = 0;
+        int advance = 0;
     }
 
 }
