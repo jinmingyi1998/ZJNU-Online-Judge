@@ -63,7 +63,7 @@ public class User {
     private Instant registertime;
 
     @Column(columnDefinition = "integer default 0")
-    private Integer score=0;
+    private Integer score = 0;
 
     @Column(length = 200)
     private String school;
@@ -73,6 +73,7 @@ public class User {
     private Privilege privilege = Privilege.student;
 
     private int standing;
+
     public enum Privilege {
         admin("admin"), teacher("teacher"), student("student");
         private String name;
@@ -86,14 +87,15 @@ public class User {
         }
     }
 
-    public String getRatio(){
-        if (submit==0)return "0.00%";
-        double ratio=solve/submit*100;
-        return String.format("%.2f%%",ratio);
+    public String getRatio() {
+        if (0 == submit) return "0.00%";
+        double ratio = 1.0*solve / submit * 100;
+        return String.format("%.2f%%", ratio);
     }
 
     public User() {
     }
+
     public String getNormalRegisterTime() {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date.from(registertime));
     }
@@ -148,21 +150,24 @@ public class User {
         this.score += score;
     }
 
-    public boolean userValidator() {
+    public boolean userValidator() throws UserFormatException {
         String pattern = "^\\w{6,15}$";
         String pattern2 = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
         if (!this.email.matches(pattern2)) {
-            System.err.println("email not match");
-            return false;
+            throw new UserFormatException("email not match");
         }
         if (!this.username.matches(pattern)) {
-            System.err.println("username not match");
-            return false;
+            throw new UserFormatException("username not match");
         }
         if (!this.password.matches(pattern)) {
-            System.err.println("password not match");
-            return false;
+            throw new UserFormatException("password not match");
         }
         return true;
+    }
+
+    public class UserFormatException extends Exception {
+        public UserFormatException(String email_not_match) {
+            super(email_not_match);
+        }
     }
 }

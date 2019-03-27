@@ -25,7 +25,7 @@ public class UserService {
     private UserRepository userRepository;
 
     public List<User> userStanding() {
-        List<User>userPage=userRepository.findFirst500ByBannedIsFalseOrderByScoreDescSolveDesc();
+        List<User> userPage = userRepository.findFirst500ByBannedIsFalseOrderByScoreDescSolveDesc();
         return userPage;
     }
 
@@ -36,7 +36,7 @@ public class UserService {
 
     //TODO update register to return string
     @Transactional
-    public User registerUser(User user) {
+    public User registerUser(User user) throws User.UserFormatException {
         if (user.userValidator() == false) {
             return null;
         }

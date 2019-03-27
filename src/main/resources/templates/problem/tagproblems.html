@@ -55,44 +55,47 @@
 <body>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-9">
-            <ul class="list-group">
+    <div class="col-1"></div>
+    <div class="col-10 row">
+        <div class="col-8">
+            <ul class="list-group container-fluid">
                 <li class="list-group-item card" style="margin: 10px;" th:each="problem,iterStat:${problems.content}"
                     th:object="${problem}">
                     <div class="card-body">
                         <ul class="list-inline">
                             <li class="list-inline-item">
                                 <h4 class="card-title">
-                                    <a th:href="'/showproblem?id='+*{id}"
+                                    <a th:href="@{/problems/{id}(id=*{id})}"
                                        th:text="${problem.id}+'  '+${problem.title}"></a></h4></li>
                             <li class="list-inline-item float-right" th:each="ta:*{tags}">
                                 <a class="badge badge-pill badge-info" th:href="'/problems/tags?tag='+${ta.name}"
                                    th:text="${ta.name}"></a></li>
                         </ul>
                         <ul class="card-text text-muted list-inline">
-                            <li class="list-inline-item" th:text="'Submit : '+${problem.submit}"></li>
-                            <li class="list-inline-item" th:text="'Accepted : '+${problem.accepted}"></li>
-                            <li class="list-inline-item floa" th:text="'Ratio : '+${problem.ratio}"></li>
-
+                            <li class="list-inline-item" th:text="'提交 : '+${problem.submit}"></li>
+                            <li class="list-inline-item" th:text="'通过 : '+${problem.accepted}"></li>
+                            <li class="list-inline-item floa" th:text="'通过率 : '+${problem.ratio}"></li>
+                            <li class="list-inline-item floa" th:text="'分数 : '+${problem.score}"></li>
                         </ul>
                     </div>
                 </li>
             </ul>
-            <ul class="pagination">
-                <li class="page-item"><a class="page-link turnpage" page="last-page">Last</a></li>
-                <li class="page-item" id="Next"><a class="page-link turnpage" page="next-page">Next</a></li>
+            <ul class="pagination justify-content-center">
+                <li class="page-item"><a class="page-link turnpage" page="last-page">上一页</a></li>
+                <li class="page-item" id="Next"><a class="page-link turnpage" page="next-page">下一页</a></li>
             </ul>
         </div>
-        <div class="col-3">
-            <div class="container-fluid bg-light rounded" style="opacity: 0.8;padding-top: 1rem;padding-bottom: 1rem;">
-                <h1>Tags</h1>
+        <div class="col-4">
+            <div class="container-fluid bg-light rounded" style="opacity: 0.8;padding-bottom: 1rem;padding-top: 1rem;margin-top: 1rem">
+                <h2 class="text-center">标签</h2>
                 <a class="badge badge-info badge-pill font-weight-bold" style="font-size: 1rem;margin: 5px"
                    th:each="tag:${tags}"
                    th:href="'/problems/tags?tag='+${tag.name}" th:text="${tag.name}"></a>
             </div>
         </div>
     </div>
-</div>
+    <div class="col-1"></div>
+    </div></div>
 <footer th:replace="~{fragment/footer :: footer}"></footer>
 </body>
 </html>

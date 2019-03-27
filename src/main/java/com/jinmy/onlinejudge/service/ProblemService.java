@@ -66,8 +66,9 @@ public class ProblemService {
     public Page<Problem> getTag(int page, int size, String tagname) {
         try {
             Tag t = tagRepository.findByName(tagname).get();
+            t.getProblems().sort((o1, o2) -> (int) (o1.getId()-o2.getId()));
             Page<Problem> problems = new PageImpl<Problem>(t.getProblems(),
-                    PageRequest.of(page, size, new Sort(Sort.Direction.ASC, "id")),
+                    PageRequest.of(page, size, new Sort(Sort.Direction.ASC, "problems_id")),
                     t.getProblems().size());
             return problems;
         } catch (Exception e) {

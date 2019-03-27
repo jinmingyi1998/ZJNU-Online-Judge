@@ -38,7 +38,7 @@ public class TeamController {
     public ModelAndView getTeamListOfMe(HttpServletResponse response) {
         try {
             ModelAndView m = new ModelAndView("team/teamindex");
-            if (!userAuthorityService.isLogin()){
+            if (!userAuthorityService.isLogin()) {
                 response.sendRedirect("/login");
                 return null;
             }
@@ -65,7 +65,7 @@ public class TeamController {
     @PostMapping("/rest/create")
     public String createTeam(Team team) {
         try {
-            if (!team.validator())return "Format Wrong";
+            if (!team.validator()) return "Format Wrong";
             Team t = teamService.insertTeam(team);
             User u = (User) session.getAttribute("currentUser");
             TeamRole teamRole = new TeamRole(t, u, TeamRole.Role.admin);
@@ -85,4 +85,26 @@ public class TeamController {
         }
         return "success";
     }
+
+    @GetMapping("/{tid}")
+    public ModelAndView teamInfo(@PathVariable(value = "tid") Long id, HttpServletResponse response) {
+        Team team = null;
+        try {
+            team = teamService.getTeamById(id);
+        } catch (NullPointerException e) {
+            log.error(e.getMessage());
+            try {
+                response.sendRedirect("/404");
+                return null;
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+        List<TeamRole> teamRoles = teamService.getUsersOfTeam(team);
+        ModelAndView m = new ModelAndView("team/teaminfo");
+        m.addObject("team", team);
+        m.addObject("members", teamRoles);
+        return m;
+    }
+
 }

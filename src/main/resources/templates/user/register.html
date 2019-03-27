@@ -65,13 +65,14 @@
         $(function () {
             $("#submit-btn").click(function () {
                 $.post({
-                    data: $("form").serialize(),
+                    data: $("#registerForm").serialize(),
                     url: "/register",
                     success: function (data) {
                         if (data == "success") {
                             location.href = "/";
                         } else {
                             $("#message").text(data);
+                            $("#message").show();
                         }
                     }
                 });
@@ -115,7 +116,7 @@
 </head>
 <body>
 <div class="container text-center">
-    <form action="/register" class="form-signin" method="post">
+    <form action="/register" class="form-signin" method="post" id="registerForm">
         <h1 class="h3 mb-3 font-weight-normal">注册</h1>
         <div class="alert alert-danger" id="message" style="display: none"></div>
         <label class="sr-only" for="inputUsername">用户名</label>

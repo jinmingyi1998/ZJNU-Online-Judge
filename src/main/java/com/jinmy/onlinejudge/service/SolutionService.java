@@ -99,6 +99,16 @@ public class SolutionService {
         }
         return solutionPage;
     }
+    public List<Solution> getTop5ProblemSolution(User user, Problem problem) {
+        List<Solution>solutions=solutionRepository.findTop5ByUserAndProblemOrderByIdDesc(user,problem);
+        for (Solution s : solutions) {
+            if (s.getResult().equals("Compile Error")) {
+                Optional<CompileError> ce = compileErrorRepository.findCompileErrorBySolution(s);
+                if (ce.isPresent()) s.setCe(ce.get());
+            }
+        }
+        return solutions;
+    }
 
     public List<Solution> getSolutionsOfUser(User user) {
         return solutionRepository.findAllByUser(user, new Sort(Sort.Direction.DESC, "id"));
@@ -190,4 +200,11 @@ public class SolutionService {
             log.error("accept add failed");
         }
     }
+
+    public UserProblem getUserProblem(User user,Problem problem)throws NullPointerException{
+        Optional<UserProblem> userProblem=userProblemRepository.findByUserAndProblem(user,problem);
+        if(userProblem.isPresent())return userProblem.get();
+        throw new NullPointerException("didn't ac");
+    }
+
 }

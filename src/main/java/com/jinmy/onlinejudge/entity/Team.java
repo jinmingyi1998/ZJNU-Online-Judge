@@ -8,13 +8,16 @@
 
 package com.jinmy.onlinejudge.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,8 +58,8 @@ public class Team {
     private Long id;
     @Column(nullable = false, length = 255, unique = true)
     private String name;
-
-    @ManyToMany
+    @JsonManagedReference
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<Contest> contests;
     @Column(nullable = false)
     private Visibility visibility;
@@ -66,7 +69,11 @@ public class Team {
     private String introduction;
     @Column
     private Instant createTime;
-    @JsonIgnore
+
+    public String getNormalCreateTime(){
+        return new SimpleDateFormat("yyyy-MM-dd").format(Date.from(createTime));
+    }
+    @JsonBackReference
     @OneToMany(mappedBy = "team")
     private List<TeamRole> teamRoles;
 

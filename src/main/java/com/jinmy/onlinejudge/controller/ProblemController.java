@@ -58,10 +58,10 @@ public class ProblemController {
             return null;
         } else
             m.addObject("problem", problemService.getProblemById(id));
-        List<Solution> solutionList = new ArrayList<Solution>();
+        List<Solution> solutionList = new ArrayList<>();
         if (session.getAttribute("currentUser") != null) {
             User user = (User) session.getAttribute("currentUser");
-            solutionList = solutionService.getSolutionPage(0, 5, user).getContent();
+            solutionList = solutionService.getTop5ProblemSolution(user, problem);
         }
         m.addObject("solutions", solutionList);
         return m;
@@ -118,12 +118,13 @@ public class ProblemController {
     }
 
     @GetMapping("/status/top/{pid}")
-    public List<Solution> getTopOfProblem(@PathVariable Long pid,HttpServletResponse response) {
-        try{
-            @NotNull Problem problem=problemService.getProblemById(pid);
-            List <Solution> solutions=solutionService.getTop50OfProblem(problem);
+    public List<Solution> getTopOfProblem(@PathVariable Long pid, HttpServletResponse response) {
+        try {
+            @NotNull Problem problem = problemService.getProblemById(pid);
+            List<Solution> solutions = solutionService.getTop50OfProblem(problem);
             return solutions;
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
         try {
             response.sendRedirect("/404");
         } catch (IOException e) {
@@ -142,5 +143,17 @@ public class ProblemController {
         m.addObject("tag", tagRepository.findByName(tagname).get());
         m.addObject("tags", tagRepository.findAll());
         return m;
+    }
+
+    @GetMapping("/rest/usersolved/{uid}/{pid}")
+    public String userHasSolvedProblem(@PathVariable("uid") Long uid, @PathVariable(value = "pid") Long pid) {
+        User user = userService.getUserById(uid);
+        Problem problem = problemService.getProblemById(pid);
+        try {
+            solutionService.getUserProblem(user, problem);
+            return "success";
+        } catch (NullPointerException e) {
+            return "false";
+        }
     }
 }

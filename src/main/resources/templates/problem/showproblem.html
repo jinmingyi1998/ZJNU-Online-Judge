@@ -121,7 +121,7 @@
                         <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" id="prog"
                              style="width:0%"></div>
                     </div>
-                    <a class="btn btn-primary btn-lg text-center text-light" id="submit_btn" style="margin-top: 1rem">Submit</a>
+                    <a class="btn btn-primary btn-lg text-center text-light" id="submit_btn" style="margin-top: 1rem">提交</a>
                 </form>
             </div>
         </main>
@@ -223,33 +223,32 @@
             </div>
         </div>
     </div>
-</div>
-<div class="modal fade" id="codeModal">
+</div><div class="modal fade" id="codeModal">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Source Code</h4>
+                <h4 class="modal-title">#<span id="modal-id"></span>&nbsp;用户名：<abbr id="modal-username"></abbr>&nbsp;题目：<abbr id="modal-problem"></abbr></h4>
                 <button class="close" data-dismiss="modal" type="button">&times;</button>
             </div>
             <div class="modal-body">
-                <table class="table-sm table-light table-responsive-sm">
+                <table class="table table-light table-responsive-sm">
                     <thead class="thead-light text-center">
                     <tr>
-                        <th>Run ID</th>
-                        <th>Username</th>
-                        <th>Problem</th>
-                        <th>Result</th>
-                        <th>Time(ms)</th>
-                        <th>Memory(B)</th>
-                        <th>Length</th>
-                        <th>Language</th>
-                        <th>Submit Time</th>
+                        <!--<th>Run ID</th>-->
+                        <!--<th><i class="fa fa-user"></i>用户名</th>-->
+                        <!--<th><i class="fa fa-question-circle-o"></i>题目</th>-->
+                        <th><i class="fa fa-check-circle"></i>结果</th>
+                        <th><i class="fa fa-clock-o"></i>用时(ms)</th>
+                        <th><i class="fa fa-database"></i>内存(Byte)</th>
+                        <th><i class="fa fa-files-o"></i>代码长度</th>
+                        <th><i class="fa fa-keyboard-o"></i>语言</th>
+                        <th><i class="fa fa-calendar"></i>提交时间</th>
                     </tr>
                     </thead>
                     <tbody class="text-center">
-                    <td id="modal-id"></td>
-                    <td id="modal-username"></td>
-                    <td id="modal-problem"></td>
+                    <!--<td id="modal-id"></td>-->
+                    <!--<td id="modal-username"></td>-->
+                    <!--<td id="modal-problem"></td>-->
                     <td id="modal-result"></td>
                     <td id="modal-time"></td>
                     <td id="modal-memory"></td>
@@ -261,8 +260,8 @@
                 <button class="btn btn-sm share-code btn-danger" id="modal-share" th:if="${session.currentUser!=null}">
                     Not Shared
                 </button>
-                <pre id="modal-ce"></pre>
-                <pre class="prettyprint"><code id="source_code"></code></pre>
+                <pre id="modal-ce" class="pre-scrollable"></pre>
+                <pre class="prettyprint pre-scrollable"><code id="source_code"></code></pre>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
@@ -286,6 +285,9 @@
             }
         });
     });
+</script>
+<script th:if="${session.currentUser!=null}">
+
 </script>
 <footer th:replace="~{fragment/footer :: footer}"></footer>
 </body>

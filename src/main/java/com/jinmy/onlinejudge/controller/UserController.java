@@ -31,7 +31,7 @@ public class UserController {
                 return "success";
             else return "false";
         } catch (Exception e) {
-            return "false";
+            return e.getMessage();
         }
     }
 
@@ -56,6 +56,6 @@ public class UserController {
             session.setAttribute("loginTime", new Date());
             return "success";
         }
-        return "Username or password is wrong.用户名或密码错误。";
+        return "用户名或密码错误。";
     }
 }

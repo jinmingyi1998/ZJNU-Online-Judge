@@ -61,8 +61,8 @@
 <body>
 <div class="container" height="100%" width="100%">
     <div class="form-inline">
-        <label for="search-title" style="font-size: 1.5rem">查找比赛:</label>
-        <input id="search-title" type="text" class="form-control">
+        <label for="search-title" style="font-size: 1.5rem">查找比赛:&nbsp;</label>
+        <input id="search-title" type="text" class="form-control">&nbsp;
         <a class="btn btn-light"id="search-btn">查找</a></div>
     <ul class="list-group" style="margin-top: 1rem;margin-bottom: 1rem;">
         <li class="list-group-item card" th:each="contest:${contests}" th:object="${contest}">
@@ -71,10 +71,15 @@
                     <li class="list-inline-item text-muted" th:text="'开始时间:'+*{normalStartTime}">开始</li>
                     <li class="text-muted list-inline-item" th:text="'结束时间:'+*{normalEndTime}">结束时间</li>
                     <li class="text-muted list-inline-item" th:text="*{runStatu}">已结束</li>
+                    <li class="text-muted list-inline-item" th:switch="*{privilege}">
+                        <span th:case="private" class="badge badge-danger">私有</span>
+                        <span th:case="public" class="badge badge-success">公共</span>
+                        <span th:case="*" class="badge badge-warning">群租</span>
+                    </li>
                 </ul>
         </li>
     </ul>
-    <ul class="pagination">
+    <ul class="pagination justify-content-center">
         <li class="page-item"><a class="page-link turnpage" page="last-page">上一页</a></li>
         <li class="page-item" id="Next"><a class="page-link turnpage" page="next-page">下一页</a></li>
     </ul>

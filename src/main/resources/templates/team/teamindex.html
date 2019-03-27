@@ -15,8 +15,8 @@
 </head>
 <body>
 <main class="container-fluid" height="100%" width="100%">
-    <div class="row"><div class="col-2"></div>
-        <div class="col-8">
+    <div class="row">
+        <div class="container">
             <h1 class="font-weight-bold">我的队伍</h1>
             <div class="row">
                 <div class="col-3 card" th:each="team:${teams}" style="margin: 1rem;">
@@ -27,7 +27,6 @@
                 </div>
             </div>
         </div>
-        <div class="col-2"><a class="btn btn-success" href="/team/create">Create Team</a></div>
     </div>
 </main>
 <footer th:replace="~{fragment/footer :: footer}"></footer>
