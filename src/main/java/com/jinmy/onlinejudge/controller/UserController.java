@@ -1,6 +1,7 @@
 package com.jinmy.onlinejudge.controller;
 
 import com.jinmy.onlinejudge.entity.User;
+import com.jinmy.onlinejudge.service.SolutionService;
 import com.jinmy.onlinejudge.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -16,6 +17,8 @@ import java.util.Date;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private SolutionService solutionService;
 
     @GetMapping("/register")
     public ModelAndView register() {
@@ -58,4 +61,5 @@ public class UserController {
         }
         return "用户名或密码错误。";
     }
+
 }

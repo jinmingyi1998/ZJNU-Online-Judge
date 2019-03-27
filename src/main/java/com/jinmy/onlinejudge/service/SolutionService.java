@@ -206,5 +206,9 @@ public class SolutionService {
         if(userProblem.isPresent())return userProblem.get();
         throw new NullPointerException("didn't ac");
     }
+    public List<UserProblem>getUserSolvedProblem(User user){
+        List<UserProblem>userProblems=userProblemRepository.findAllByUser(user);
+        return userProblems;
+    }
 
 }
