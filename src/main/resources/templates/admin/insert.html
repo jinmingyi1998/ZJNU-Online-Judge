@@ -11,11 +11,11 @@
 <head>
     <title>Insert</title>
     <meta content="text/html;charset=UTF-8" http-equiv="Content-Type">
-    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/font-awesome.css}">
     <script th:src="@{/js/jquery-3.2.1.min.js}"></script>
     <script th:src="@{/js/popper.min.js}"></script>
-    <script th:src="@{/js/bootstrap.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
 </head>
 <body>
 <div class="container">
@@ -24,6 +24,10 @@
         <div class="form-group">
             Title:<input class="form-control" name="title" type="text">
         </div>
+        <div class="form-group">Active:  <select class="form-control" name="active" id="active" required>
+            <option value="1">Active</option>
+            <option value="0">No</option>
+        </select></div>
         <div class="form-group">
             Time Limit(ms):<input class="form-control" name="timeLimit" type="number" value="1000">
         </div>
@@ -32,11 +36,11 @@
         </div>
         <div class="form-group">Tags(用
             <mark>英文逗号</mark>
-            分隔，只能是已经存在的tag)<input name="tag" type="text">
+            分隔，只能是已经存在的tag)<input class="form-control" name="tag" type="text" required>
         </div>
 
         <div class="form-group">
-            Score: <input class="form-control" name="score" type="number">
+            Score: <input class="form-control" name="score" type="number" required>
         </div>
         <div class="form-group">
             Description: <textarea class="form-control" cols="35" name="description" rows="10"></textarea>

@@ -28,10 +28,10 @@ public class Judger extends SandboxApi {
         run_dir = config.getSrc_dir() + solution.getId() + "/";
         uid = Integer.parseInt(config.getUid());
         gid = Integer.parseInt(config.getGid());
-        max_cpu_time = problem.getTimeLimit();
-        max_real_time = problem.getTimeLimit() + Math.max(max_cpu_time, 5);
+        max_cpu_time = problem.getTimeLimit()+500;
+        max_real_time = problem.getTimeLimit() + Math.max(max_cpu_time, 6000);
         max_memory = problem.getMemoryLimit();
-        max_stack = max_memory;
+        max_stack = 500*1024*1024;
         switch (lang) {
             case 0:
                 exe_path = run_dir + "main";

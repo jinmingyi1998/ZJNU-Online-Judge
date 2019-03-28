@@ -24,9 +24,9 @@ public class Compiler extends SandboxApi {
         super.init();
         uid = Integer.parseInt(config.getUid());
         gid = Integer.parseInt(config.getGid());
-        max_cpu_time = 3000;
+        max_cpu_time = 4000;
         run_dir = config.getSrc_dir() + solution.getId() + "/";
-        max_real_time = 5000;
+        max_real_time = 6000;
         max_memory = 128 * 1024 * 1024;
         max_stack = 128 * 1024 * 1024;
         switch (lang) {

@@ -167,7 +167,7 @@ public class JudgeQueue {
      * Wrong = -1
      */
     private int judge(String filename, int lang, Problem problem, Solution solution, String case_name) {
-        solution.setResult("Running on case " + case_name);
+        solution.setResult("Running");
         solutionService.updateSolution(solution);
         judger.init(filename, problem, solution, lang, case_name);
         String script = judger.getScript();
@@ -228,7 +228,7 @@ public class JudgeQueue {
                 return 4;
             }
             int ret = jsonObject.getInteger("result");
-            solution.setTime(Math.max(jsonObject.getInteger("cpu_time"), solution.getTime()));
+            solution.setTime(Math.max(jsonObject.getInteger("real_time"), solution.getTime()));
             solution.setMemory(Math.max(jsonObject.getInteger("memory"), solution.getMemory()));
             if (ret != 0) {
                 return ret;
@@ -313,7 +313,7 @@ public class JudgeQueue {
             for (String f : file.list()) {
                 f = f.trim();
                 //log.info("data file:" + f);
-                if (f.indexOf("in") != -1) {
+                if (f.indexOf(".in") != -1) {
                     case_name = f.substring(0, f.length() - 3);
                     //log.info("case name:" + case_name);
                     case_counter++;
@@ -343,12 +343,12 @@ public class JudgeQueue {
                             break;
                     }
                     if (ret != 0) {
-                        solution.setCaseNumber(case_counter);
                         break;
                     }
                 } else {
                     continue;
                 }
+                solution.setCaseNumber(case_counter);
             }
             if (case_counter == 0) {
                 solution.setResult("System Error");

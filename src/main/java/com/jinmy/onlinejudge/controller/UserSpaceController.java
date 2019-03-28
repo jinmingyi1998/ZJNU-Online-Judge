@@ -134,13 +134,13 @@ public class UserSpaceController {
                     }
                 }
             }
-            radar.ds= (int) (100.0* radar.ds/tagService.getTagByName("数据结构").getScore());
-            radar.dp= (int) (100.0* radar.dp/tagService.getTagByName("动态规划").getScore());
-            radar.geometry= (int) (100.0* radar.geometry/tagService.getTagByName("计算几何").getScore());
-            radar.string= (int) (100.0* radar.string/tagService.getTagByName("字符串").getScore());
-            radar.graph= (int) (100.0* radar.graph/tagService.getTagByName("图论").getScore());
-            radar.search= (int) (100.0* radar.search/tagService.getTagByName("搜索").getScore());
-            radar.math= (int) (100.0* radar.math/tagService.getTagByName("数论").getScore());
+            radar.ds= (int) (100.0* radar.ds/(1+tagService.getTagByName("数据结构").getScore()));
+            radar.dp= (int) (100.0* radar.dp/(1+tagService.getTagByName("动态规划").getScore()));
+            radar.geometry= (int) (100.0* radar.geometry/(1+tagService.getTagByName("计算几何").getScore()));
+            radar.string= (int) (100.0* radar.string/(1+tagService.getTagByName("字符串").getScore()));
+            radar.graph= (int) (100.0* radar.graph/(1+tagService.getTagByName("图论").getScore()));
+            radar.search= (int) (100.0* radar.search/(1+tagService.getTagByName("搜索").getScore()));
+            radar.math= (int) (100.0* radar.math/(1+tagService.getTagByName("数论").getScore()));
         }
     }
 

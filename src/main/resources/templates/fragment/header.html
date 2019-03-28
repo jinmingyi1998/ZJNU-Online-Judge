@@ -51,7 +51,6 @@
             text-decoration: none;
         }
     </style>
-    <script async src="/js/MathJax.js?config=TeX-AMS_CHTML" type="text/javascript"></script>
     <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
     extensions: ["tex2jax.js"],
@@ -61,11 +60,10 @@
       displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
       processEscapes: true
     },
-    "HTML-CSS": { fonts: ["TeX"] }
+    "HTML-CSS": { availableFonts: ["TeX"] }
   });
-
-
-    </script>
+</script>
+    <script type="text/javascript" src="/js/MathJax.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-expand-xl navbar-dark bg-dark  fixed-top">
@@ -83,7 +81,7 @@
             <li class="nav-item"><a class="nav-link" href="/video">视频资源</a></li>
             <li class="nav-item"><a class="nav-link" href="#">帮助</a></li>
             <li class="nav-item">
-                <a class="nav-link"  th:if="${session.currentUser== null}"
+                <a class="nav-link" href="#" th:if="${session.currentUser== null}"
                    data-toggle="modal" data-target="#loginModal">登录</a>
                 <a class="nav-link" th:href="'/user/'+${session.currentUser.id}"
                    th:text="${session.currentUser.name}"

@@ -95,10 +95,20 @@ public class AdminController {
         return m;
     }
 
-    @PutMapping("/edit/{pid}")
-    public ModelAndView editProblemAction(Problem problem, @PathVariable(value = "pid") Long id, HttpServletResponse response) {
+    @PostMapping("/edit/{pid}")
+    public ModelAndView editProblemAction(Problem problem, @PathVariable(value = "pid") Long id, HttpServletResponse response,
+    @RequestParam(value = "tag", defaultValue = "") String tag) {
         problem.setId(id);
         @NotNull Problem initProblem = problemService.getProblemById(id);
+        String[] tags = tag.split(",");
+        ArrayList<Tag> t = new ArrayList<>();
+        for (int i = 0; i < tags.length; i++) {
+            Tag _tag = tagService.getTagByName(tags[i]);
+            if (_tag != null) {
+                t.add(_tag);
+            }
+        }
+        problem.setTags(t);
         problem.setSubmit(initProblem.getSubmit());
         problem.setAccepted(initProblem.getAccepted());
         problemService.updateProblem(problem);

@@ -134,19 +134,25 @@ function changeProblem(cid, pid) {
         url: "/contest/rest/" + cid + "/problem/" + pid,
         success: function (problem) {
             $("#problem-title").text(problem.title);
-            $("#problem-time-limit").text(problem.timeLimit+"ms");
-            $("#problem-memory-limit").text(problem.memoryLimit+"Bytes");
-            $("#problem-description").html(markdown.makeHtml(problem.description));
-            $("#problem-input").html(markdown.makeHtml(problem.input));
-            $("#problem-output").html(markdown.makeHtml(problem.output));
+            $("#problem-time-limit").text(problem.timeLimit + "ms");
+            $("#problem-memory-limit").text(problem.memoryLimit + "Bytes");
+            $("#problem-description").html(problem.description);
+            $("#problem-input").html(problem.input);
+            $("#problem-output").html(problem.output);
             $("#problem-sample-input").text(problem.sampleInput);
             $("#problem-sample-output").text(problem.sampleOutput);
-            $("#problem-hint").html(markdown.makeHtml(problem.hint));
+            $("#problem-hint").html(problem.hint);
             $("#submit_btn").attr("problem-id", pid);
             try {
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
             } catch (e) {
             }
+            setTimeout(function () {
+                $("#problem-description").html(markdown.makeHtml($("#problem-description").html()));
+                $("#problem-input").html(markdown.makeHtml($("#problem-input").html()));
+                $("#problem-output").html(markdown.makeHtml($("#problem-output").html()));
+                $("#problem-hint").html(markdown.makeHtml($("#problem-hint").html()));
+            }, 1000);
         }
     });
 }

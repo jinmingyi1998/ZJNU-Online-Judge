@@ -97,7 +97,7 @@
                 </tr>
                 </tbody>
             </table>
-            <div class="row rounded bg-light m-3" >
+            <div class="row rounded bg-light m-3">
                 <div style="height:20rem;opacity: 0.8;" id="PieChart" class="col-sm-6"></div>
                 <div style="height:20rem;opacity: 0.8;" id="RadarChart" class="col-sm-6"></div>
             </div>
@@ -168,22 +168,29 @@
             var graph = res;
             if (graph != null) {
                 pieoption = {
+                    "color": [
+                        "#3fb1e3",
+                        "#6be6c1",
+                        "#626c91",
+                        "#a0a7e6",
+                        "#c4ebad",
+                        "#96dee8"
+                    ],
+                    legend: {
+                        orient: 'vertical',
+                        x: 'left',
+                        data:['初级','中级','高级','未通过']
+                    },
                     tooltip: {
                         trigger: 'item',
                         formatter: "{a} <br/>{b} : {c} ({d}%)"
-                    },
-                    visualMap: {
-                        show: true,
-                        min: 0,
-                        max: graph.solve,
-                        inRange: {
-                            colorLightness: [0, 1]
-                        }
                     },
                     series: [
                         {
                             name: '题目难度',
                             type: 'pie',
+                            avoidLabelOverlap: false,
+                            radius: ['50%', '70%'],
                             data: [
                                 {value: graph.pie.prime, name: '初级'},
                                 {value: graph.pie.medium, name: '中级'},
@@ -195,34 +202,51 @@
                             roseType: 'radius',
                             label: {
                                 normal: {
+                                    show: false,
+                                    position: 'center'
+                                },
+                                emphasis: {
+                                    show: true,
                                     textStyle: {
-                                        color: 'gray'
+                                        color:'gray',
+                                        fontSize: '30',
+                                        fontWeight: 'bold'
                                     }
                                 }
                             },
                             labelLine: {
                                 normal: {
-                                    lineStyle: {
-                                        color: 'black'
-                                    },
-                                    smooth: 0.2,
-                                    length: 10,
-                                    length2: 20
+                                    show:false
                                 }
                             },
                             itemStyle: {
                                 normal: {
-                                    color: '#62a3ff',
                                     shadowBlur: 200,
-                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                    shadowColor: 'black'
                                 }
                             },
                             animationType: 'scale',
-                            animationEasing: 'elasticOut'
+                            animationEasing: 'elasticOut',
+                            animationDelay: function (idx) {
+                                return Math.random() * 200;
+                            }
                         }
                     ]
                 };
                 radaroption = {
+                    title: {
+                        text: '能力雷达图',
+                        show:false
+                    },
+                    "color": [
+                        "#3fb1e3",
+                        "#6be6c1",
+                        "#626c91",
+                        "#a0a7e6",
+                        "#c4ebad",
+                        "#96dee8"
+                    ],
+                    tooltip:{},
                     radar: {
                         indicator: [
                             {name: '数据结构', max: 100},
@@ -239,33 +263,27 @@
                         splitNumber: 5,
                         name: {
                             textStyle: {
-                                color: 'darkblue'
-                            }
-                        },
-                        splitLine: {
-                            lineStyle: {
-                                color: 'rgba(255, 255, 255, 0.5)'
-                            }
-                        },
-                        axisLine: {
-                            lineStyle: {
-                                color: 'rgba(238, 197, 102, 0.5)'
+                                color: '#666666'
                             }
                         }
                     },
                     series: [
                         {
+                            name:'能力值',
                             type: 'radar',
                             lineStyle: {
                                 normal: {
-                                    width: 1,
+                                    width: 3,
                                     opacity: 0.5
                                 }
                             },
+                            "symbolSize": "8",
+                            "symbol": "emptyCircle",
+                            "smooth": false,
                             data: [
                                 {
-                                    value: [graph.radar.ds, graph.radar.graph, graph.radar.dp, graph.radar.search, graph.radar.geometry, graph.radar.string, graph.radar.math],
-                                    symbol:'circle',
+                                    value: [graph.radar.ds, graph.radar.graph, graph.radar.dp, graph.radar.search, graph.radar.geometry, graph.radar.string, graph.radar.math,graph.ratio],
+                                    symbol: 'circle',
                                     label: {
                                         normal: {
                                             show: true,
@@ -278,7 +296,9 @@
                             ],
                             itemStyle: {
                                 normal: {
-                                    color: '#F9713C'
+                                    normal: {
+                                        borderWidth: "2"
+                                    }
                                 }
                             },
                             areaStyle: {

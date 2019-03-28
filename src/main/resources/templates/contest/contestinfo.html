@@ -31,7 +31,7 @@
         <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#comment"style="font-size: 1.5rem">评论</a></li>
     </ul></div>
     <div class="tab-content container" style="margin-top: 2rem">
-        <div class="tab-pane" id="overview">
+        <div class="tab-pane container fade" id="overview">
             <div class="list-group container">
                 <li class="list-group-item"
                     th:each="problem:${problems}" th:object="${problem}">
@@ -41,14 +41,14 @@
                 </li>
             </div>
         </div>
-        <div class="tab-pane container active" id="problem">
+        <div class="tab-pane container fade show active" id="problem">
             <span id="problem-number" style="display: none" th:text="${contest.problems.size()}"></span>
             <div class="nav nav-pills bg-light rounded" style="padding: 0.5rem;padding-left: 2rem;margin-bottom: 1rem">
                 <h2>选择题目:&nbsp;</h2>
-                <li class="nav-item nav-link change-problem"
+                <a class="nav-item nav-link change-problem ml-1 mr-1"
                     data-toggle="pill" href="#problem"
                     th:each="problem:${contest.problems}" th:id="${problem.tempId}"
-                    th:text="${problem.tempId}"></li>
+                    th:text="${problem.tempId}"></a>
             </div>
             <div id="problem-container" style="display:none;">
                 <div class="card bg-light">
@@ -154,7 +154,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="container tab-pane" id="rank">
+        <div class="container tab-pane fade" id="rank">
             <a class="fa fa-refresh btn btn-success" onclick="getRankOfContest()"
                style="font-size: 1.5rem;color: white"></a>
             <table class="table-sm table-hover table-responsive-xl table-bordered table-light container-fluid"
@@ -171,7 +171,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="container tab-pane" id="comment">
+        <div class="container tab-pane fade" id="comment">
             <ul class="list-group" id="comments">
                 <li :key="comment.id" class="list-group-item" v-for="comment in comments">
                     <a :href="user_url(comment.user.id)">{{comment.user.name}}</a>&nbsp; @ &nbsp;<span>{{comment.normalPostTime}}</span>
@@ -306,12 +306,11 @@
                         if (d == "success") {
                             scrollTo(0, 0);
                         } else {
-                            $(".progress").hide();
-                            $("#submit_btn").attr("class", "btn btn-primary btn-lg text-center");
-                            $("#submit_btn").text("Submit");
                             $("#submit-msg").text(d);
                             $("#submit-msg").show();
-                        }
+                        } $(".progress").hide();
+                        $("#submit_btn").attr("class", "btn btn-primary btn-lg text-center");
+                        $("#submit_btn").text("Submit");
                     }, 2000);
                 }
             });
