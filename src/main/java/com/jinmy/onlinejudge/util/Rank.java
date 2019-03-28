@@ -27,17 +27,22 @@ public class Rank {
     @JsonIgnore
     Map<Long, Long> durationMap = new HashMap<>();////temp id :: minimal duration seconds
 
+
     public Rank(Contest contest) {
         this.contest = contest;
         this.contestProblemList = this.contest.getProblems();
     }
 
     public void init(List<Solution> solutionList) {
+        List<RankSolution> rankSolutionList = new ArrayList<>();
+        for (int i = 0; i < solutionList.size(); i++) {
+            rankSolutionList.add(new RankSolution(solutionList.get(i)));
+        }
         for (ContestProblem cp : contestProblemList) {
             problemIdMap.put(cp.getProblem().getId(), cp.getTempId());
         }
-        for (Solution s : solutionList) {
-            s.getProblem().setId(problemIdMap.get(s.getProblem().getId()));
+        for (RankSolution s : rankSolutionList) {
+            s.setPid(problemIdMap.get(s.getPid()));
             if (personMap.containsKey(s.getUser().getId())) {
                 personMap.get(s.getUser().getId()).update(s);
             } else {
@@ -45,12 +50,12 @@ public class Rank {
                 personMap.get(s.getUser().getId()).update(s);
             }
             if (s.getResult().equals("Accepted")) {
-                if (durationMap.containsKey(s.getProblem().getId())) {
-                    durationMap.put(s.getProblem().getId(),
+                if (durationMap.containsKey(s.getPid())) {
+                    durationMap.put(s.getPid(),
                             Math.min(Duration.between(contest.getStartTime(), s.getSubmitTime()).getSeconds(),
-                                    durationMap.get(s.getProblem().getId())));
+                                    durationMap.get(s.getPid())));
                 } else {
-                    durationMap.put(s.getProblem().getId(), Duration.between(contest.getStartTime(), s.getSubmitTime()).getSeconds());
+                    durationMap.put(s.getPid(), Duration.between(contest.getStartTime(), s.getSubmitTime()).getSeconds());
                 }
             }
         }
@@ -97,10 +102,10 @@ class Person {
         return penalty / 60;
     }
 
-    void update(Solution s) {
+    void update(RankSolution s) {
         user = s.getUser();
         RankProblem rp = new RankProblem();
-        rp.setPid(s.getProblem().getId());
+        rp.setPid(s.getPid());
         if (map.containsKey(rp.getPid())) {
             rp = map.get(rp.getPid());
         }
@@ -156,4 +161,21 @@ class RankProblem {
         RankProblem that = (RankProblem) o;
         return pid.equals(that.pid);
     }
+}
+
+@Data
+class RankSolution extends Solution {
+    RankSolution(Solution solution){
+        this.pid=solution.getProblem().getId();
+        this.setProblem(solution.getProblem());
+        this.setUser(solution.getUser());
+        this.setContest(solution.getContest());
+        this.setResult(solution.getResult());
+        this.setSubmitTime(solution.getSubmitTime());
+        this.setCe(solution.getCe());
+        this.setId(solution.getId());
+    }
+    Long pid;
+
+
 }

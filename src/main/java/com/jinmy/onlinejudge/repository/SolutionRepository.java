@@ -35,7 +35,7 @@ public interface SolutionRepository extends JpaRepository<Solution, Long>, Query
 
     List<Solution> findAllByUserAndContest(User u, Contest contest);
 
-    List<Solution> findAllByContest(Contest contest, Sort sort);
+    List<Solution> findAllByContestOrderByIdAsc(Contest contest);
 
     Page<Solution> findAllByUser(Pageable pageable, User user);
 

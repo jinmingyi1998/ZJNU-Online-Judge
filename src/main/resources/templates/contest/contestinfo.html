@@ -36,8 +36,8 @@
                 <li class="list-group-item"
                     th:each="problem:${problems}" th:object="${problem}">
                     <span th:text="*{tempId}">Problem id</span>&nbsp;<span th:text="*{tempTitle}">tempTitle</span>
-                    <div class="float-right"><span class="text-success" th:text="*{accepted}">solve</span>/<span
-                            th:text="*{submitted}">submit</span></div>
+                    <!--<div class="float-right"><span class="text-success" th:text="*{accepted}">solve</span>/<span-->
+                            <!--th:text="*{submitted}">submit</span></div>-->
                 </li>
             </div>
         </div>

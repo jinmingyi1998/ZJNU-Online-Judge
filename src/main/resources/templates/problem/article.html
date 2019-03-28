@@ -12,29 +12,70 @@
     <th:block th:insert="~{fragment/header :: header}"></th:block>
     <meta charset="UTF-8">
     <title th:text="|题解 of ${problem.title}|"></title>
+    <link rel="stylesheet" href="/editor/css/editormd.min.css">
+    <script src="/editor/editormd.min.js"></script>
 </head>
 <body>
 <main class="container">
     <div class="card mt-5 p-3">
         <h2 class=" text-center" th:text="|${problem.title} - 题解|"></h2>
-
         <div class="card-body">
             <p class="card-text">
                 <span class="font-weight-bold lead">以下题解仅供学习参考使用。</span>
             </p>
             <p class="card-text">
-                <b class="text-danger">抄袭</b> 、<b class="text-danger">复制</b>题解，以达到刷AC率/AC数量或其他目的的行为，是严格禁止的。此类行为将会导致您成为 <b>作弊者</b>。
+                <b class="text-danger">抄袭</b> 、<b class="text-danger">复制</b>题解，以达到刷AC率/AC数量或其他目的的行为，是严格禁止的。此类行为将会导致您成为
+                <b>作弊者</b>。
             </p>
         </div>
     </div>
     <div class="card mt-2" th:each="a:${articles}">
         <div class="card-body">
-            <p class="card-text text-muted"><span class="m-3">作者：<a th:href="@{/user/{uid}(uid=${a.author.id})}" th:text="${a.author.username}"></a></span><span th:text="|发布时间: ${a.normalPostTime}|" class="m-3"></span></p>
+            <p class="card-text text-muted"><span class="m-3">作者：<a th:href="@{/user/{uid}(uid=${a.author.id})}"
+                                                                    th:text="${a.author.username}"></a></span><span
+                    th:text="|发布时间: ${a.normalPostTime}|" class="m-3"></span></p>
             <hr>
-            <div class="card-text" th:text="${a.text}"></div>
+            <div class="card-text md-text" th:text="${a.text}"></div>
         </div>
     </div>
+    <div class="container-fluid mt-5 justify-content-sm-center">
+        <form action="" class="mt-1 justify-content-center" method="post">
+            <div class="form-group" id="editormd">
+                <textarea name="text" class="w-100"></textarea></div>
+            <input type="submit" th:value="发布" class="text-center text-light btn btn-primary mt-3 justify-content-center">
+        </form>
+    </div>
 </main>
+<script>
+    var markdown = new showdown.Converter();
+    var editor = editormd({
+        id: "editormd",
+        path: "/editor/lib/",
+        height: 300,
+        codeFold: true,
+        saveHTMLToTextarea: true,
+        searchReplace: true,
+        emoji: true,
+        taskList: false,
+        tocm: false,
+        tex: false,
+        autoFocus: false,
+        flowChart: false,
+        sequenceDiagram: false
+    });
+    $(function () {
+        setTimeout(function () {
+            try {
+                $(".md-text").each(function () {
+                    str = ($(this).html());
+                    $(this).html(markdown.makeHtml(str));
+                });
+            } catch (e) {
+                console.log("md error")
+            }
+        }, 500);
+    });
+</script>
 <footer th:replace="~{fragment/footer :: footer}"></footer>
 </body>
 </html>

@@ -38,7 +38,7 @@ public class Article {
     protected Article() {
     }
 
-    public Article(String text, Problem problem) {
+    public Article(String text, Problem problem,User user) {
         this.text = text;
         this.problem = problem;
         postTime=Instant.now();

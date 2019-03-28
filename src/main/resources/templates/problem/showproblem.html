@@ -18,7 +18,8 @@
             setTimeout(function () {
                 try {
                     $(".md-text").each(function () {
-                        str = markdown.makeHtml($(this).html());
+                        // str = markdown.makeHtml($(this).html());
+                        str=$(this.html());
                         $(this).html(markdown.makeHtml(str));
                     });
                 } catch (e) {

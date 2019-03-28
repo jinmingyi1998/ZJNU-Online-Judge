@@ -12,6 +12,7 @@ import com.jinmy.onlinejudge.entity.Article;
 import com.jinmy.onlinejudge.entity.Problem;
 import com.jinmy.onlinejudge.entity.Solution;
 import com.jinmy.onlinejudge.entity.User;
+import com.jinmy.onlinejudge.repository.ArticleRepository;
 import com.jinmy.onlinejudge.repository.TagRepository;
 import com.jinmy.onlinejudge.service.*;
 import lombok.extern.slf4j.Slf4j;
@@ -175,5 +176,26 @@ public class ProblemController {
             return null;
         }
         return m;
+    }
+
+    @Autowired
+    ArticleRepository articleRepository;
+    @PostMapping("/article/{pid}")
+    public ModelAndView postArticle(@PathVariable("pid")Long pid,HttpServletResponse response,Article article){
+        if(!userAuthorityService.isLogin()) {
+            try {
+                response.sendRedirect("/404");
+                return null;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        User user= (User) session.getAttribute("currentUser");
+        Problem problem=problemService.getProblemById(pid);
+        article.setProblem(problem);
+        article.setAuthor(user);
+        article.setPostTime(Instant.now());
+        articleRepository.save(article);
+        return problemArticle(pid,response);
     }
 }
