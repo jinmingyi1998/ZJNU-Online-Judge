@@ -4,6 +4,7 @@ import com.jinmy.onlinejudge.entity.Tag;
 import com.jinmy.onlinejudge.entity.User;
 import com.jinmy.onlinejudge.entity.UserProblem;
 import com.jinmy.onlinejudge.service.SolutionService;
+import com.jinmy.onlinejudge.service.TagService;
 import com.jinmy.onlinejudge.service.UserService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,11 +77,11 @@ public class UserSpaceController {
 
 
     @GetMapping("/rest/pie/{uid}")
-    public PieGraph getRadarGraph(@PathVariable(value = "uid") Long uid, HttpServletResponse response) {
+    public Graph getGraph(@PathVariable(value = "uid") Long uid, HttpServletResponse response) {
         try {
             @NotNull User user = userService.getUserById(uid);
-            PieGraph pieGraph = new PieGraph();
-            return pieGraph;
+            Graph graph=new Graph(user);
+            return graph;
         } catch (Exception e) {
             try {
                 response.sendRedirect("/404");
@@ -91,10 +92,13 @@ public class UserSpaceController {
         }
     }
 
+    @Autowired
+    private TagService tagService;
+
     @Data
     class Graph {
-        Radargraph radarGraph = new Radargraph();
-        PieGraph pieGraph = new PieGraph();
+        Radargraph radar = new Radargraph();
+        PieGraph pie = new PieGraph();
         int ratio = 0;
         int solve = 0;
         int submit = 0;
@@ -104,32 +108,39 @@ public class UserSpaceController {
             submit = user.getSubmit();
             ratio = (int) (1.0 * user.getSolve() / user.getSubmit() * 100);
             List<UserProblem> userProblems = solutionService.getUserSolvedProblem(user);
-            pieGraph.prime = pieGraph.medium = pieGraph.advance = 0;
+            pie.prime = pie.medium = pie.advance = 0;
             for (UserProblem up : userProblems) {
                 for (Tag t : up.getProblem().getTags()) {
                     if (t.getId() == 1l) {
-                        pieGraph.prime++;
+                        pie.prime++;
                     } else if (t.getId() == 2l) {
-                        pieGraph.medium++;
+                        pie.medium++;
                     } else if (t.getId() == 3l) {
-                        pieGraph.advance++;
+                        pie.advance++;
                     } else if (t.getName().equals("数据结构")) {
-                        radarGraph.ds++;
+                        radar.ds+=up.getProblem().getScore();
                     } else if (t.getName().equals("动态规划")) {
-                        radarGraph.dp++;
+                        radar.dp+=up.getProblem().getScore();
                     } else if (t.getName().equals("搜索")) {
-                        radarGraph.search++;
+                        radar.search+=up.getProblem().getScore();
                     } else if (t.getName().equals("数论")) {
-                        radarGraph.math++;
+                        radar.math+=up.getProblem().getScore();
                     } else if (t.getName().equals("图论")) {
-                        radarGraph.graph++;
+                        radar.graph+=up.getProblem().getScore();
                     } else if (t.getName().equals("计算几何")) {
-                        radarGraph.geometry++;
+                        radar.geometry+=up.getProblem().getScore();
                     } else if (t.getName().equals("字符串")) {
-                        radarGraph.string++;
+                        radar.string+=up.getProblem().getScore();
                     }
                 }
             }
+            radar.ds= (int) (100.0* radar.ds/tagService.getTagByName("数据结构").getScore());
+            radar.dp= (int) (100.0* radar.dp/tagService.getTagByName("动态规划").getScore());
+            radar.geometry= (int) (100.0* radar.geometry/tagService.getTagByName("计算几何").getScore());
+            radar.string= (int) (100.0* radar.string/tagService.getTagByName("字符串").getScore());
+            radar.graph= (int) (100.0* radar.graph/tagService.getTagByName("图论").getScore());
+            radar.search= (int) (100.0* radar.search/tagService.getTagByName("搜索").getScore());
+            radar.math= (int) (100.0* radar.math/tagService.getTagByName("数论").getScore());
         }
     }
 

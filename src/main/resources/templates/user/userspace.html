@@ -97,7 +97,7 @@
                 </tr>
                 </tbody>
             </table>
-            <div class="row rounded bg-light" style="margin: 1rem;opacity: 0.8">
+            <div class="row rounded bg-light m-3" >
                 <div style="height:20rem;opacity: 0.8;" id="PieChart" class="col-sm-6"></div>
                 <div style="height:20rem;opacity: 0.8;" id="RadarChart" class="col-sm-6"></div>
             </div>
@@ -160,77 +160,141 @@
     </div>
 </div>
 <script>
-
-        var pieChart = echarts.init(document.getElementById("PieChart"));
-        var pie = null;
-        $.get({
-            url: "/user/rest/pie/" + $("main").attr("id"),
-            success: function (res) {
-                pie = res;
-
-                if (pie != null) {
-                    console.log('aasa');
-                    option = {
-                        tooltip: {
-                            trigger: 'item',
-                            formatter: "{a} <br/>{b} : {c} ({d}%)"
-                        },
-                        visualMap: {
-                            show: true,
-                            min: 0,
-                            max: pie.total,
-                            inRange: {
-                                colorLightness: [0, 1]
+    var radarChart = echarts.init(document.getElementById("RadarChart"));
+    var pieChart = echarts.init(document.getElementById("PieChart"));
+    $.get({
+        url: "/user/rest/pie/" + $("main").attr("id"),
+        success: function (res) {
+            var graph = res;
+            if (graph != null) {
+                pieoption = {
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                    },
+                    visualMap: {
+                        show: true,
+                        min: 0,
+                        max: graph.solve,
+                        inRange: {
+                            colorLightness: [0, 1]
+                        }
+                    },
+                    series: [
+                        {
+                            name: '题目难度',
+                            type: 'pie',
+                            data: [
+                                {value: graph.pie.prime, name: '初级'},
+                                {value: graph.pie.medium, name: '中级'},
+                                {value: graph.pie.advance, name: '高级'},
+                                {value: graph.submit - graph.solve, name: '未通过'}
+                            ].sort(function (a, b) {
+                                return a.value - b.value;
+                            }),
+                            roseType: 'radius',
+                            label: {
+                                normal: {
+                                    textStyle: {
+                                        color: 'gray'
+                                    }
+                                }
+                            },
+                            labelLine: {
+                                normal: {
+                                    lineStyle: {
+                                        color: 'black'
+                                    },
+                                    smooth: 0.2,
+                                    length: 10,
+                                    length2: 20
+                                }
+                            },
+                            itemStyle: {
+                                normal: {
+                                    color: '#62a3ff',
+                                    shadowBlur: 200,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            },
+                            animationType: 'scale',
+                            animationEasing: 'elasticOut'
+                        }
+                    ]
+                };
+                radaroption = {
+                    radar: {
+                        indicator: [
+                            {name: '数据结构', max: 100},
+                            {name: '图论', max: 100},
+                            {name: '动态规划', max: 100},
+                            {name: '搜索', max: 100},
+                            {name: '计算几何', max: 100},
+                            {name: '字符串', max: 100},
+                            {name: '数论', max: 100},
+                            {name: '通过率', max: 100}
+                        ],
+                        startAngle: 90,
+                        shape: 'circle',
+                        splitNumber: 5,
+                        name: {
+                            textStyle: {
+                                color: 'darkblue'
                             }
                         },
-                        series: [
-                            {
-                                name: '题目难度',
-                                type: 'pie',
-                                radius: '55%',
-                                data: [
-                                    {value: pie.prime, name: '初级'},
-                                    {value: pie.medium, name: '中级'},
-                                    {value: pie.advance, name: '高级'}
-                                ].sort(function (a, b) {
-                                    return a.value - b.value;
-                                }),
-                                roseType: 'radius',
-                                label: {
-                                    normal: {
-                                        textStyle: {
-                                            color: 'gray'
+                        splitLine: {
+                            lineStyle: {
+                                color: 'rgba(255, 255, 255, 0.5)'
+                            }
+                        },
+                        axisLine: {
+                            lineStyle: {
+                                color: 'rgba(238, 197, 102, 0.5)'
+                            }
+                        }
+                    },
+                    series: [
+                        {
+                            type: 'radar',
+                            lineStyle: {
+                                normal: {
+                                    width: 1,
+                                    opacity: 0.5
+                                }
+                            },
+                            data: [
+                                {
+                                    value: [graph.radar.ds, graph.radar.graph, graph.radar.dp, graph.radar.search, graph.radar.geometry, graph.radar.string, graph.radar.math],
+                                    symbol:'circle',
+                                    label: {
+                                        normal: {
+                                            show: true,
+                                            formatter: function (params) {
+                                                return params.value;
+                                            }
                                         }
                                     }
-                                },
-                                labelLine: {
-                                    normal: {
-                                        lineStyle: {
-                                            color: 'black'
-                                        },
-                                        smooth: 0.2,
-                                        length: 10,
-                                        length2: 20
-                                    }
-                                },
-                                itemStyle: {
-                                    normal: {
-                                        color: '#62a3ff',
-                                        shadowBlur: 200,
-                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
-                                    }
-                                },
-                                animationType: 'scale',
-                                animationEasing: 'elasticOut',
-                                animationDelay: function (idx) {
-                                    return Math.random() * 200;
+                                }
+                            ],
+                            itemStyle: {
+                                normal: {
+                                    color: '#F9713C'
+                                }
+                            },
+                            areaStyle: {
+                                normal: {
+                                    color: 'white',
+                                    opacity: 0.1
                                 }
                             }
-                        ]
-                    };
-                    pieChart.setOption(option);
-                }
-            }});
+                        }
+                    ]
+                };
+                pieChart.setOption(pieoption);
+                radarChart.setOption(radaroption);
+            }
+        }
+    });
 </script>
 <footer th:replace="~{fragment/footer :: footer}"></footer>
 </body>
