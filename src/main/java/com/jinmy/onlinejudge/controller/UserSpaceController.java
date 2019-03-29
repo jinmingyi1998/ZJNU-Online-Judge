@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.List;
@@ -20,9 +21,38 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserSpaceController {
     @Autowired
+    HttpSession session;
+    @Autowired
     UserService userService;
     @Autowired
     SolutionService solutionService;
+
+    @PostMapping("/rest/update/{uid}")
+    public String userUpdateAction(HttpServletResponse response, @PathVariable("uid") Long id, User user) {
+        try {
+            @NotNull User u = (User) session.getAttribute("currentUser");
+            if (u.getId() == id) {
+                u = userService.getUserById(id);
+                if (u.getPassword().equals(user.getPassword())) {
+                    u.setPassword(user.getPassword());
+                    u.setSchool(user.getSchool());
+                    u.setCls(user.getCls());
+                    u.setName(user.getName());
+                    u.setEmail(user.getEmail());
+                    if (u.userValidator())
+                    userService.saveOrUpdateUser(u);
+                    else return "格式错误";
+                    return "success";
+                } else {
+                    return "原密码错误";
+                }
+            }else{
+                return "请登录";
+            }
+        } catch (Exception e) {
+            return "系统错误";
+        }
+    }
 
     @GetMapping("/{uid}")
     public ModelAndView userSpace(HttpServletResponse response, @PathVariable Long uid) {
@@ -80,7 +110,7 @@ public class UserSpaceController {
     public Graph getGraph(@PathVariable(value = "uid") Long uid, HttpServletResponse response) {
         try {
             @NotNull User user = userService.getUserById(uid);
-            Graph graph=new Graph(user);
+            Graph graph = new Graph(user);
             return graph;
         } catch (Exception e) {
             try {
@@ -118,29 +148,29 @@ public class UserSpaceController {
                     } else if (t.getId() == 3l) {
                         pie.advance++;
                     } else if (t.getName().equals("数据结构")) {
-                        radar.ds+=up.getProblem().getScore();
+                        radar.ds += up.getProblem().getScore();
                     } else if (t.getName().equals("动态规划")) {
-                        radar.dp+=up.getProblem().getScore();
+                        radar.dp += up.getProblem().getScore();
                     } else if (t.getName().equals("搜索")) {
-                        radar.search+=up.getProblem().getScore();
+                        radar.search += up.getProblem().getScore();
                     } else if (t.getName().equals("数论")) {
-                        radar.math+=up.getProblem().getScore();
+                        radar.math += up.getProblem().getScore();
                     } else if (t.getName().equals("图论")) {
-                        radar.graph+=up.getProblem().getScore();
+                        radar.graph += up.getProblem().getScore();
                     } else if (t.getName().equals("计算几何")) {
-                        radar.geometry+=up.getProblem().getScore();
+                        radar.geometry += up.getProblem().getScore();
                     } else if (t.getName().equals("字符串")) {
-                        radar.string+=up.getProblem().getScore();
+                        radar.string += up.getProblem().getScore();
                     }
                 }
             }
-            radar.ds= (int) (100.0* radar.ds/(1+tagService.getTagByName("数据结构").getScore()));
-            radar.dp= (int) (100.0* radar.dp/(1+tagService.getTagByName("动态规划").getScore()));
-            radar.geometry= (int) (100.0* radar.geometry/(1+tagService.getTagByName("计算几何").getScore()));
-            radar.string= (int) (100.0* radar.string/(1+tagService.getTagByName("字符串").getScore()));
-            radar.graph= (int) (100.0* radar.graph/(1+tagService.getTagByName("图论").getScore()));
-            radar.search= (int) (100.0* radar.search/(1+tagService.getTagByName("搜索").getScore()));
-            radar.math= (int) (100.0* radar.math/(1+tagService.getTagByName("数论").getScore()));
+            radar.ds = (int) (100.0 * radar.ds / (1 + tagService.getTagByName("数据结构").getScore()));
+            radar.dp = (int) (100.0 * radar.dp / (1 + tagService.getTagByName("动态规划").getScore()));
+            radar.geometry = (int) (100.0 * radar.geometry / (1 + tagService.getTagByName("计算几何").getScore()));
+            radar.string = (int) (100.0 * radar.string / (1 + tagService.getTagByName("字符串").getScore()));
+            radar.graph = (int) (100.0 * radar.graph / (1 + tagService.getTagByName("图论").getScore()));
+            radar.search = (int) (100.0 * radar.search / (1 + tagService.getTagByName("搜索").getScore()));
+            radar.math = (int) (100.0 * radar.math / (1 + tagService.getTagByName("数论").getScore()));
         }
     }
 

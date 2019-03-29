@@ -148,12 +148,10 @@ function changeProblem(cid, pid) {
             } catch (e) {
             }
             setTimeout(function () {
-                console.log($("#problem-description").html());
                 $("#problem-description").html(markdown.render($("#problem-description").html()));
                 $("#problem-input").html(markdown.render($("#problem-input").html()));
                 $("#problem-output").html(markdown.render($("#problem-output").html()));
                 $("#problem-hint").html(markdown.render($("#problem-hint").html()));
-
             }, 1300);
         }
     });

@@ -16,14 +16,9 @@
     <script th:inline="javascript">
         $(function () {
             setTimeout(function () {
-                // try {
-                    $(".md-text").each(function () {
-                        // str = markdown.makeHtml($(this).html());
-                        $(this).html(markdown.render($(this).html()));
-                    });
-                // } catch (e) {
-                //     console.log("md error")
-                // }
+                $(".md-text").each(function () {
+                    $(this).html(markdown.render($(this).html()));
+                });
             }, 1200);
             $("#submit_btn").click(function () {
                 $("#submit_btn").attr("class", "btn btn-primary btn-lg text-center disabled");
@@ -66,6 +61,20 @@
             });
         });
     </script>
+
+    <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+      processEscapes: true
+    },
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+    <script type="text/javascript" src="/js/MathJax.js"></script>
 </head>
 <body>
 <div class="container " height="100%">
@@ -280,8 +289,7 @@
     </div>
 </div>
 <script>
-    //var markdown = new showdown.Converter();
-    var markdown=new Remarkable({
+    var markdown = new Remarkable({
         html: true, // Enable HTML tags in source
         xhtmlOut: false, // Use '/' to close single tags (<br />)
         breaks: false, // Convert '\n' in paragraphs into <br>

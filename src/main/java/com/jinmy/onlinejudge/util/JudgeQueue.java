@@ -315,8 +315,8 @@ public class JudgeQueue {
                 //log.info("data file:" + f);
                 if (f.indexOf(".in") != -1) {
                     case_name = f.substring(0, f.length() - 3);
-                    //log.info("case name:" + case_name);
                     case_counter++;
+                    solution.setCaseNumber(case_counter);
                     int ret = judge(filename, lang, problem, solution, case_name);
                     switch (ret) {
                         case -1:
@@ -348,7 +348,6 @@ public class JudgeQueue {
                 } else {
                     continue;
                 }
-                solution.setCaseNumber(case_counter);
             }
             if (case_counter == 0) {
                 solution.setResult("System Error");

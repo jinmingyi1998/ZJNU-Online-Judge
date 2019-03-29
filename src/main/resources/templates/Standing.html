@@ -33,7 +33,7 @@
                 <tbody>
                 <tr th:if="${session.currentUser!=null}" class="font-weight-bold">
                     <td th:text="${user.standing}" th:if="${user.standing>0}"></td>
-                    <td th:unless="${user.standing>0}">>500</td>
+                    <td th:unless="${user.standing>0}">500+</td>
                     <td><span class="badge badge-primary">我</span>&nbsp;<a th:href="'/user/'+${user.id}"
                                                                            th:text="${user.username}"></a></td>
                     <td th:text="${user.name}"></td>
