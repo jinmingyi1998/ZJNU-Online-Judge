@@ -176,6 +176,4 @@ class RankSolution extends Solution {
         this.setId(solution.getId());
     }
     Long pid;
-
-
 }

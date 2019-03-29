@@ -136,23 +136,25 @@ function changeProblem(cid, pid) {
             $("#problem-title").text(problem.title);
             $("#problem-time-limit").text(problem.timeLimit + "ms");
             $("#problem-memory-limit").text(problem.memoryLimit + "Bytes");
-            $("#problem-description").html(problem.description);
-            $("#problem-input").html(problem.input);
-            $("#problem-output").html(problem.output);
+            $("#problem-description").text(problem.description);
+            $("#problem-input").text(problem.input);
+            $("#problem-output").text(problem.output);
             $("#problem-sample-input").text(problem.sampleInput);
             $("#problem-sample-output").text(problem.sampleOutput);
-            $("#problem-hint").html(problem.hint);
+            $("#problem-hint").text(problem.hint);
             $("#submit_btn").attr("problem-id", pid);
             try {
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
             } catch (e) {
             }
             setTimeout(function () {
-                $("#problem-description").html(markdown.makeHtml($("#problem-description").html()));
-                $("#problem-input").html(markdown.makeHtml($("#problem-input").html()));
-                $("#problem-output").html(markdown.makeHtml($("#problem-output").html()));
-                $("#problem-hint").html(markdown.makeHtml($("#problem-hint").html()));
-            }, 1000);
+                console.log($("#problem-description").html());
+                $("#problem-description").html(markdown.render($("#problem-description").html()));
+                $("#problem-input").html(markdown.render($("#problem-input").html()));
+                $("#problem-output").html(markdown.render($("#problem-output").html()));
+                $("#problem-hint").html(markdown.render($("#problem-hint").html()));
+
+            }, 1300);
         }
     });
 }

@@ -12,6 +12,7 @@
     <th:block th:insert="~{fragment/header :: header}"></th:block>
     <meta charset="UTF-8">
     <title th:text="|题解 of ${problem.title}|"></title>
+    <script src="/js/remarkable.min.js"></script>
     <link rel="stylesheet" href="/editor/css/editormd.min.css">
     <script src="/editor/editormd.min.js"></script>
 </head>
@@ -48,6 +49,19 @@
 </main>
 <script>
     var markdown = new showdown.Converter();
+    var rm=new Remarkable({
+        html: false, // Enable HTML tags in source
+        xhtmlOut: false, // Use '/' to close single tags (<br />)
+        breaks: false, // Convert '\n' in paragraphs into <br>
+        linkify: false, // Autoconvert URL-like text to links
+
+        // Enable some language-neutral replacement + quotes beautification
+        typographer: false,
+
+        // Double + single quotes replacement pairs, when typographer enabled,
+        // and smartquotes on. Set doubles to '«»' for Russian, '„“' for German.
+        quotes: '“”‘’'
+    });
     var editor = editormd({
         id: "editormd",
         path: "/editor/lib/",
@@ -67,13 +81,15 @@
         setTimeout(function () {
             try {
                 $(".md-text").each(function () {
-                    str = ($(this).html());
+                    str = ($(this).text());
+                    //$(this).html(rm.render(str));
+                    console.log(rm.render(str));
                     $(this).html(markdown.makeHtml(str));
                 });
             } catch (e) {
                 console.log("md error")
             }
-        }, 500);
+        }, 1500);
     });
 </script>
 <footer th:replace="~{fragment/footer :: footer}"></footer>
