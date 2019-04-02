@@ -8,10 +8,7 @@
 
 package com.jinmy.onlinejudge.controller;
 
-import com.jinmy.onlinejudge.entity.Article;
-import com.jinmy.onlinejudge.entity.Problem;
-import com.jinmy.onlinejudge.entity.Solution;
-import com.jinmy.onlinejudge.entity.User;
+import com.jinmy.onlinejudge.entity.*;
 import com.jinmy.onlinejudge.repository.ArticleRepository;
 import com.jinmy.onlinejudge.repository.TagRepository;
 import com.jinmy.onlinejudge.service.*;
@@ -137,14 +134,25 @@ public class ProblemController {
 
     @GetMapping("/tags")
     public ModelAndView showProblemListByTag(@RequestParam(value = "page", defaultValue = "0") int page,
-                                             @RequestParam(value = "tag", defaultValue = "") String tagname) {
+                                             @RequestParam(value = "tag", defaultValue = "") String tagname, HttpServletResponse response) {
         ModelAndView m = new ModelAndView("problem/tagproblems");
-        page = Math.max(page, 0);
-        Page<Problem> problemPage = problemService.getTag(page, PAGE_SIZE, tagname);
-        m.addObject("problems", problemPage);
-        m.addObject("tag", tagRepository.findByName(tagname).get());
-        m.addObject("tags", tagRepository.findAll());
-        return m;
+        try {
+            page = Math.max(page, 0);
+            Page<Problem> problemPage = problemService.getByTagName(page, PAGE_SIZE, tagname);
+            Tag tag = tagRepository.findByName(tagname).get();
+            tag.setProblems(problemPage.getContent());
+            m.addObject("problems", problemPage);
+            m.addObject("tag", tag);
+            m.addObject("tags", tagRepository.findAll());
+            return m;
+        } catch (Exception e) {
+            try {
+                response.sendRedirect("/404");
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            return null;
+        }
     }
 
     @GetMapping("/rest/usersolved/{uid}/{pid}")
@@ -159,6 +167,21 @@ public class ProblemController {
         }
     }
 
+    @GetMapping("/rest/{pid}")
+    public Problem getRestProblem(@PathVariable("pid") Long id, HttpServletResponse response) {
+        try {
+            @NotNull Problem problem = problemService.getProblemById(id);
+            return problem;
+        } catch (NullPointerException e) {
+            try {
+                response.sendRedirect("/404");
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            return null;
+        }
+    }
+
     @GetMapping("/article/{pid}")
     public ModelAndView problemArticle(@PathVariable(value = "pid") Long pid, HttpServletResponse response) {
         ModelAndView m = new ModelAndView("problem/article");
@@ -166,7 +189,7 @@ public class ProblemController {
             @NotNull Problem problem = problemService.getProblemById(pid);
             List<Article> articles = problemService.getArticlesOfProblem(problem);
             m.addObject("articles", articles);
-            m.addObject("problem",problem);
+            m.addObject("problem", problem);
         } catch (Exception e) {
             try {
                 response.sendRedirect("/404");
@@ -178,11 +201,20 @@ public class ProblemController {
         return m;
     }
 
+    @GetMapping("/rest/article/{pid}")
+    public List<Article> getRestArticleById(@PathVariable("pid")Long pid)
+    {
+        @NotNull Problem problem = problemService.getProblemById(pid);
+        List<Article> articles = problemService.getArticlesOfProblem(problem);
+        return articles;
+    }
+
     @Autowired
     ArticleRepository articleRepository;
+
     @PostMapping("/article/{pid}")
-    public ModelAndView postArticle(@PathVariable("pid")Long pid,HttpServletResponse response,Article article){
-        if(!userAuthorityService.isLogin()) {
+    public ModelAndView postArticle(@PathVariable("pid") Long pid, HttpServletResponse response, Article article) {
+        if (!userAuthorityService.isLogin()) {
             try {
                 response.sendRedirect("/404");
                 return null;
@@ -190,12 +222,12 @@ public class ProblemController {
                 e.printStackTrace();
             }
         }
-        User user= (User) session.getAttribute("currentUser");
-        Problem problem=problemService.getProblemById(pid);
+        User user = (User) session.getAttribute("currentUser");
+        Problem problem = problemService.getProblemById(pid);
         article.setProblem(problem);
         article.setAuthor(user);
         article.setPostTime(Instant.now());
         articleRepository.save(article);
-        return problemArticle(pid,response);
+        return problemArticle(pid, response);
     }
 }

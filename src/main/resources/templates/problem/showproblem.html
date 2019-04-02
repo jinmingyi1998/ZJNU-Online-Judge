@@ -11,102 +11,39 @@
 <head>
     <th:block th:insert="~{fragment/header :: header}"></th:block>
     <meta charset="UTF-8">
-    <title th:text="${problem.title}"></title>
-    <script src="/js/StatusInModal.js"></script>
-    <script th:inline="javascript">
-        $(function () {
-            setTimeout(function () {
-                $(".md-text").each(function () {
-                    $(this).html(markdown.render($(this).html()));
-                });
-            }, 1200);
-            $("#submit_btn").click(function () {
-                $("#submit_btn").attr("class", "btn btn-primary btn-lg text-center disabled");
-                $("#submit_btn").text("Submiting...");
-                $.post({
-                    data: $("#form").serialize(),
-                    url: "/problems/submit/" + "[[${problem.id}]]",
-                    cache: false,
-                    dataType: 'text',
-                    success: function (d) {
-                        var x = 0;
-                        $("#prog").width(0);
-                        $(".progress").show();
-                        setTimeout(function () {
-                            $("#prog").width("10%")
-                        }, 200);
-                        setTimeout(function () {
-                            $("#prog").width("50%")
-                        }, 800);
-                        setTimeout(function () {
-                            $("#prog").width("90%")
-                        }, 1600);
-                        setTimeout(function () {
-                            $("#prog").width("100%")
-                        }, 2000);
-                        setTimeout(function () {
-                            if (d == "success") {
-                                location.reload();
-                                scrollTo(0, 0);
-                            } else {
-                                $(".progress").hide();
-                                $("#submit_btn").attr("class", "btn btn-primary btn-lg text-center");
-                                $("#submit_btn").text("Submit");
-                                $("#submit-msg").text(d);
-                                $("#submit-msg").show();
-                            }
-                        }, 2000);
-                    }
-                });
-            });
-        });
-    </script>
-
-    <script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    extensions: ["tex2jax.js"],
-    jax: ["input/TeX", "output/HTML-CSS"],
-    tex2jax: {
-      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-      processEscapes: true
-    },
-    "HTML-CSS": { availableFonts: ["TeX"] }
-  });
-</script>
-    <script type="text/javascript" src="/js/MathJax.js"></script>
+    <title></title>
 </head>
 <body>
 <div class="container " height="100%">
     <div class="row">
         <main class="col-9" th:id="${problem.id}">
-            <div class="card bg-light">
+            <div class="card bg-light" id="vue-problem">
                 <div class="card-header">
-                    <h2 class="card-title" th:text="${problem.title}"></h2>
+                    <h2 class="card-title">{{problem.title}}</h2>
                 </div>
                 <div class="card-body">
                     <h3 class="card-title">题目描述</h3>
-                    <div class="card-text md-text" th:utext="${problem.description}"></div>
+                    <div class="card-text md-text" v-html="problem.description"></div>
                 </div>
                 <div class="card-body">
                     <h3 class="card-title">输入</h3>
-                    <div class="card-text md-text" th:utext="${problem.input}"></div>
+                    <div class="card-text md-text" v-html="problem.input"></div>
                 </div>
                 <div class="card-body">
                     <h3 class="card-title">输出</h3>
-                    <div class="card-text md-text" th:utext="${problem.output}"></div>
+                    <div class="card-text md-text" v-html="problem.output"></div>
                 </div>
                 <div class="card-body">
                     <h3 class="card-title">样例输入</h3>
-                    <pre class="card-text" th:utext="${problem.sampleInput}"></pre>
+                    <pre class="card-text">{{problem.sampleInput}}</pre>
                 </div>
                 <div class="card-body">
                     <h3 class="card-title">样例输出</h3>
-                    <pre class="card-text" th:utext="${problem.sampleOutput}"></pre>
+                    <pre class="card-text">{{problem.sampleOutput}}</pre>
                 </div>
                 <div class="card-body">
                     <h3 class="card-title">提示</h3>
-                    <div class="card-text md-text" th:utext="${problem.hint}"></div>
+                    <div class="card-text md-text" v-html="problem.hint"></div>
                 </div>
             </div>
             <div class="container text-center" style="margin-top: 20px">
@@ -253,9 +190,6 @@
                 <table class="table table-light table-responsive-sm">
                     <thead class="thead-light text-center">
                     <tr>
-                        <!--<th>Run ID</th>-->
-                        <!--<th><i class="fa fa-user"></i>用户名</th>-->
-                        <!--<th><i class="fa fa-question-circle-o"></i>题目</th>-->
                         <th><i class="fa fa-check-circle"></i>结果</th>
                         <th><i class="fa fa-clock-o"></i>用时(ms)</th>
                         <th><i class="fa fa-database"></i>内存(Byte)</th>
@@ -265,9 +199,6 @@
                     </tr>
                     </thead>
                     <tbody class="text-center">
-                    <!--<td id="modal-id"></td>-->
-                    <!--<td id="modal-username"></td>-->
-                    <!--<td id="modal-problem"></td>-->
                     <td id="modal-result"></td>
                     <td id="modal-time"></td>
                     <td id="modal-memory"></td>
@@ -289,18 +220,15 @@
     </div>
 </div>
 <script>
-    var markdown = new Remarkable({
-        html: true, // Enable HTML tags in source
-        xhtmlOut: false, // Use '/' to close single tags (<br />)
-        breaks: false, // Convert '\n' in paragraphs into <br>
-        linkify: false, // Autoconvert URL-like text to links
-
-        // Enable some language-neutral replacement + quotes beautification
-        typographer: false,
-
-        // Double + single quotes replacement pairs, when typographer enabled,
-        // and smartquotes on. Set doubles to '«»' for Russian, '„“' for German.
-        quotes: '“”‘’'
+    var markdown = new showdown.Converter({
+        openLinksInNewWindow: true
+    });
+    markdown.setFlavor('github');
+    var prom = new Vue({
+        el: '#vue-problem',
+        data: {
+            problem: null
+        }
     });
     var vm = new Vue({
         el: '#top-list',
@@ -316,10 +244,76 @@
             }
         });
     });
+    $.get({
+        url: '/problems/rest/' + $("main").attr("id"),
+        success: function (res) {
+            prom._data.problem = res;
+            $("title").text(res.title)
+        }
+    });
 </script>
-<script th:if="${session.currentUser!=null}">
-
+<script th:inline="javascript">
+    $(function () {
+        setTimeout(function () {
+            $(".md-text").each(function () {
+                console.log($(this).html());
+                $(this).html(markdown.makeHtml($(this).html()));
+            });
+        }, 5000);
+        $("#submit_btn").click(function () {
+            $("#submit_btn").attr("class", "btn btn-primary btn-lg text-center disabled");
+            $("#submit_btn").text("Submiting...");
+            $.post({
+                data: $("#form").serialize(),
+                url: "/problems/submit/" + "[[${problem.id}]]",
+                cache: false,
+                dataType: 'text',
+                success: function (d) {
+                    var x = 0;
+                    $("#prog").width(0);
+                    $(".progress").show();
+                    setTimeout(function () {
+                        $("#prog").width("10%")
+                    }, 200);
+                    setTimeout(function () {
+                        $("#prog").width("50%")
+                    }, 800);
+                    setTimeout(function () {
+                        $("#prog").width("90%")
+                    }, 1600);
+                    setTimeout(function () {
+                        $("#prog").width("100%")
+                    }, 2000);
+                    setTimeout(function () {
+                        if (d == "success") {
+                            location.reload();
+                            scrollTo(0, 0);
+                        } else {
+                            $(".progress").hide();
+                            $("#submit_btn").attr("class", "btn btn-primary btn-lg text-center");
+                            $("#submit_btn").text("Submit");
+                            $("#submit-msg").text(d);
+                            $("#submit-msg").show();
+                        }
+                    }, 2000);
+                }
+            });
+        });
+    });
 </script>
 <footer th:replace="~{fragment/footer :: footer}"></footer>
+<script src="/js/StatusInModal.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+      processEscapes: true
+    },
+    "HTML-CSS": { availableFonts: ["TeX"] }});
+</script>
+<script type="text/javascript" src="/js/MathJax.js"></script>
 </body>
 </html>

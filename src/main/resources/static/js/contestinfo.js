@@ -136,7 +136,7 @@ function changeProblem(cid, pid) {
             $("#problem-title").text(problem.title);
             $("#problem-time-limit").text(problem.timeLimit + "ms");
             $("#problem-memory-limit").text(problem.memoryLimit + "Bytes");
-            $("#problem-description").text(problem.description);
+            $("#problem-description").html(problem.description);
             $("#problem-input").text(problem.input);
             $("#problem-output").text(problem.output);
             $("#problem-sample-input").text(problem.sampleInput);

@@ -7,7 +7,7 @@
   -->
 
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" >
 <head>
     <th:block th:insert="~{fragment/header :: header}"></th:block>
     <meta charset="UTF-8">
@@ -15,23 +15,9 @@
     <script src="/js/remarkable.min.js"></script>
     <link rel="stylesheet" href="/editor/css/editormd.min.css">
     <script src="/editor/editormd.min.js"></script>
-
-    <script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    extensions: ["tex2jax.js"],
-    jax: ["input/TeX", "output/HTML-CSS"],
-    tex2jax: {
-      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-      processEscapes: true
-    },
-    "HTML-CSS": { availableFonts: ["TeX"] }
-  });
-</script>
-    <script type="text/javascript" src="/js/MathJax.js"></script>
 </head>
 <body>
-<main class="container">
+<main class="container" th:id="${problem.id}">
     <div class="card mt-5 p-3">
         <h2 class=" text-center" th:text="|${problem.title} - 题解|"></h2>
         <div class="card-body">
@@ -44,13 +30,13 @@
             </p>
         </div>
     </div>
-    <div class="card mt-2" th:each="a:${articles}">
-        <div class="card-body">
-            <p class="card-text text-muted"><span class="m-3">作者：<a th:href="@{/user/{uid}(uid=${a.author.id})}"
-                                                                    th:text="${a.author.username}"></a></span><span
-                    th:text="|发布时间: ${a.normalPostTime}|" class="m-3"></span></p>
+    <div class="card mt-2"  id="article-list">
+        <div class="card-body" v-for="a in articles">
+            <p class="card-text text-muted"><span class="m-3">作者：<a v-bind:href="authorHref(a.author.id)">{{a.author.username}}</a>
+            </span><span class="m-3">{{postTime(a.normalPostTime)}}</span></p>
             <hr>
-            <div class="card-text md-text" th:text="${a.text}"></div>
+            <!--<div class="card-text md-text" v-html="a.text"></div>-->
+            <div class="card-text md-text axt"></div>
         </div>
     </div>
     <div class="container-fluid mt-5 justify-content-sm-center">
@@ -62,19 +48,31 @@
     </div>
 </main>
 <script>
-    var rm=new Remarkable({
-        html: true, // Enable HTML tags in source
-        xhtmlOut: false, // Use '/' to close single tags (<br />)
-        breaks: false, // Convert '\n' in paragraphs into <br>
-        linkify: false, // Autoconvert URL-like text to links
-
-        // Enable some language-neutral replacement + quotes beautification
-        typographer: true,
-
-        // Double + single quotes replacement pairs, when typographer enabled,
-        // and smartquotes on. Set doubles to '«»' for Russian, '„“' for German.
-        quotes: '“”‘’'
+    var arti=new Vue({
+       el:'#article-list',
+       data:{
+           articles:[]
+       },
+       methods:{
+           postTime:function (str) {
+               return "发布时间 "+str;
+           },
+           authorHref:function (str) {
+               return "/user/"+str;
+           }
+       }
     });
+    $.get({
+        url:'/problems/rest/article/'+$("main").attr("id"),
+        success:function (res) {
+            arti._data.articles=res;
+
+        }
+    });
+    var markdown=new showdown.Converter({
+        openLinksInNewWindow:true
+    });
+    markdown.setFlavor('github');
     var editor = editormd({
         id: "editormd",
         path: "/editor/lib/",
@@ -91,18 +89,32 @@
         sequenceDiagram: false
     });
     $(function () {
+            $(".axt").each(function () {
+                $(this).html(arti._data.articles[0].text);
+            })
         setTimeout(function () {
-            try {
-                $(".md-text").each(function () {
-                    str = ($(this).html());
-                    $(this).html(rm.render(str));
-                });
-            } catch (e) {
-                console.log("md error")
-            }
-        }, 0);
+            $(".md-text").each(function () {
+
+                console.log($(this).html());
+                $(this).html(markdown.makeHtml($(this).html()));
+            });
+        }, 5000);
     });
 </script>
 <footer th:replace="~{fragment/footer :: footer}"></footer>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+      processEscapes: true
+    },
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+<script type="text/javascript" src="/js/MathJax.js"></script>
 </body>
 </html>

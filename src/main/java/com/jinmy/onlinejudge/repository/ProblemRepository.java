@@ -2,6 +2,7 @@ package com.jinmy.onlinejudge.repository;
 
 
 import com.jinmy.onlinejudge.entity.Problem;
+import com.jinmy.onlinejudge.entity.Tag;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,8 @@ import java.util.Optional;
 public interface ProblemRepository extends JpaRepository<Problem, Long> {
 
     void deleteById(Long id);
+
+    Page<Problem>findAllByTagsOrderByIdAsc(Tag tag,Pageable pageable);
 
     Problem save(Problem problem);
 

@@ -17,7 +17,6 @@ import com.jinmy.onlinejudge.repository.TagRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -68,13 +67,10 @@ public class ProblemService {
         return problemRepository.save(problem);
     }
 
-    public Page<Problem> getTag(int page, int size, String tagname) {
+    public Page<Problem> getByTagName(int page, int size, String tagname) {
         try {
             Tag t = tagRepository.findByName(tagname).get();
-            t.getProblems().sort((o1, o2) -> (int) (o1.getId()-o2.getId()));
-            Page<Problem> problems = new PageImpl<Problem>(t.getProblems(),
-                    PageRequest.of(page, size, new Sort(Sort.Direction.ASC, "problems_id")),
-                    t.getProblems().size());
+            Page<Problem> problems = problemRepository.findAllByTagsOrderByIdAsc(t, PageRequest.of(page, size));
             return problems;
         } catch (Exception e) {
         }
@@ -118,8 +114,8 @@ public class ProblemService {
         problemRepository.deleteById(id);
     }
 
-    public List<Article>getArticlesOfProblem(Problem problem){
-        List<Article>articles= articleRepository.findAllByProblemOrderByIdDesc(problem);
+    public List<Article> getArticlesOfProblem(Problem problem) {
+        List<Article> articles = articleRepository.findAllByProblemOrderByIdDesc(problem);
         return articles;
     }
 }
