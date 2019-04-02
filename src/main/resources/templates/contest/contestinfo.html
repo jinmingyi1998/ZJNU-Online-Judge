@@ -12,21 +12,16 @@
 <head>
     <th:block th:insert="~{fragment/header :: header}"></th:block>
     <meta charset="UTF-8">
-    <title>Contests</title>
-
-    <script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    extensions: ["tex2jax.js"],
-    jax: ["input/TeX", "output/HTML-CSS"],
-    tex2jax: {
-      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-      processEscapes: true
-    },
-    "HTML-CSS": { availableFonts: ["TeX"] }
-  });
-</script>
-    <script type="text/javascript" src="/js/MathJax.js"></script>
+    <title th:text="${contest.title}">Contests</title>
+    <link rel="stylesheet" href="/editor/css/editormd.css">
+    <script src="/editor/lib/marked.min.js"></script>
+    <script src="/editor/lib/raphael.min.js"></script>
+    <script src="/editor/lib/underscore.min.js"></script>
+    <script src="/editor/lib/sequence-diagram.min.js"></script>
+    <script src="/editor/lib/flowchart.min.js"></script>
+    <script src="/editor/lib/jquery.flowchart.min.js"></script>
+    <script src="/editor/editormd.js"></script>
+    <link rel="stylesheet" href="/js/prettify/skins/sunburst.css">
 </head>
 <body>
 <style>
@@ -41,7 +36,7 @@
         <li class="nav-item"><a class="nav-link active" data-toggle="pill" href="#problem"style="font-size: 1.5rem">题目</a></li>
         <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#status"style="font-size: 1.5rem">提交记录</a></li>
         <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#rank"style="font-size: 1.5rem">排行榜</a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#comment"style="font-size: 1.5rem">评论</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="pill" id="refreshComment" href="#comment"style="font-size: 1.5rem">评论</a></li>
     </ul></div>
     <div class="tab-content container" style="margin-top: 2rem">
         <div class="tab-pane container fade" id="overview">
@@ -76,15 +71,21 @@
                     </div>
                     <div class="card-body">
                         <h3 class="card-title">题目描述</h3>
-                        <div class="card-text" id="problem-description"></div>
+                        <div class="card-text md-problem" id="problem-description">
+                            <textarea style="display: none;"></textarea>
+                        </div>
                     </div>
                     <div class="card-body">
                         <h3 class="card-title">输入</h3>
-                        <div class="card-text" id="problem-input"></div>
+                        <div class="card-text md-problem" id="problem-input">
+                            <textarea style="display: none;"></textarea>
+                        </div>
                     </div>
                     <div class="card-body">
                         <h3 class="card-title">输出</h3>
-                        <div class="card-text" id="problem-output"></div>
+                        <div class="card-text md-problem" id="problem-output">
+                            <textarea style="display: none;"></textarea>
+                        </div>
                     </div>
                     <div class="card-body">
                         <h3 class="card-title">样例输入</h3>
@@ -96,7 +97,9 @@
                     </div>
                     <div class="card-body">
                         <h3 class="card-title">提示</h3>
-                        <pre class="card-text" id="problem-hint"></pre>
+                        <div class="card-text md-problem" id="problem-hint">
+                            <textarea style="display: none;"></textarea>
+                        </div>
                     </div>
                 </div>
                 <div class="container text-center" style="margin-top: 20px">
@@ -186,16 +189,19 @@
         </div>
         <div class="container tab-pane fade" id="comment">
             <ul class="list-group" id="comments">
-                <li :key="comment.id" class="list-group-item" v-for="comment in comments">
-                    <a :href="user_url(comment.user.id)">{{comment.user.name}}</a>&nbsp; @ &nbsp;<span>{{comment.normalPostTime}}</span>
-                    <span v-if="comment.fatherId!=null">{{comment}}</span>
-                    <div v-html="mdtext(comment.text)"></div>
+                <li  class="list-group-item" >
+                 :key="comment.id" class="list-group-item" v-for="comment in comments">
+                    <a href="">{{comment.user.name}}</a>&nbsp; @ &nbsp;<span>{{comment.normalPostTime}}</span>
+                    <div class="md-comment">
+                        <textarea style="display: none;"></textarea>
+                    </div>
+
                 </li>
             </ul>
-            <div class="container" style="margin-top: 6rem">
+            <div class="container mt-3" >
                 <div class="alert alert-success">支持 <code>markdown</code> </div>
                 <textarea name="post_comment" id="post_comment" cols="30" rows="5" class="form-control"></textarea>
-                <a class="btn text-light btn-primary text-center" id="submit_comment" style="margin-top: 1rem">发送</a>
+                <a class="btn text-light btn-primary justify-content-center" id="submit_comment" style="margin-top: 1rem">发送</a>
             </div>
         </div>
     </div>
@@ -210,9 +216,6 @@
                 <table class="table table-light table-responsive-sm">
                     <thead class="thead-light text-center">
                     <tr>
-                        <!--<th>Run ID</th>-->
-                        <!--<th><i class="fa fa-user"></i>用户名</th>-->
-                        <!--<th><i class="fa fa-question-circle-o"></i>题目</th>-->
                         <th><i class="fa fa-check-circle"></i>结果</th>
                         <th><i class="fa fa-clock-o"></i>用时(ms)</th>
                         <th><i class="fa fa-database"></i>内存(Byte)</th>
@@ -222,9 +225,6 @@
                     </tr>
                     </thead>
                     <tbody class="text-center">
-                    <!--<td id="modal-id"></td>-->
-                    <!--<td id="modal-username"></td>-->
-                    <!--<td id="modal-problem"></td>-->
                     <td id="modal-result"></td>
                     <td id="modal-time"></td>
                     <td id="modal-memory"></td>
@@ -246,37 +246,20 @@
     </div>
 </div>
 <script>
-    var markdown=new Remarkable({
-        html: true, // Enable HTML tags in source
-        xhtmlOut: false, // Use '/' to close single tags (<br />)
-        breaks: false, // Convert '\n' in paragraphs into <br>
-        linkify: false, // Autoconvert URL-like text to links
-
-        // Enable some language-neutral replacement + quotes beautification
-        typographer: false,
-
-        // Double + single quotes replacement pairs, when typographer enabled,
-        // and smartquotes on. Set doubles to '«»' for Russian, '„“' for German.
-        quotes: '“”‘’'
+    var editor = editormd({
+        id: "editormd",
+        path: "/editor/lib/",
+        width:'100%',
+        height: 400,
+        tex: true,
+        flowChart: true,
+        sequenceDiagram: true,
+        previewCodeHighlight: true
     });
     var ve = new Vue({
         el: "#status-tbody",
         data: {
             status: []
-        }
-    });
-    var ce = new Vue({
-        el: '#comments',
-        data: {
-            comments: []
-        },
-        methods: {
-            user_url: function (x) {
-                return "/user/" + x;
-            },
-            mdtext: function (txt) {
-                return markdown.render(txt);
-            }
         }
     });
 </script>

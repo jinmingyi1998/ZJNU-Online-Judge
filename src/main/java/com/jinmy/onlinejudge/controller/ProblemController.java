@@ -228,6 +228,11 @@ public class ProblemController {
         article.setAuthor(user);
         article.setPostTime(Instant.now());
         articleRepository.save(article);
+        try {
+            response.sendRedirect("/problems/article/"+pid);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return problemArticle(pid, response);
     }
 }

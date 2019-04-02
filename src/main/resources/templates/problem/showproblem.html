@@ -11,6 +11,15 @@
 <head>
     <th:block th:insert="~{fragment/header :: header}"></th:block>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="/editor/css/editormd.css">
+    <script src="/editor/lib/marked.min.js"></script>
+    <script src="/editor/lib/raphael.min.js"></script>
+    <script src="/editor/lib/underscore.min.js"></script>
+    <script src="/editor/lib/sequence-diagram.min.js"></script>
+    <script src="/editor/lib/flowchart.min.js"></script>
+    <script src="/editor/lib/jquery.flowchart.min.js"></script>
+    <script src="/editor/editormd.js"></script>
+    <link rel="stylesheet" href="/js/prettify/skins/sunburst.css">
     <title></title>
 </head>
 <body>
@@ -19,31 +28,39 @@
         <main class="col-9" th:id="${problem.id}">
             <div class="card bg-light" id="vue-problem">
                 <div class="card-header">
-                    <h2 class="card-title">{{problem.title}}</h2>
+                    <h2 class="card-title" th:text="${problem.title}">{{problem.title}}</h2>
                 </div>
                 <div class="card-body">
                     <h3 class="card-title">题目描述</h3>
-                    <div class="card-text md-text" v-html="problem.description"></div>
+                    <div class="card-text md-text">
+                        <textarea style="display: none;" th:text="${problem.description}">{{problem.description}}</textarea>
+                    </div>
                 </div>
                 <div class="card-body">
                     <h3 class="card-title">输入</h3>
-                    <div class="card-text md-text" v-html="problem.input"></div>
+                    <div class="card-text md-text">
+                        <textarea style="display: none;" th:text="${problem.input}">{{problem.input}}</textarea>
+                    </div>
                 </div>
                 <div class="card-body">
                     <h3 class="card-title">输出</h3>
-                    <div class="card-text md-text" v-html="problem.output"></div>
+                    <div class="card-text md-text">
+                        <textarea style="display: none;" th:text="${problem.output}">{{problem.output}}</textarea>
+                    </div>
                 </div>
                 <div class="card-body">
                     <h3 class="card-title">样例输入</h3>
-                    <pre class="card-text">{{problem.sampleInput}}</pre>
+                    <pre class="card-text" th:text="${problem.sampleInput}">{{problem.sampleInput}}</pre>
                 </div>
                 <div class="card-body">
                     <h3 class="card-title">样例输出</h3>
-                    <pre class="card-text">{{problem.sampleOutput}}</pre>
+                    <pre class="card-text" th:text="${problem.sampleOutput}">{{problem.sampleOutput}}</pre>
                 </div>
                 <div class="card-body">
                     <h3 class="card-title">提示</h3>
-                    <div class="card-text md-text" v-html="problem.hint"></div>
+                    <div class="card-text md-text">
+                        <textarea style="display: none;" th:text="${problem.hint}">{{problem.hint}}</textarea>
+                    </div>
                 </div>
             </div>
             <div class="container text-center" style="margin-top: 20px">
@@ -220,16 +237,6 @@
     </div>
 </div>
 <script>
-    var markdown = new showdown.Converter({
-        openLinksInNewWindow: true
-    });
-    markdown.setFlavor('github');
-    var prom = new Vue({
-        el: '#vue-problem',
-        data: {
-            problem: null
-        }
-    });
     var vm = new Vue({
         el: '#top-list',
         data: {
@@ -244,22 +251,46 @@
             }
         });
     });
+    /*var _problem;
     $.get({
         url: '/problems/rest/' + $("main").attr("id"),
         success: function (res) {
-            prom._data.problem = res;
+            _problem = res;
             $("title").text(res.title)
         }
     });
+    var prom = new Vue({
+        el: '#vue-problem',
+        data: {
+            problem: _problem
+        }
+    });*/
 </script>
 <script th:inline="javascript">
     $(function () {
-        setTimeout(function () {
-            $(".md-text").each(function () {
-                console.log($(this).html());
-                $(this).html(markdown.makeHtml($(this).html()));
+        $(".md-text").each(function () {
+            $(this).attr("id", "editormd-view");
+            editormd.markdownToHTML("editormd-view", {
+                gfm: true,
+                toc: true,
+                tocm: false,
+                tocStartLevel: 1,
+                tocTitle: "目录",
+                tocDropdown: false,
+                tocContainer: "",
+                markdown: "",
+                autoLoadKaTeX: true,
+                pageBreak: true,
+                atLink: true,    // for @link
+                emailLink: true,    // for mail address auto link
+                tex: true,
+                taskList: true,   // Github Flavored Markdown task lists
+                flowChart: true,
+                sequenceDiagram: true,
+                previewCodeHighlight: true
             });
-        }, 5000);
+            $(this).attr("id", "");
+        });
         $("#submit_btn").click(function () {
             $("#submit_btn").attr("class", "btn btn-primary btn-lg text-center disabled");
             $("#submit_btn").text("Submiting...");
@@ -303,17 +334,5 @@
 </script>
 <footer th:replace="~{fragment/footer :: footer}"></footer>
 <script src="/js/StatusInModal.js"></script>
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    extensions: ["tex2jax.js"],
-    jax: ["input/TeX", "output/HTML-CSS"],
-    tex2jax: {
-      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-      processEscapes: true
-    },
-    "HTML-CSS": { availableFonts: ["TeX"] }});
-</script>
-<script type="text/javascript" src="/js/MathJax.js"></script>
 </body>
 </html>

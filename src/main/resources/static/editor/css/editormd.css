@@ -3833,7 +3833,8 @@
   padding: 20px;
   overflow: auto;
   width: 100%;
-  background-color: #fff;
+  /*background-color: #fff;*/
+  background-color: inherit;
 }
 .editormd-preview-container blockquote, .editormd-html-preview blockquote {
   color: #666;
@@ -3865,7 +3866,7 @@
 }
 .editormd-preview-container pre, .editormd-html-preview pre {
   border: 1px solid #ddd;
-  background: #f6f6f6;
+  /*background: #f6f6f6;*/
   padding: 10px;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -4043,7 +4044,7 @@ li.L3,
 li.L5,
 li.L7,
 li.L9 {
-  background: #eee;
+  /*background: #eee;*/
 }
 
 .editormd-preview-container pre.prettyprint, .editormd-html-preview pre.prettyprint {

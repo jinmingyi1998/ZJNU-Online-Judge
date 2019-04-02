@@ -14,6 +14,7 @@ $(function () {
     $(".change-problem").click(function () {
         changeProblem(cid, $(this).attr("id"))
     });
+    $("#refreshComment").click(getComments());
     $(function () {
         $("body").on('click', '.view-code', function () {
             var id = $(this).attr("id");
@@ -136,23 +137,45 @@ function changeProblem(cid, pid) {
             $("#problem-title").text(problem.title);
             $("#problem-time-limit").text(problem.timeLimit + "ms");
             $("#problem-memory-limit").text(problem.memoryLimit + "Bytes");
-            $("#problem-description").html(problem.description);
-            $("#problem-input").text(problem.input);
-            $("#problem-output").text(problem.output);
+            $("#problem-description").empty();
+            $("#problem-description").append(" <textarea style=\"display: none;\"></textarea>");
+            $("#problem-description").children("textarea").text(problem.description);
+            $("#problem-input").empty();
+            $("#problem-input").append(" <textarea style=\"display: none;\"></textarea>");
+            $("#problem-input").children("textarea").text(problem.input);
+            $("#problem-output").empty();
+            $("#problem-output").append(" <textarea style=\"display: none;\"></textarea>");
+            $("#problem-output").children("textarea").text(problem.output);
             $("#problem-sample-input").text(problem.sampleInput);
             $("#problem-sample-output").text(problem.sampleOutput);
-            $("#problem-hint").text(problem.hint);
+            $("#problem-hint").empty();
+            $("#problem-hint").append(" <textarea style=\"display: none;\"></textarea>");
+            $("#problem-hint").children("textarea").text(problem.hint);
             $("#submit_btn").attr("problem-id", pid);
-            try {
-                MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-            } catch (e) {
-            }
-            setTimeout(function () {
-                $("#problem-description").html(markdown.render($("#problem-description").html()));
-                $("#problem-input").html(markdown.render($("#problem-input").html()));
-                $("#problem-output").html(markdown.render($("#problem-output").html()));
-                $("#problem-hint").html(markdown.render($("#problem-hint").html()));
-            }, 1300);
+            $(".md-problem").each(function () {
+                var tid = $(this).attr("id");
+                $(this).attr("id", "editormd-view");
+                editormd.markdownToHTML("editormd-view", {
+                    gfm: true,
+                    toc: true,
+                    tocm: false,
+                    tocStartLevel: 1,
+                    tocTitle: "目录",
+                    tocDropdown: false,
+                    tocContainer: "",
+                    markdown: "",
+                    autoLoadKaTeX: true,
+                    pageBreak: true,
+                    atLink: true,    // for @link
+                    emailLink: true,    // for mail address auto link
+                    tex: true,
+                    taskList: true,   // Github Flavored Markdown task lists
+                    flowChart: true,
+                    sequenceDiagram: true,
+                    previewCodeHighlight: true
+                });
+                $(this).attr("id", tid);
+            });
         }
     });
 }
@@ -161,7 +184,29 @@ function getComments() {
     $.get({
         url: "/contest/rest/" + cid + "/comments",
         success: function (res) {
-            ce._data.comments = res;
+            $("#comments").empty();
+            for (var i = 0; i < res.length; i++) {
+                $("#comments").append("<li  class=\"list-group-item\" >" +
+                    "<a href=\"/user/" + res[i].user.id + "\">" + res[i].user.name + "</a>&nbsp; @ &nbsp;<span>" + res[i].normalPostTime
+                    + "</span>" +
+                    "<div class=\"md-comment\">" +
+                    "<textarea style=\"display: none;\">" + res[i].text + "</textarea>" +
+                    "</div>" +
+                    "</li>")
+            }
+            $(".md-comment").each(function () {
+                $(this).attr("id", "editormd-view");
+                editormd.markdownToHTML("editormd-view", {
+                    toc: true,
+                    autoLoadKaTeX: true,
+                    tex: true,
+                    flowChart: true,
+                    taskList: true,
+                    sequenceDiagram: true,
+                    previewCodeHighlight: true
+                });
+                $(this).attr("id", "");
+            });
         }
     });
 }

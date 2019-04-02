@@ -7,14 +7,20 @@
   -->
 
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" >
+<html xmlns:th="http://www.thymeleaf.org" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="~{fragment/header :: header}"></th:block>
     <meta charset="UTF-8">
     <title th:text="|题解 of ${problem.title}|"></title>
-    <script src="/js/remarkable.min.js"></script>
-    <link rel="stylesheet" href="/editor/css/editormd.min.css">
-    <script src="/editor/editormd.min.js"></script>
+    <link rel="stylesheet" href="/editor/css/editormd.css">
+    <script src="/editor/lib/marked.min.js"></script>
+    <script src="/editor/lib/raphael.min.js"></script>
+    <script src="/editor/lib/underscore.min.js"></script>
+    <script src="/editor/lib/sequence-diagram.min.js"></script>
+    <script src="/editor/lib/flowchart.min.js"></script>
+    <script src="/editor/lib/jquery.flowchart.min.js"></script>
+    <script src="/editor/editormd.js"></script>
+    <link rel="stylesheet" href="/js/prettify/skins/sunburst.css">
 </head>
 <body>
 <main class="container" th:id="${problem.id}">
@@ -30,91 +36,109 @@
             </p>
         </div>
     </div>
-    <div class="card mt-2"  id="article-list">
+    <div class="card mt-2" id="article-list">
         <div class="card-body" v-for="a in articles">
             <p class="card-text text-muted"><span class="m-3">作者：<a v-bind:href="authorHref(a.author.id)">{{a.author.username}}</a>
             </span><span class="m-3">{{postTime(a.normalPostTime)}}</span></p>
             <hr>
-            <!--<div class="card-text md-text" v-html="a.text"></div>-->
-            <div class="card-text md-text axt"></div>
+            <div class="card-text md-text" id="editormd-view">
+                <textarea style="display: none;">{{a.text}}</textarea>
+            </div>
         </div>
     </div>
     <div class="container-fluid mt-5 justify-content-sm-center">
         <form action="" class="mt-1 justify-content-center" method="post">
             <div class="form-group" id="editormd">
                 <textarea name="text" class="w-100"></textarea></div>
-            <input type="submit" th:value="发布" class="text-center text-light btn btn-primary mt-3 justify-content-center">
+            <input type="submit" th:value="发布"
+                   class="text-center text-light btn btn-primary mt-3 justify-content-center">
         </form>
     </div>
 </main>
 <script>
-    var arti=new Vue({
-       el:'#article-list',
-       data:{
-           articles:[]
-       },
-       methods:{
-           postTime:function (str) {
-               return "发布时间 "+str;
-           },
-           authorHref:function (str) {
-               return "/user/"+str;
-           }
-       }
-    });
-    $.get({
-        url:'/problems/rest/article/'+$("main").attr("id"),
-        success:function (res) {
-            arti._data.articles=res;
-
+    var arti = new Vue({
+        el: '#article-list',
+        data: {
+            articles: []
+        },
+        methods: {
+            postTime: function (str) {
+                return "发布时间 " + str;
+            },
+            authorHref: function (str) {
+                return "/user/" + str;
+            }
         }
     });
-    var markdown=new showdown.Converter({
-        openLinksInNewWindow:true
+    $.get({
+        url: '/problems/rest/article/' + $("main").attr("id"),
+        success: function (res) {
+            arti._data.articles = res;
+        }
     });
-    markdown.setFlavor('github');
     var editor = editormd({
         id: "editormd",
         path: "/editor/lib/",
-        height: 300,
+        height: 800,
         codeFold: true,
         saveHTMLToTextarea: true,
         searchReplace: true,
-        emoji: true,
-        taskList: false,
+        gfm: true,
+        toc: true,
         tocm: false,
-        tex: false,
-        autoFocus: false,
-        flowChart: false,
-        sequenceDiagram: false
+        tocStartLevel: 1,
+        tocTitle: "目录",
+        tocDropdown: false,
+        tocContainer: "",
+        markdown: "",
+        autoLoadKaTeX: true,
+        pageBreak: true,
+        atLink: true,    // for @link
+        emailLink: true,    // for mail address auto link
+        tex: true,
+        taskList: true,   // Github Flavored Markdown task lists
+        flowChart: true,
+        sequenceDiagram: true,
+        previewCodeHighlight: true
     });
     $(function () {
-            $(".axt").each(function () {
-                $(this).html(arti._data.articles[0].text);
-            })
-        setTimeout(function () {
-            $(".md-text").each(function () {
-
-                console.log($(this).html());
-                $(this).html(markdown.makeHtml($(this).html()));
+        $(".md-text").each(function () {
+            editormd.markdownToHTML("editormd-view", {
+                gfm: true,
+                toc: true,
+                tocm: false,
+                tocStartLevel: 1,
+                tocTitle: "目录",
+                tocDropdown: false,
+                tocContainer: "",
+                markdown: "",
+                autoLoadKaTeX: true,
+                pageBreak: true,
+                atLink: true,    // for @link
+                emailLink: true,    // for mail address auto link
+                tex: true,
+                taskList: true,   // Github Flavored Markdown task lists
+                flowChart: true,
+                sequenceDiagram: true,
+                previewCodeHighlight: true
             });
-        }, 5000);
+            $(this).attr("id", "");
+        });
     });
 </script>
 <footer th:replace="~{fragment/footer :: footer}"></footer>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    extensions: ["tex2jax.js"],
-    jax: ["input/TeX", "output/HTML-CSS"],
-    tex2jax: {
-      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-      processEscapes: true
-    },
-    "HTML-CSS": { availableFonts: ["TeX"] }
-  });
-</script>
-<script type="text/javascript" src="/js/MathJax.js"></script>
+<!--<script type="text/x-mathjax-config">-->
+<!--MathJax.Hub.Config({-->
+<!--extensions: ["tex2jax.js"],-->
+<!--jax: ["input/TeX", "output/HTML-CSS"],-->
+<!--tex2jax: {-->
+<!--inlineMath: [ ['$','$'], ["\\(","\\)"] ],-->
+<!--displayMath: [ ['$$','$$'], ["\\[","\\]"] ],-->
+<!--processEscapes: true-->
+<!--},-->
+<!--"HTML-CSS": { availableFonts: ["TeX"] }-->
+<!--});-->
+<!--</script>-->
+<!--<script type="text/javascript" src="/js/MathJax.js"></script>-->
 </body>
 </html>
