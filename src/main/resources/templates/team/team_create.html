@@ -44,7 +44,7 @@
         $("#name").change(function () {
             var tname = $(this).val();
             $.get({
-                url: "/team/rest/checkname",
+                url: "/team/api/checkname",
                 data: {
                     name: tname
                 },
@@ -62,7 +62,7 @@
 
     function createTeam() {
         $.post({
-            url: "/team/rest/create",
+            url: "/team/api/create",
             data: $("#team-form").serialize(),
             cache: false,
             dataType: 'text',

@@ -20,18 +20,13 @@
     <script th:src="@{/js/bootstrap.min.js}"></script>
     <script src="/js/prettify/prettify.js"></script>
     <style>
-        pre {
-            white-space: pre-wrap;
-            white-space: -moz-pre-wrap;
-            white-space: -o-pre-wrap;
-            word-wrap: break-word;
+        .text-content{
+            text-indent: 2rem;
         }
-
         html, body {
             height: 100%;
             width: 100%;
         }
-
         body {
             padding: 0;
             margin: 0;
@@ -41,12 +36,7 @@
             //background: linear-gradient(rgb(237, 196, 121), rgb(248, 177, 185)) fixed;
             background: linear-gradient(150deg,#54c4ff, #99ffc0) fixed;
         }
-
-        a {
-            text-decoration: none;
-        }
-
-        a:hover {
+        a , a:hover {
             text-decoration: none;
         }
     </style>

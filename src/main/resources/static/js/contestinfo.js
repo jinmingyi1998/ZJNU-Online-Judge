@@ -79,7 +79,7 @@ $(function () {
 function getStatusOfMe() {
     cid = $("main").attr("id");
     $.get({
-        url: "/contest/rest/status/" + cid,
+        url: "/contest/api/status/" + cid,
         success: function (data) {
             ve._data.status = data;
         }
@@ -89,7 +89,7 @@ function getStatusOfMe() {
 function getRankOfContest() {
     $.get(
         {
-            url: "/contest/rest/rank/" + cid,
+            url: "/contest/api/rank/" + cid,
             success: function (rank) {
                 peo = rank.people;
                 psize = $("#problem-number").text();
@@ -132,7 +132,7 @@ function changeProblem(cid, pid) {
     $("#problem-container").show();
     var problem = Object();
     $.get({
-        url: "/contest/rest/" + cid + "/problem/" + pid,
+        url: "/contest/api/" + cid + "/problem/" + pid,
         success: function (problem) {
             $("#problem-title").text(problem.title);
             $("#problem-time-limit").text(problem.timeLimit + "ms");
@@ -182,7 +182,7 @@ function changeProblem(cid, pid) {
 
 function getComments() {
     $.get({
-        url: "/contest/rest/" + cid + "/comments",
+        url: "/contest/api/" + cid + "/comments",
         success: function (res) {
             $("#comments").empty();
             for (var i = 0; i < res.length; i++) {

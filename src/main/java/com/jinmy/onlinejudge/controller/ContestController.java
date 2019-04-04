@@ -97,7 +97,7 @@ public class ContestController {
     }
 
 
-    @GetMapping("/rest/{cid}/problem/{pid}")
+    @GetMapping("/api/{cid}/problem/{pid}")
     public Problem getProblemByContestTempId(@PathVariable(value = "cid") Long cid,
                                              @PathVariable("pid") Long pid) {
         try {
@@ -115,7 +115,7 @@ public class ContestController {
         return null;
     }
 
-    @GetMapping("/rest/status/{cid}")
+    @GetMapping("/api/status/{cid}")
     public List<Solution> getUserStatus(@PathVariable("cid") Long cid, HttpServletResponse response) {
         try {
             @NotNull Contest contest = contestService.getContestById(cid);
@@ -189,7 +189,7 @@ public class ContestController {
     }
 
 
-    @GetMapping("/rest/rank/{cid}")
+    @GetMapping("/api/rank/{cid}")
     public Rank getRankOfContest(@PathVariable Long cid, HttpServletResponse response) {
         try {
             @NotNull Contest contest = contestService.getContestById(cid);
@@ -208,7 +208,7 @@ public class ContestController {
         return null;
     }
 
-    @GetMapping("/rest/{cid}/comments")
+    @GetMapping("/api/{cid}/comments")
     public List<Comment> getCommentsOfContest(@PathVariable Long cid) {
         try {
             @NotNull Contest contest = contestService.getContestById(cid);
@@ -219,7 +219,7 @@ public class ContestController {
         return null;
     }
 
-    @PostMapping("/rest/{cid}/comments/post")
+    @PostMapping("/api/{cid}/comments/post")
     public String postComments(@RequestParam("post_comment") String text, @PathVariable(value = "cid") Long cid) {
         try {
             @NotNull Contest contest = contestService.getContestById(cid);

@@ -25,6 +25,11 @@ public class MainController {
     @Autowired
     UserService userService;
 
+    @GetMapping("/404")
+    public ModelAndView notFound(){
+        return new ModelAndView("404");
+    }
+
     @GetMapping("/standing")
     public ModelAndView userStanding(@RequestParam(value = "page",defaultValue = "0") int page, HttpSession session) {
         ModelAndView m = new ModelAndView("Standing");

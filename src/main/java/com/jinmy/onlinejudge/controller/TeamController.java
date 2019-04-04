@@ -71,7 +71,7 @@ public class TeamController {
         return new ModelAndView("team/team_create");
     }
 
-    @PostMapping("/rest/create")
+    @PostMapping("/api/create")
     public String createTeam(Team team) {
         try {
             if (!team.validator()) return "Format Wrong";
@@ -85,7 +85,7 @@ public class TeamController {
         return "false";
     }
 
-    @GetMapping("/rest/checkname")
+    @GetMapping("/api/checkname")
     public String checkName(@RequestParam String name) {
         if (name.length() > 30)
             return "Name Too Long";

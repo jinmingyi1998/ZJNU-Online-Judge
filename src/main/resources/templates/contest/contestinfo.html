@@ -273,7 +273,7 @@
             tex = $("#post_comment").val();
             if (tex.length > 5) {
                 $.post({
-                    url: "/contest/rest/" + $("main").attr("id") + "/comments/post",
+                    url: "/contest/api/" + $("main").attr("id") + "/comments/post",
                     data: {post_comment: tex},
                     success: function (res) {
                         if (res == "success") {

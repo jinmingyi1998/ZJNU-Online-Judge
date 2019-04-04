@@ -26,7 +26,7 @@ public class VideoController {
         return m;
     }
 
-    @GetMapping("/rest/list")
+    @GetMapping("/api/list")
     public List<Video> getVideos() {
         List<Video> videoList = videoRepository.findAll();
         return videoList;

@@ -155,7 +155,7 @@ public class ProblemController {
         }
     }
 
-    @GetMapping("/rest/usersolved/{uid}/{pid}")
+    @GetMapping("/api/usersolved/{uid}/{pid}")
     public String userHasSolvedProblem(@PathVariable("uid") Long uid, @PathVariable(value = "pid") Long pid) {
         User user = userService.getUserById(uid);
         Problem problem = problemService.getProblemById(pid);
@@ -167,7 +167,7 @@ public class ProblemController {
         }
     }
 
-    @GetMapping("/rest/{pid}")
+    @GetMapping("/api/{pid}")
     public Problem getRestProblem(@PathVariable("pid") Long id, HttpServletResponse response) {
         try {
             @NotNull Problem problem = problemService.getProblemById(id);
@@ -201,7 +201,7 @@ public class ProblemController {
         return m;
     }
 
-    @GetMapping("/rest/article/{pid}")
+    @GetMapping("/api/article/{pid}")
     public List<Article> getRestArticleById(@PathVariable("pid")Long pid)
     {
         @NotNull Problem problem = problemService.getProblemById(pid);

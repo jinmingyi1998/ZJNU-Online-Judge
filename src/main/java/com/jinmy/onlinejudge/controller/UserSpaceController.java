@@ -27,7 +27,7 @@ public class UserSpaceController {
     @Autowired
     SolutionService solutionService;
 
-    @PostMapping("/rest/update/{uid}")
+    @PostMapping("/api/update/{uid}")
     public String userUpdateAction(HttpServletResponse response, @PathVariable("uid") Long id, User user) {
         try {
             @NotNull User u = (User) session.getAttribute("currentUser");
@@ -99,14 +99,14 @@ public class UserSpaceController {
         return "";
     }
 
-    @GetMapping("/rest/user/{id}")
+    @GetMapping("/api/user/{id}")
     public User getUser(@PathVariable Long id) {
         @NotNull User user = userService.getUserById(id);
         return user;
     }
 
 
-    @GetMapping("/rest/pie/{uid}")
+    @GetMapping("/api/pie/{uid}")
     public Graph getGraph(@PathVariable(value = "uid") Long uid, HttpServletResponse response) {
         try {
             @NotNull User user = userService.getUserById(uid);

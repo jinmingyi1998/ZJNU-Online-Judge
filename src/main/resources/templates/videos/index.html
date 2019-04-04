@@ -75,7 +75,7 @@
 
     function getList() {
         $.get({
-            url: "/video/rest/list",
+            url: "/video/api/list",
             success: function (res) {
                 vlist._data.videos = res;
             }

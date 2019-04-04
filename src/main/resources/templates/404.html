@@ -1,0 +1,42 @@
+<!--
+  ~ Copyright (c) 2019. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  -->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="~{fragment/header :: header}"></th:block>
+    <title>N0T FOUND</title>
+    <link rel="stylesheet" href="/flappybird/flappy.css">
+    <script src="/flappybird/flappy.js"></script>
+</head>
+<body>
+<main class="container">
+    <div class="jumbotron text-center"><h1>4O4 N0T FOUND</h1></div>
+    <div id="game">
+        <div id="gameStart">
+            <div id="headTitle">
+                <img src="/flappybird/img/bird.gif">
+            </div>
+            <div id="btn"></div>
+        </div>
+        <div id="line"></div>
+        <div id="gameEnter">
+            <div id="myBird">
+                <img src="/flappybird/img/bird.gif">
+            </div>
+            <div id="pipes">
+
+            </div>
+            <div id="scores">0</div>
+        </div>
+    </div>
+    <p class="text-center">鼠标点击起飞 空格键暂停</p>
+</main>
+<footer th:replace="~{fragment/footer :: footer}"></footer>
+</body>
+</html>

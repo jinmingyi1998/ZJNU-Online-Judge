@@ -19,7 +19,7 @@
             $("#submit-btn").click(function () {
                 $.post({
                     data: $("form").serialize(),
-                    url: "/user/rest/update/"+$("main").attr("id"),
+                    url: "/user/api/update/"+$("main").attr("id"),
                     success: function (data) {
                         if (data == "success") {
                             location.reload();
@@ -162,7 +162,7 @@
     var radarChart = echarts.init(document.getElementById("RadarChart"));
     var pieChart = echarts.init(document.getElementById("PieChart"));
     $.get({
-        url: "/user/rest/pie/" + $("main").attr("id"),
+        url: "/user/api/pie/" + $("main").attr("id"),
         success: function (res) {
             var graph = res;
             if (graph != null) {
