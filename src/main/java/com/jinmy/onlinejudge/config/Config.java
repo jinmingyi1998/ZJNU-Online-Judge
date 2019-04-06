@@ -8,14 +8,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "onlinejudge")
 public class Config {
-    private String root_dir;
-    private String src_dir;
-    private String data_dir;
-    private String exc_dir;
-    private String out_dir;
+    private String rootDir;
+    private String srcDir;
+    private String dataDir;
+    private String excDir;
+    private String outDir;
     private Judge judge;
     private Compile compile;
-    private String judger_dir;
+    private String judgerDir;
     private String uid;
     private String gid;
 

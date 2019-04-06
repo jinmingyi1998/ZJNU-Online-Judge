@@ -88,8 +88,8 @@ public class JudgeQueue {
                 postfix = "main.py";
                 break;
         }
-        String filename = config.getSrc_dir() + solution.getId() + "/" + postfix;
-        File file = new File(config.getSrc_dir() + solution.getId());
+        String filename = config.getSrcDir() + solution.getId() + "/" + postfix;
+        File file = new File(config.getSrcDir() + solution.getId());
         file.mkdir();
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(filename);
@@ -233,7 +233,7 @@ public class JudgeQueue {
             if (ret != 0) {
                 return ret;
             }
-            if (fileCompare(config.getData_dir() + problem.getId() + "/" + case_name + ".out", judger.getRun_dir() + "/" + case_name + ".out")) {
+            if (fileCompare(config.getDataDir() + problem.getId() + "/" + case_name + ".out", judger.getRun_dir() + "/" + case_name + ".out")) {
                 return 0;
             } else return -1;
         } catch (Exception e) {
@@ -304,7 +304,7 @@ public class JudgeQueue {
             String case_name = "";
             solution.setResult("Running");
             solutionService.updateSolution(solution);
-            File file = new File(config.getData_dir() + problem.getId());
+            File file = new File(config.getDataDir() + problem.getId());
             if (!file.exists()) {
                 log.error("Data directory not Found!");
                 return;

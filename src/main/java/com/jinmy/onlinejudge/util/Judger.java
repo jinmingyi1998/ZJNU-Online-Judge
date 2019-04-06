@@ -25,7 +25,7 @@ public class Judger extends SandboxApi {
      */
     public void init(String filename, Problem problem, Solution solution, int lang, String input_name) {
         super.init();
-        run_dir = config.getSrc_dir() + solution.getId() + "/";
+        run_dir = config.getSrcDir() + solution.getId() + "/";
         uid = Integer.parseInt(config.getUid());
         gid = Integer.parseInt(config.getGid());
         max_cpu_time = problem.getTimeLimit()+500;
@@ -68,7 +68,7 @@ public class Judger extends SandboxApi {
                 break;
         }
         output_path = run_dir + input_name + ".out";
-        input_path = config.getData_dir() + problem.getId() + "/" + input_name + ".in";
+        input_path = config.getDataDir() + problem.getId() + "/" + input_name + ".in";
         log_path = run_dir + input_name + ".judgelog";
         script = String.format("%s " +
                         " --max_cpu_time=%d " +
@@ -86,7 +86,7 @@ public class Judger extends SandboxApi {
                         " --args=%s " +
                         " --uid=%s " +
                         " --gid=%s ",
-                config.getJudger_dir(),
+                config.getJudgerDir(),
                 max_cpu_time,
                 max_real_time,
                 max_memory,

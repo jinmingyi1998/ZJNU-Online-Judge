@@ -25,7 +25,7 @@ public class Compiler extends SandboxApi {
         uid = Integer.parseInt(config.getUid());
         gid = Integer.parseInt(config.getGid());
         max_cpu_time = 4000;
-        run_dir = config.getSrc_dir() + solution.getId() + "/";
+        run_dir = config.getSrcDir() + solution.getId() + "/";
         max_real_time = 6000;
         max_memory = 128 * 1024 * 1024;
         max_stack = 128 * 1024 * 1024;
@@ -74,7 +74,7 @@ public class Compiler extends SandboxApi {
                         " --uid=%s " +
                         " --gid=%s " +
                         "--env=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
-                config.getJudger_dir(),
+                config.getJudgerDir(),
                 max_cpu_time,
                 max_real_time,
                 max_memory,

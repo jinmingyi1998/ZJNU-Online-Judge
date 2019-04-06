@@ -13,7 +13,6 @@ public class MvcConfigurer implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         List<String> stringList=new ArrayList<>();
         stringList.add("/admin/**");
-        //stringList
-        registry.addInterceptor(new SessionHandlerInterceptor()).addPathPatterns("/admin/**");
+        registry.addInterceptor(new SessionHandlerInterceptor()).addPathPatterns(stringList);
     }
 }

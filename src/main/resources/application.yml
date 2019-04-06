@@ -19,11 +19,11 @@ server:
   port: 80
 
 onlinejudge:
-  root_dir: /usr/judger/
-  src_dir: /usr/judger/src/
-  data_dir: /usr/judger/data/
-  out_dir: /usr/judger/out/
-  judger_dir: /usr/lib/judger/libjudger.so
+  root-dir: /usr/judger/
+  src-dir: /usr/judger/src/
+  data-dir: /usr/judger/data/
+  out-dir: /usr/judger/out/
+  judger-dir: /usr/lib/judger/libjudger.so
   uid: 0
   gid: 0
   judge:
@@ -45,3 +45,8 @@ onlinejudge:
       args: -m py_compile
     python3:
       args: -m py_compile
+
+  switches:
+    executing: true
+    submit: true
+    enter-system: false

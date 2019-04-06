@@ -1,7 +1,6 @@
 package com.jinmy.onlinejudge.interceptor;
 
 import com.jinmy.onlinejudge.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -11,11 +10,9 @@ import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
 
 public class SessionHandlerInterceptor implements HandlerInterceptor {
-    @Autowired
-    HttpSession session;
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        HttpSession session=request.getSession();
         try {
             @NotNull User user = (User) session.getAttribute("currentUser");
             if (user == null) {
