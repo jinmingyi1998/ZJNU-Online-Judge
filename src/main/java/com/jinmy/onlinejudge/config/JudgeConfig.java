@@ -11,4 +11,5 @@ public class JudgeConfig {
     private Boolean executing;
     private Boolean submit;
     private Boolean enterSystem;
+    private Boolean sslEnabled;
 }

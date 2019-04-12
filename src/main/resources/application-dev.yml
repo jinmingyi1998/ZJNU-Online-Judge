@@ -15,8 +15,10 @@ spring:
     mode: HTML
   config:
     additional-location: com/jinmy/onlinejudge
+
 server:
-  port: 80
+  port: 8088
+
 
 onlinejudge:
   root-dir: /usr/judger/
@@ -50,3 +52,4 @@ onlinejudge:
     executing: true
     submit: true
     enter-system: false
+    ssl-enabled: false
