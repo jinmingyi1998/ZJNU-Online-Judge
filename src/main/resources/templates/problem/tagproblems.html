@@ -55,9 +55,15 @@
 <body>
 <div class="container-fluid">
     <div class="row">
-    <div class="col-1"></div>
-    <div class="col-10 row">
-        <div class="col-8">
+        <div class="col-md-3">
+        <div class="container-fluid bg-light rounded" style="opacity: 0.8;padding-bottom: 1rem;padding-top: 1rem;margin-top: 1rem">
+            <h2 class="text-center">标签</h2>
+            <a class="badge badge-primary badge-pill font-weight-bold" style="font-size: 1rem;margin: 5px"
+               th:each="tag:${tags}"
+               th:href="'/problems/tags?tag='+${tag.name}" th:text="${tag.name}"></a>
+        </div>
+    </div>
+        <div class="col-md-9">
             <ul class="list-group container-fluid">
                 <li class="list-group-item card" style="margin: 10px;" th:each="problem,iterStat:${problems.content}"
                     th:object="${problem}">
@@ -68,7 +74,7 @@
                                     <a th:href="@{/problems/{id}(id=*{id})}"
                                        th:text="${problem.id}+'  '+${problem.title}"></a></h4></li>
                             <li class="list-inline-item float-right" th:each="ta:*{tags}">
-                                <a class="badge badge-pill badge-info" th:href="'/problems/tags?tag='+${ta.name}"
+                                <a class="badge badge-pill badge-primary" th:href="'/problems/tags?tag='+${ta.name}"
                                    th:text="${ta.name}"></a></li>
                         </ul>
                         <ul class="card-text text-muted list-inline">
@@ -85,17 +91,9 @@
                 <li class="page-item" id="Next"><a class="page-link turnpage" page="next-page">下一页</a></li>
             </ul>
         </div>
-        <div class="col-4">
-            <div class="container-fluid bg-light rounded" style="opacity: 0.8;padding-bottom: 1rem;padding-top: 1rem;margin-top: 1rem">
-                <h2 class="text-center">标签</h2>
-                <a class="badge badge-info badge-pill font-weight-bold" style="font-size: 1rem;margin: 5px"
-                   th:each="tag:${tags}"
-                   th:href="'/problems/tags?tag='+${tag.name}" th:text="${tag.name}"></a>
-            </div>
-        </div>
+
     </div>
-    <div class="col-1"></div>
-    </div></div>
+    </div>
 <footer th:replace="~{fragment/footer :: footer}"></footer>
 </body>
 </html>

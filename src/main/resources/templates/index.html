@@ -14,8 +14,8 @@
     <title>Home</title>
 </head>
 <body>
-<div class="container" height="100%" width="100%">
-    <div class="jumbotron" style="opacity: 0.8;">
+<div class="container-fluid" height="100%" width="100%">
+    <div class="jumbotron container" style="opacity: 0.8;">
         <h1 class="display-3">信奥评测系统</h1>
         <h1>Olympiad in Informatics Online Judge System</h1>
         <blockquote class="blockquote">
@@ -23,13 +23,15 @@
             <p class="font-weight-bold blockquote-footer">Don't use IE or Edge</p>
         </blockquote>
     </div>
-    <div class="container row">
+    <div class="container">
+        <div class="row">
         <div class="col-4 text-center">
             <a href="/problems" class=" text-center fa fa-pencil-square" style="font-size: 6rem;color: #335bac;margin: 1rem"><h3>刷题</h3></a></div>
         <div class="col-4 text-center">
             <a href="/contest" class=" text-center fa fa-lightbulb-o" style="font-size: 6rem;color: #d35400;margin: 1rem"><h3>比赛</h3></a></div>
         <div class="col-4 text-center">
             <a href="/video" class=" text-center fa fa-book" style="font-size: 6rem;color: #982e22;margin: 1rem"><h3>学习</h3></a></div>
+        </div>
     </div>
 </div>
 <footer th:replace="~{fragment/footer :: footer}"></footer>

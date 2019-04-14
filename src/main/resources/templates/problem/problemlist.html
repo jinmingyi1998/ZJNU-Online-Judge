@@ -60,10 +60,25 @@
 </head>
 <body>
 <main class="container-fluid">
-    <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-10 row">
-            <div class="col-md-8" th:if="${problems.content.size()>0}">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="container-fluid rounded bg-light form-inline mt-3 mb-3 p-2"
+                     style="opacity: 0.8;">
+                    <label for="search-problem" style="font-size: 1.5rem;padding-left: 1rem">搜索题目: </label>&nbsp;
+                    <input
+                            class="form-control ml-2 mr-2" id="search-problem" name="search"
+                            type="text">&nbsp;
+                    <button class="btn" id="search">搜索</button>
+                </div>
+                <div class="container-fluid bg-light rounded"
+                     style="opacity: 0.8;padding-bottom: 1rem;padding-top: 1rem">
+                    <h2 class="text-center">标签</h2>
+                    <a class="badge badge-primary badge-pill font-weight-bold" style="font-size: 1rem;margin: 5px"
+                       th:each="tag:${tags}"
+                       th:href="'/problems/tags?tag='+${tag.name}" th:text="${tag.name}"></a>
+                </div>
+            </div>
+            <div class="col-md-9" th:if="${problems.content.size()>0}">
                 <ul class="list-group container-fluid" style="margin: 0;padding: 0">
                     <li class="list-group-item card" style="margin: 10px;"
                         th:each="problem,iterStat:${problems.content}"
@@ -77,7 +92,7 @@
                                     </h4>
                                 </div>
                                 <div class="col-sm-7 justify-content-sm-end row"><div>
-                                        <a class="badge badge-pill badge-info" th:each="ta:*{tags}"
+                                        <a class="badge badge-pill badge-primary" th:each="ta:*{tags}"
                                            th:href="'/problems/tags?tag='+${ta.name}" th:text="${ta.name}"></a></div>
                                 </div>
                             </div>
@@ -95,26 +110,9 @@
                     <li class="page-item" id="Next"><a class="page-link turnpage" page="next-page">下一页</a></li>
                 </ul>
             </div>
-            <div class="col-md-4">
-                <div class="container-fluid rounded bg-light form-inline"
-                     style="margin-top: 1rem;margin-bottom: 1rem;opacity: 0.8;padding: 1rem">
-                    <label for="search-problem" style="font-size: 1.5rem;padding-left: 1rem">搜索题目: </label>&nbsp;<input
-                        class="form-control" id="search-problem" name="search"
-                        style="margin-left: 1rem;margin-right: 1rem"
-                        type="text">&nbsp;
-                    <button class="btn" id="search">搜索</button>
-                </div>
-                <div class="container-fluid bg-light rounded"
-                     style="opacity: 0.8;padding-bottom: 1rem;padding-top: 1rem">
-                    <h2 class="text-center">标签</h2>
-                        <a class="badge badge-info badge-pill font-weight-bold" style="font-size: 1rem;margin: 5px"
-                           th:each="tag:${tags}"
-                           th:href="'/problems/tags?tag='+${tag.name}" th:text="${tag.name}"></a>
-                </div>
-            </div>
+
         </div>
-        <div class="col-md-1"></div>
-    </div>
+
 </main>
 <footer th:replace="~{fragment/footer :: footer}"></footer>
 </body>
