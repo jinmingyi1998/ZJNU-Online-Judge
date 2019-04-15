@@ -62,7 +62,8 @@
 <main class="container-fluid">
         <div class="row">
             <div class="col-lg-3">
-                <div class="container-fluid rounded bg-light mt-3 mb-3 p-2 text-center"
+                <div class="container-fluid list-group">
+                <div class="list-group-item rounded bg-light mt-3 mb-3 p-2 text-center"
                      style="opacity: 0.8;">
                     <label for="search-problem"  style="font-size: 1.5rem;">搜索题目: </label>
                     <div class="input-group">
@@ -71,17 +72,18 @@
                             type="text">
                     <button class="btn btn-primary btn-sm input-group-append" id="search">搜索</button>
                     </div></div>
-                <div class="container-fluid bg-light rounded"
+                <div class="list-group-item bg-light rounded"
                      style="opacity: 0.8;padding-bottom: 1rem;padding-top: 1rem">
                     <h2 class="text-center">标签</h2>
                     <a class="badge badge-primary badge-pill font-weight-bold" style="font-size: 1rem;margin: 5px"
                        th:each="tag:${tags}"
                        th:href="'/problems/tags?tag='+${tag.name}" th:text="${tag.name}"></a>
                 </div>
+                </div>
             </div>
             <div class="col-lg-9" th:if="${problems.content.size()>0}">
-                <ul class="list-group container-fluid" style="margin: 0;padding: 0">
-                    <li class="list-group-item card" style="margin: 10px;"
+                <ul class="list-group container-fluid">
+                    <li class="list-group-item card mt-3"
                         th:each="problem,iterStat:${problems.content}"
                         th:object="${problem}">
                         <div class="card-body">

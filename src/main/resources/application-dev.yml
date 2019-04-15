@@ -40,7 +40,7 @@ onlinejudge:
     c:
       args: -DONLINE_JUDGE -O2 -w -fmax-errors=3 -std=c99 -lm
     cpp:
-      args: -DONLINE_JUDGE -O2 -w -fmax-errors=3 -std=c++14 -lm
+      args: -DONLINE_JUDGE -O2 -w -fmax-errors=3 -std=c++11 -lm
     java:
       args: -encoding UTF8
     python2:
