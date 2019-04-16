@@ -1,5 +1,6 @@
 package com.jinmy.onlinejudge.controller;
 
+import com.jinmy.onlinejudge.config.Config;
 import com.jinmy.onlinejudge.entity.Contest;
 import com.jinmy.onlinejudge.entity.ContestProblem;
 import com.jinmy.onlinejudge.entity.Problem;
@@ -8,19 +9,24 @@ import com.jinmy.onlinejudge.repository.ContestProblemRepository;
 import com.jinmy.onlinejudge.service.ContestService;
 import com.jinmy.onlinejudge.service.ProblemService;
 import com.jinmy.onlinejudge.service.TagService;
+import com.jinmy.onlinejudge.util.DataManager;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
+import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
@@ -34,18 +40,22 @@ public class AdminController {
     TagService tagService;
     @Autowired
     ContestProblemRepository contestProblemRepository;
+    @Autowired
+    DataManager dataManager;
+    @Autowired
+    Config config;
 
     @GetMapping("/update/tag/score")
-    public String updateTagScore(){
-        List<Tag>tags=tagService.getTagList();
-        for(int i=0;i<tags.size();i++){
-            tags.get(i).setScore(0l);
+    public String updateTagScore() {
+        List<Tag> tags = tagService.getTagList();
+        for (int i = 0; i < tags.size(); i++) {
+            tags.get(i).setScore(0L);
         }
         tagService.updateManyTags(tags);
-        List<Problem>problems=problemService.getProblemList();
-        for (Problem p :problems) {
-            for(int i=0;i<p.getTags().size();i++){
-                p.getTags().get(i).setScore(p.getTags().get(i).getScore()+p.getScore());
+        List<Problem> problems = problemService.getProblemList();
+        for (Problem p : problems) {
+            for (int i = 0; i < p.getTags().size(); i++) {
+                p.getTags().get(i).setScore(p.getTags().get(i).getScore() + p.getScore());
             }
             tagService.updateManyTags(p.getTags());
         }
@@ -62,24 +72,38 @@ public class AdminController {
     }
 
     @GetMapping("/insert")
-    public ModelAndView insertProblem() {
+    public ModelAndView insertProblem(String... msg) {
         ModelAndView m = new ModelAndView("admin/insert");
+        m.addObject("message", msg);
         return m;
     }
 
     @PostMapping("/insert")
-    public ModelAndView insertProblemAction(Problem problem, @RequestParam(value = "tag", defaultValue = "") String tag) {
-        String[] tags = tag.split(",");
-        ArrayList<Tag> t = new ArrayList<>();
-        for (int i = 0; i < tags.length; i++) {
-            Tag _tag = tagService.getTagByName(tags[i]);
-            if (_tag != null) {
-                t.add(_tag);
+    public ModelAndView insertProblemAction(Problem problem,
+                                            @RequestParam(value = "tag", defaultValue = "") String tag,
+                                            @RequestParam(value = "zipfile") MultipartFile file) {
+        setTagsOfProblem(problem, tag);
+        log.info("Problem insert: " + problem.toString());
+        log.info("File Size= " + file.getSize());
+        problem = problemService.insertProblem(problem);
+        try {
+            if (!file.isEmpty()) {
+                if (file.getOriginalFilename().matches("^\\w+\\.zip$")) {
+                    String filename=config.getTmpDir()+"/"+problem.getId()+"/";
+                    File zip=new File(filename);
+                    if (!zip.exists()){
+                        zip.mkdirs();
+                    }
+                    zip=new File(filename+file.getOriginalFilename());
+                    file.transferTo(zip);
+                    dataManager.uploadDataFromZip(zip, config.getDataDir()+problem.getId() + "/");
+                    zip.delete();
+                }
             }
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            return insertProblem("Upload Error!");
         }
-        problem.setTags(t);
-        System.out.println(problem);
-        problemService.insertProblem(problem);
         return insertProblem();
     }
 
@@ -97,9 +121,17 @@ public class AdminController {
 
     @PostMapping("/edit/{pid}")
     public ModelAndView editProblemAction(Problem problem, @PathVariable(value = "pid") Long id, HttpServletResponse response,
-    @RequestParam(value = "tag", defaultValue = "") String tag) {
+                                          @RequestParam(value = "tag", defaultValue = "") String tag) {
         problem.setId(id);
         @NotNull Problem initProblem = problemService.getProblemById(id);
+        setTagsOfProblem(problem, tag);
+        problem.setSubmit(initProblem.getSubmit());
+        problem.setAccepted(initProblem.getAccepted());
+        problemService.updateProblem(problem);
+        return editProblem(id, response);
+    }
+
+    private void setTagsOfProblem(Problem problem, String tag) {
         String[] tags = tag.split(",");
         ArrayList<Tag> t = new ArrayList<>();
         for (int i = 0; i < tags.length; i++) {
@@ -109,10 +141,6 @@ public class AdminController {
             }
         }
         problem.setTags(t);
-        problem.setSubmit(initProblem.getSubmit());
-        problem.setAccepted(initProblem.getAccepted());
-        problemService.updateProblem(problem);
-        return editProblem(id, response);
     }
 
     @DeleteMapping("/delete/{pid}")
