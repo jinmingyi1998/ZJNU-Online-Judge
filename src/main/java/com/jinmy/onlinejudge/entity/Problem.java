@@ -59,6 +59,13 @@ public class Problem {
     private Integer submit = 0;
     @Column(columnDefinition = "integer default 0")
     private Integer accepted = 0;
+    public String tagsToString(){
+        String str="";
+        for (int i = 0; i < tags.size(); i++) {
+            str+=","+tags.get(i).getName();
+        }
+        return str.substring(1);
+    }
 
     public Problem() {
         solutions = null;
