@@ -13,6 +13,7 @@ public class Config {
     private String dataDir;
     private String excDir;
     private String outDir;
+    private String tmpDir;
     private Judge judge;
     private Compile compile;
     private String judgerDir;
