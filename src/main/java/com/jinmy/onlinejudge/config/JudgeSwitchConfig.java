@@ -7,9 +7,10 @@ import org.springframework.context.annotation.Configuration;
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "onlinejudge.switches")
-public class JudgeConfig {
+public class JudgeSwitchConfig {
     private Boolean executing;
     private Boolean submit;
     private Boolean enterSystem;
     private Boolean sslEnabled;
+    private Boolean autoCreateDir;
 }
