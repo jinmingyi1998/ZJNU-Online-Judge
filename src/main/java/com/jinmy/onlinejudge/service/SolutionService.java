@@ -15,7 +15,10 @@ import com.jinmy.onlinejudge.repository.SolutionRepository;
 import com.jinmy.onlinejudge.repository.UserProblemRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,16 +66,44 @@ public class SolutionService {
         return solutionRepository.save(solution);
     }
 
-
-    public Page<Solution> getStatus(User user, Problem problem, String result, int page) {
-        Solution s = new Solution();
-        s.setUser(user);
-        s.setProblem(problem);
-        s.setResult(result);
-        ExampleMatcher exampleMatcher = ExampleMatcher.matching().withIgnoreNullValues();
-        Example<Solution> example = Example.of(s, exampleMatcher);
-        return solutionRepository.findAll(example, PageRequest.of(page, PAGE_SIZE, new Sort(Sort.Direction.DESC, "id")));
-        //return solutionExampleExecutor.findAll(example, );
+    public Page<Solution> getStatus(String username, Problem problem, String result, int page){
+        User user=userService.getUserByUsername(username);
+        Pageable pageable=PageRequest.of(page,PAGE_SIZE,new Sort(Sort.Direction.DESC,"id"));
+        if (user!=null){
+            if (problem!=null){
+                if (result!=null&&result.length()>0){
+                    return solutionRepository.findAllByUserAndProblemAndResult(pageable,user,problem,result);
+                }
+                else{
+                    return solutionRepository.findAllByUserAndProblem(pageable,user,problem);
+                }
+            }
+            else{
+                if (result!=null&&result.length()>0){
+                    return solutionRepository.findAllByUserAndResult(pageable,user,result);
+                }
+                else{
+                    return solutionRepository.findAllByUser(pageable,user);
+                }
+            }
+        }else{
+            if (problem!=null){
+                if (result!=null&&result.length()>0){
+                    return solutionRepository.findAllByProblemAndResult(pageable,problem,result);
+                }
+                else{
+                    return solutionRepository.findAllByProblem(pageable,problem);
+                }
+            }
+            else{
+                if (result!=null&&result.length()>0){
+                    return solutionRepository.findAllByResult(pageable,result);
+                }
+                else{
+                    return solutionRepository.findAll(pageable);
+                }
+            }
+        }
     }
 
     public List<Solution> getTop50OfProblem(Problem problem) {

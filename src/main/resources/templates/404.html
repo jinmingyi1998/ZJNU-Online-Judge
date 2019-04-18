@@ -10,13 +10,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:insert="~{fragment/header :: header}"></th:block>
-    <title>N0T FOUND</title>
+    <title th:text="${code}"></title>
     <link rel="stylesheet" href="/flappybird/flappy.css">
     <script src="/flappybird/flappy.js"></script>
 </head>
 <body>
 <main class="container">
-    <div class="jumbotron text-center"><h1>4O4 N0T FOUND</h1></div>
+    <div class="jumbotron text-center"><h1 th:text="${code}"></h1></div>
     <div id="game">
         <div id="gameStart">
             <div id="headTitle">

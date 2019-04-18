@@ -94,6 +94,7 @@
             <span th:text="${problem.id}"></span>
             <span th:text="${problem.title}"></span>
             <a class="btn-sm btn-primary float-right" th:href="'/admin/edit/'+${problem.id}">Update</a>
+            <a class="btn-sm btn-primary float-right" th:href="'/admin/editdata/'+${problem.id}">Change Data</a>
             <a class="btn-danger btn-sm remove-btn float-right" th:id="${problem.id}">Remove</a></li>
     </ul>
     <div class="container">

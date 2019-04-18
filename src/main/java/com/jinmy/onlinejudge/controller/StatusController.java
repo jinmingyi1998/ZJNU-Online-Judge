@@ -50,7 +50,7 @@ public class StatusController {
         if (result.length() == 0)
             result = null;
         // receive username
-        Page<Solution> solutions = solutionService.getStatus(userService.getUserByUsername(username),
+        Page<Solution> solutions = solutionService.getStatus(username,
                 problemService.getProblemById(pid), result, page);
         m.addObject("solutions", solutions);
         return m;

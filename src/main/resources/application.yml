@@ -14,7 +14,7 @@ spring:
     cache: false
     mode: HTML
   config:
-    additional-location: com/jinmy/onlinejudge
+    additional-location: onlinejudge
   servlet:
     multipart:
       max-file-size: 50MB
@@ -22,6 +22,9 @@ spring:
   profiles:
     active: pro
 
+
+logging:
+  path: onlinejudge/log
 
 onlinejudge:
   root-dir: /usr/judger/

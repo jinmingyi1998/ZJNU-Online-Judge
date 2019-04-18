@@ -50,7 +50,7 @@
         </div>
         <div class="form-group">Tags(用
             <mark>英文逗号</mark>
-            分隔，只能是已经存在的tag)<input class="form-control" name="tag" type="text" required>
+            分隔，只能是已经存在的tag)<input class="form-control" name="tag" type="text" th:value="${problem.tagsToString()}" required>
         </div>
 
         <div class="form-group">

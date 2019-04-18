@@ -43,11 +43,12 @@ public interface SolutionRepository extends JpaRepository<Solution, Long>, Query
 
     List<Solution> findAllByUser(User user, Sort sort);
 
-    List<Solution> findAllByResult(String result);
 
-    List<Solution> findAllByProblem(Problem problem);
+    Page<Solution> findAllByProblem(Pageable pageable,Problem problem);
 
     Page<Solution> findAllByResult(Pageable pageable, String result);
+    Page<Solution> findAllByProblemAndResult(Pageable pageable, Problem problem,String result);
+
 
     //Top 50
     List<Solution> findFirst50ByResultAndProblemOrderByTimeAsc(String res,Problem problem);
@@ -55,6 +56,13 @@ public interface SolutionRepository extends JpaRepository<Solution, Long>, Query
 
     @Override
     <S extends Solution> Page<S> findAll(Example<S> example, Pageable pageable);
+
+    Page<Solution> findAllByUserAndResult(Pageable pageable, User user, String result);
+
+    Page<Solution> findAllByUserAndProblemAndResult(Pageable pageable, User user, Problem problem, String result);
+
+    Page<Solution> findAllByUserAndProblem(Pageable pageable, User user, Problem problem);
+
 
     //   Page<Solution> findAllByUserAndProblemAndResult( Pageable pageable, User user, Problem problem, String result);
 }
