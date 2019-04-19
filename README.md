@@ -43,5 +43,7 @@ Chrome Firefox Edge
 ### 用户能力评价模型：
 根据通过题目评价用户学习状况
 
+## 许可
 
+The [MIT](http://opensource.org/licenses/MIT) License
 
