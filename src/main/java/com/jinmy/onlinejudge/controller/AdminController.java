@@ -87,24 +87,64 @@ public class AdminController {
         log.info("File Size= " + file.getSize());
         problem = problemService.insertProblem(problem);
         try {
-            if (!file.isEmpty()) {
-                if (file.getOriginalFilename().matches("^\\w+\\.zip$")) {
-                    String filename=config.getTmpDir()+"/"+problem.getId()+"/";
-                    File zip=new File(filename);
-                    if (!zip.exists()){
-                        zip.mkdirs();
-                    }
-                    zip=new File(filename+file.getOriginalFilename());
-                    file.transferTo(zip);
-                    dataManager.uploadDataFromZip(zip, config.getDataDir()+problem.getId() + "/");
-                    zip.delete();
-                }
-            }
+            uploadAndSaveZipFile(file, problem);
         } catch (IOException e) {
             log.error(e.getMessage());
             return insertProblem("Upload Error!");
         }
         return insertProblem();
+    }
+
+
+    @GetMapping("/editdata/{pid}")
+    public ModelAndView editProblemData(@PathVariable(value = "pid")Long id,HttpServletResponse response,String... message){
+        ModelAndView m = new ModelAndView("admin/editdata");
+        m.addObject("message",message);
+        Problem problem=problemService.getProblemById(id);
+        if (problem==null){
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return null;
+        }
+        m.addObject(problem);
+        return m;
+    }
+    @PostMapping("/editdata/{pid}")
+    public ModelAndView editProblemDataAction(@PathVariable(value = "pid")Long id,
+                                              @RequestParam(value = "zipfile")MultipartFile multipartFile,
+                                              HttpServletResponse response){
+
+        Problem problem=problemService.getProblemById(id);
+        if (problem==null){
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return null;
+        }
+        log.info("File Size= " + multipartFile.getSize());
+        try {
+            uploadAndSaveZipFile(multipartFile, problem);
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            return editProblemData(id,response,"上传失败");
+        }
+        return editProblemData(id,response,"上传成功");
+    }
+
+    private void uploadAndSaveZipFile(MultipartFile multipartFile, Problem problem) throws IOException {
+        if (!multipartFile.isEmpty()) {
+            if (multipartFile.getOriginalFilename().matches("^\\w+\\.zip$")) {
+                String fileDir=config.getTmpDir()+"/"+problem.getId()+"/";
+                File zip=new File(fileDir);
+                if (!zip.exists()){
+                    zip.mkdirs();
+                }else{
+                    dataManager.deleteFiles(fileDir);
+                    zip.mkdirs();
+                }
+                zip=new File(fileDir+multipartFile.getOriginalFilename());
+                multipartFile.transferTo(zip);
+                dataManager.uploadDataFromZip(zip, config.getDataDir()+problem.getId() + "/");
+                zip.delete();
+            }
+        }
     }
 
     @GetMapping("/edit/{pid}")
