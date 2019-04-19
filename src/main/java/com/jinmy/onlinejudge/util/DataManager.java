@@ -74,19 +74,23 @@ public class DataManager {
     public void moveFiles() {
     }
 
-    public void deleteFiles() {
+    public void deleteFiles(String path) {
+        File file=new File(path);
+        if(file.isDirectory()){
+            for (int i = 0; i < file.list().length; i++) {
+                deleteFiles(path+file.list()[i]);
+            }
+        }
+        file.delete();
     }
 
     public void uploadDataFromZip(File file, String destDir) throws IOException {
         File dir = new File(destDir);
         if (!dir.exists()) {
-            dir.mkdir();
+            dir.mkdirs();
         } else {
-            for (int i = 0; i < dir.list().length; i++) {
-                File f = new File(dir.list()[i]);
-                if (!f.isDirectory())
-                    f.delete();
-            }
+            deleteFiles(destDir);
+            dir.mkdirs();
         }
         unZipFiles(file, destDir);
     }
